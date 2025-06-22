@@ -41,7 +41,7 @@ const player1Values = [];
 const player2Values = [];
 
 function runTurn(cellIndex) {
-  if (cellsState[cellIndex].value === null) {
+  if (cellsState[cellIndex].state === STATES.empty) {
     gameState.playing = true;
 
     console.log(`cell i: ${cellIndex} - player: ${gameState.players[gameState.currentPlayerTurn].name}`);
@@ -50,27 +50,27 @@ function runTurn(cellIndex) {
     cellsState[cellIndex].state = STATES.played;
 
     if (gameState.currentPlayerTurn === 0) {
-      cells[cellIndex].innerText = "[O]";
       player1Values.push(cellIndex);
     } else {
-      cells[cellIndex].innerText = "[X]";
       player2Values.push(cellIndex);
     }
 
+    messageEl.innerText = `${gameState.players[gameState.currentPlayerTurn].name} turn`;
+    renderCell(cellIndex);
+    killOldCell();
     evaluateWhoWins();
 
-    // End of the turn - Switch Turn
-    gameState.currentPlayerTurn = gameState.currentPlayerTurn === 0 ? 1 : 0;
+    gameState.currentPlayerTurn = gameState.currentPlayerTurn === 0 ? 1 : 0; // Change turn
     gameState.turn++;
   }
   console.log(JSON.stringify(gameState, null, 2));
+  console.log(JSON.stringify(cellsState, null, 2));
   console.log("1", player1Values);
   console.log("2", player2Values);
 }
 
 pickWhoPlayFirstTurn();
 setInputListener(cells, runTurn);
-renderCells();
 
 console.log(JSON.stringify(gameState, null, 2));
 
@@ -78,12 +78,35 @@ function pickWhoPlayFirstTurn() {
   if (gameState.gamesPlayed === 0) {
     gameState.whoPlaysFirst = Math.floor(Math.random() * 2);
     gameState.currentPlayerTurn = gameState.whoPlaysFirst;
+    gameState.winner = gameState.players[gameState.currentPlayerTurn].name;
     messageEl.innerText = `${gameState.players[gameState.currentPlayerTurn].name} turn`;
     return;
   }
 
   gameState.whoPlaysFirst = gameState.whoPlaysFirst === 1 ? 0 : 1;
   gameState.currentPlayerTurn = gameState.whoPlaysFirst;
+}
+
+function killOldCell() {
+  for (let i = 0; i < 9; i++) {
+    if (cellsState[i].state === STATES.dead) {
+      cellsState[i].value = null;
+      cellsState[i].state = STATES.empty;
+      cells[i].children[0].remove();
+    }
+  }
+
+  if (gameState.currentPlayerTurn === 0 && player1Values.length > 3) {
+    const deadValue = player1Values.shift();
+    console.log(cells[deadValue].children[0]);
+    cellsState[deadValue].state = STATES.dead;
+    cells[deadValue].children[0].setAttribute("data-dead", "");
+  } else if (gameState.currentPlayerTurn === 1 && player2Values.length > 3) {
+    const deadValue = player2Values.shift();
+    console.log(cells[deadValue].children);
+    cellsState[deadValue].state = STATES.dead;
+    cells[deadValue].children[0].setAttribute("data-dead", "");
+  }
 }
 
 function evaluateWhoWins() {
@@ -94,22 +117,19 @@ function evaluateWhoWins() {
     const oneWinScene = winScenarios[i];
     if (oneWinScene.every((value) => playerValues.includes(value))) {
       gameState.playing = false;
-      alert(`${gameState.players[gameState.currentPlayerTurn].name} wins!!!`);
+      messageEl.innerText = `${gameState.players[gameState.currentPlayerTurn].name} wins!!!`;
     }
   }
 }
 
-function renderCells() {
-  for (let i = 0; i < 9; i++) {
-    console.log(cells[i].textContent);
-  }
+function renderCell(index) {
+  const svg = gameState.currentPlayerTurn === 0 ? circle() : cross();
+  cells[index].insertAdjacentHTML("beforeend", svg);
 }
 
 const circle = () => `
   <svg
-    id="Layer_1"
-    class="h-23.5 w-23.5 fill-sky-500"
-    data-name="Layer 1"
+    class="h-23.5 w-23.5 fill-sky-500 data-[dead]:opacity-40"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 47 47"
   >
@@ -120,7 +140,7 @@ const circle = () => `
 `;
 
 const cross = () => `
-  <svg id="Layer_1" class="w-23 h-23 fill-rose-500" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38.41 38.41">
+  <svg class="w-23 h-23 fill-rose-500 data-[dead]:opacity-40" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38.41 38.41">
     <rect x="15.74" y="-6.52" width="6.92" height="51.45" rx="3.46" ry="3.46" transform="translate(19.2 -7.95) rotate(45)" />
     <rect x="15.74" y="-6.52" width="6.92" height="51.45" rx="3.46" ry="3.46" transform="translate(46.36 19.2) rotate(135)" />
   </svg>
