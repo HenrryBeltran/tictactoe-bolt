@@ -1,10 +1,12 @@
 import { setInputListener } from "./js/input.js";
 
-const cells = document.querySelectorAll("td");
+const cells = document.querySelectorAll(".cell");
+const messageEl = document.querySelector("#message");
 
 const STATES = { played: 0, dead: 1, empty: 2 };
 const gameState = {
   gamesPlayed: 0,
+  playing: false,
   turn: 1,
   whoPlaysFirst: 0,
   currentPlayerTurn: 0,
@@ -35,20 +37,35 @@ const winScenarios = [
   [0, 4, 8], // Main diagonal
   [2, 4, 6], // Anti diagonal
 ];
+const player1Values = [];
+const player2Values = [];
 
 function runTurn(cellIndex) {
   if (cellsState[cellIndex].value === null) {
+    gameState.playing = true;
+
     console.log(`cell i: ${cellIndex} - player: ${gameState.players[gameState.currentPlayerTurn].name}`);
-    const symbol = gameState.currentPlayerTurn === 0 ? "O" : "X";
-    cells[cellIndex].innerText = `[${symbol}]`;
+
     cellsState[cellIndex].value = gameState.currentPlayerTurn;
     cellsState[cellIndex].state = STATES.played;
+
+    if (gameState.currentPlayerTurn === 0) {
+      cells[cellIndex].innerText = "[O]";
+      player1Values.push(cellIndex);
+    } else {
+      cells[cellIndex].innerText = "[X]";
+      player2Values.push(cellIndex);
+    }
+
+    evaluateWhoWins();
 
     // End of the turn - Switch Turn
     gameState.currentPlayerTurn = gameState.currentPlayerTurn === 0 ? 1 : 0;
     gameState.turn++;
   }
   console.log(JSON.stringify(gameState, null, 2));
+  console.log("1", player1Values);
+  console.log("2", player2Values);
 }
 
 pickWhoPlayFirstTurn();
@@ -61,6 +78,7 @@ function pickWhoPlayFirstTurn() {
   if (gameState.gamesPlayed === 0) {
     gameState.whoPlaysFirst = Math.floor(Math.random() * 2);
     gameState.currentPlayerTurn = gameState.whoPlaysFirst;
+    messageEl.innerText = `${gameState.players[gameState.currentPlayerTurn].name} turn`;
     return;
   }
 
@@ -69,7 +87,16 @@ function pickWhoPlayFirstTurn() {
 }
 
 function evaluateWhoWins() {
-  // Compute if there is a winner after the play.
+  const playerValues = gameState.currentPlayerTurn === 0 ? player1Values : player2Values;
+  const sceneriosLength = winScenarios.length;
+
+  for (let i = 0; i < sceneriosLength; i++) {
+    const oneWinScene = winScenarios[i];
+    if (oneWinScene.every((value) => playerValues.includes(value))) {
+      gameState.playing = false;
+      alert(`${gameState.players[gameState.currentPlayerTurn].name} wins!!!`);
+    }
+  }
 }
 
 function renderCells() {
@@ -77,3 +104,24 @@ function renderCells() {
     console.log(cells[i].textContent);
   }
 }
+
+const circle = () => `
+  <svg
+    id="Layer_1"
+    class="h-23.5 w-23.5 fill-sky-500"
+    data-name="Layer 1"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 47 47"
+  >
+    <path
+      d="M23.5,0C10.52,0,0,10.52,0,23.5s10.52,23.5,23.5,23.5,23.5-10.52,23.5-23.5S36.48,0,23.5,0ZM23.5,39c-8.56,0-15.5-6.94-15.5-15.5s6.94-15.5,15.5-15.5,15.5,6.94,15.5,15.5-6.94,15.5-15.5,15.5Z"
+    />
+  </svg>
+`;
+
+const cross = () => `
+  <svg id="Layer_1" class="w-23 h-23 fill-rose-500" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38.41 38.41">
+    <rect x="15.74" y="-6.52" width="6.92" height="51.45" rx="3.46" ry="3.46" transform="translate(19.2 -7.95) rotate(45)" />
+    <rect x="15.74" y="-6.52" width="6.92" height="51.45" rx="3.46" ry="3.46" transform="translate(46.36 19.2) rotate(135)" />
+  </svg>
+`;

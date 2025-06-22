@@ -3,14 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <link rel="icon" href="/favicon.ico" />
-
     <meta
       name="description"
       content="Play the Bolt Edition of Tic Tac Toe for free. This fast-paced version eliminates ties, ensuring every match is decisive and exciting. Perfect for quick fun with friends or solo play!"
     />
-
     <meta property="og:title" content="Tic Tac Toe - Bolt Edition" />
     <meta
       property="og:description"
@@ -19,7 +16,6 @@
     <meta property="og:image" content="/images/icon.png" />
     <meta property="og:url" content="https://tictactoebolt.pages.dev" />
     <meta property="og:type" content="website" />
-
     <meta name="twitter:card" content="Free Game" />
     <meta name="twitter:title" content="Tic Tac Toe - Bolt Edition" />
     <meta
@@ -27,31 +23,71 @@
       content="Play the Bolt Edition of Tic Tac Toe for free. This fast-paced version eliminates ties, ensuring every match is decisive and exciting. Perfect for quick fun with friends or solo play!"
     />
     <meta name="twitter:image" content="/images/icon.png" />
-
+    <link
+      rel="preload"
+      fetchpriority="high"
+      href="/fonts/RobotoMonoVariable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link rel="stylesheet" href="/src/styles.css" />
-
     <title>Tic Tac Toe - Bolt Edition</title>
   </head>
-  <body>
+  <body class="bg-neutral-100 text-neutral-700">
     <main>
-      <h1>Tic Tac Toe Bolt - Bolt Edition</h1>
-      <table class="font-mono">
-        <tr>
-          <td>[.]</td>
-          <td>[.]</td>
-          <td>[.]</td>
-        </tr>
-        <tr>
-          <td>[.]</td>
-          <td>[.]</td>
-          <td>[.]</td>
-        </tr>
-        <tr>
-          <td>[.]</td>
-          <td>[.]</td>
-          <td>[.]</td>
-        </tr>
-      </table>
+      <!-- <svg -->
+      <!--   class="h-23.5 w-23.5 fill-sky-500" -->
+      <!--   id="Layer_1" -->
+      <!--   data-name="Layer 1" -->
+      <!--   xmlns="http://www.w3.org/2000/svg" -->
+      <!--   viewBox="0 0 47 47" -->
+      <!-- > -->
+      <!--   <path -->
+      <!--     d="M23.5,0C10.52,0,0,10.52,0,23.5s10.52,23.5,23.5,23.5,23.5-10.52,23.5-23.5S36.48,0,23.5,0ZM23.5,39c-8.56,0-15.5-6.94-15.5-15.5s6.94-15.5,15.5-15.5,15.5,6.94,15.5,15.5-6.94,15.5-15.5,15.5Z" -->
+      <!--   /> -->
+      <!-- </svg> -->
+      <!-- <svg -->
+      <!--   id="Layer_1" -->
+      <!--   class="h-23 w-23 fill-rose-500" -->
+      <!--   data-name="Layer 1" -->
+      <!--   xmlns="http://www.w3.org/2000/svg" -->
+      <!--   viewBox="0 0 38.41 38.41" -->
+      <!-- > -->
+      <!--   <rect -->
+      <!--     x="15.74" -->
+      <!--     y="-6.52" -->
+      <!--     width="6.92" -->
+      <!--     height="51.45" -->
+      <!--     rx="3.46" -->
+      <!--     ry="3.46" -->
+      <!--     transform="translate(19.2 -7.95) rotate(45)" -->
+      <!--   /> -->
+      <!--   <rect -->
+      <!--     x="15.74" -->
+      <!--     y="-6.52" -->
+      <!--     width="6.92" -->
+      <!--     height="51.45" -->
+      <!--     rx="3.46" -->
+      <!--     ry="3.46" -->
+      <!--     transform="translate(46.36 19.2) rotate(135)" -->
+      <!--   /> -->
+      <!-- </svg> -->
+
+      <section class="flex min-h-svh w-full flex-col items-center justify-center">
+        <h2 id="message" class="mb-8 text-2xl font-bold"></h2>
+        <div class="grid h-102 w-102 grid-cols-3 grid-rows-3 gap-3.5">
+          <div class="cell flex items-center justify-center rounded-2xl bg-neutral-300/75"></div>
+          <div class="cell flex items-center justify-center rounded-2xl bg-neutral-300/75"></div>
+          <div class="cell flex items-center justify-center rounded-2xl bg-neutral-300/75"></div>
+          <div class="cell flex items-center justify-center rounded-2xl bg-neutral-300/75"></div>
+          <div class="cell flex items-center justify-center rounded-2xl bg-neutral-300/75"></div>
+          <div class="cell flex items-center justify-center rounded-2xl bg-neutral-300/75"></div>
+          <div class="cell flex items-center justify-center rounded-2xl bg-neutral-300/75"></div>
+          <div class="cell flex items-center justify-center rounded-2xl bg-neutral-300/75"></div>
+          <div class="cell flex items-center justify-center rounded-2xl bg-neutral-300/75"></div>
+        </div>
+      </section>
     </main>
     <script type="module" src="/src/main.js"></script>
   </body>

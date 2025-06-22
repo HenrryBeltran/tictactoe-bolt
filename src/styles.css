@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+@font-face {
+  font-family: RobotoMonoVariable;
+  src: url("/fonts/RobotoMonoVariable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 700;
+  font-display: swap;
+}
+
+@theme {
+  --font-roboto-mono: RobotoMonoVariable, monospace;
+}
+
+:root {
+  @apply font-roboto-mono;
+}
+
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
