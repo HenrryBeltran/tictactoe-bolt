@@ -118,6 +118,16 @@ function evaluateWhoWins() {
     if (oneWinScene.every((value) => playerValues.includes(value))) {
       gameState.playing = false;
       messageEl.innerText = `${gameState.players[gameState.currentPlayerTurn].name} wins!!!`;
+
+      // TODO: Convert to for let i = 0;
+      oneWinScene.forEach((value) => {
+        cells[value].classList.remove("bg-neutral-300/75");
+        if (gameState.currentPlayerTurn === 0) {
+          cells[value].classList.add("bg-sky-300/70");
+        } else {
+          cells[value].classList.add("bg-rose-300/70");
+        }
+      });
     }
   }
 }
@@ -129,7 +139,7 @@ function renderCell(index) {
 
 const circle = () => `
   <svg
-    class="h-23.5 w-23.5 fill-sky-500 data-[dead]:opacity-40"
+    class="w-full h-full p-px fill-sky-500 data-[dead]:opacity-40"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 47 47"
   >
@@ -140,7 +150,7 @@ const circle = () => `
 `;
 
 const cross = () => `
-  <svg class="w-23 h-23 fill-rose-500 data-[dead]:opacity-40" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38.41 38.41">
+  <svg class="w-full h-full p-px fill-rose-500 data-[dead]:opacity-40" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38.41 38.41">
     <rect x="15.74" y="-6.52" width="6.92" height="51.45" rx="3.46" ry="3.46" transform="translate(19.2 -7.95) rotate(45)" />
     <rect x="15.74" y="-6.52" width="6.92" height="51.45" rx="3.46" ry="3.46" transform="translate(46.36 19.2) rotate(135)" />
   </svg>
