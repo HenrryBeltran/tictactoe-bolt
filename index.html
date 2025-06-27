@@ -31,13 +31,43 @@
       type="font/woff2"
       crossorigin
     />
+    <link
+      rel="preload"
+      fetchpriority="high"
+      href="/fonts/Tanker-Regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link rel="stylesheet" href="/src/styles.css" />
     <title>Tic Tac Toe - Bolt Edition</title>
   </head>
   <body class="bg-neutral-100 text-neutral-700">
     <main>
-      <section class="flex min-h-svh w-full flex-col items-center justify-center">
-        <h2 id="message" class="mb-8 text-2xl font-bold"></h2>
+      <section id="home" class="flex min-h-svh w-full items-center justify-center">
+        <div>
+          <div class="mb-32 flex flex-col items-center justify-center gap-1">
+            <h1 class="font-tanker text-[20vw] leading-none font-black text-rose-500 sm:text-8xl">TIC TAC TOE</h1>
+            <span class="text-xl font-bold text-neutral-500">BOLT EDITION</span>
+          </div>
+          <div class="mx-auto flex w-fit flex-col items-center justify-center gap-4 pb-32">
+            <button id="btn-pvp" class="w-full rounded-xl bg-neutral-700 px-6 py-2 text-neutral-50 hover:bg-sky-500">
+              Player VS Player
+            </button>
+            <button id="btn-pvc" class="w-full rounded-xl bg-neutral-700 px-6 py-2 text-neutral-50 hover:bg-sky-500">
+              Player VS CPU
+            </button>
+            <button
+              id="btn-instruction"
+              class="w-full rounded-xl bg-neutral-700 px-6 py-2 text-neutral-50 hover:bg-sky-500"
+            >
+              Instructions
+            </button>
+          </div>
+        </div>
+      </section>
+      <section id="game" class="flex min-h-svh w-full flex-col items-center justify-center" hidden>
+        <h2 id="message" class="mb-8 text-2xl font-bold">Player 1 starts</h2>
         <div class="flex h-full w-full items-center justify-center px-8">
           <div
             id="table"
@@ -53,6 +83,10 @@
             <div class="cell flex items-center justify-center rounded-2xl bg-neutral-300/75 p-4"></div>
             <div class="cell flex items-center justify-center rounded-2xl bg-neutral-300/75 p-4"></div>
           </div>
+        </div>
+        <div class="mt-10 mb-6 flex gap-10 text-lg font-semibold">
+          <div>Player 1 Score: <span id="score-p1">0</span></div>
+          <div>Player 2 Score: <span id="score-p2">0</span></div>
         </div>
       </section>
     </main>

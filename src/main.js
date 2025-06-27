@@ -2,6 +2,8 @@ import { setInputListener } from "./js/input.js";
 
 const cells = document.querySelectorAll(".cell");
 const messageEl = document.querySelector("#message");
+const score1 = document.querySelector("#score-p1");
+const score2 = document.querySelector("#score-p2");
 
 const STATES = { played: 0, dead: 1, empty: 2 };
 const gameState = {
@@ -15,6 +17,8 @@ const gameState = {
     { id: 1, name: "Player 2", type: "Human" },
   ],
   winner: null,
+  player1Score: 0,
+  player2Score: 0,
 };
 const cellsState = [
   { value: null, state: STATES.empty },
@@ -40,7 +44,7 @@ const winScenarios = [
 const player1Values = [];
 const player2Values = [];
 
-function runTurn(cellIndex) {
+async function runTurn(cellIndex) {
   if (cellsState[cellIndex].state === STATES.empty) {
     gameState.playing = true;
 
@@ -55,13 +59,14 @@ function runTurn(cellIndex) {
       player2Values.push(cellIndex);
     }
 
-    messageEl.innerText = `${gameState.players[gameState.currentPlayerTurn].name} turn`;
     renderCell(cellIndex);
     killOldCell();
-    evaluateWhoWins();
+    await evaluateWhoWins();
 
     gameState.currentPlayerTurn = gameState.currentPlayerTurn === 0 ? 1 : 0; // Change turn
     gameState.turn++;
+
+    messageEl.innerText = `${gameState.players[gameState.currentPlayerTurn].name} turn`;
   }
   console.log(JSON.stringify(gameState, null, 2));
   console.log(JSON.stringify(cellsState, null, 2));
@@ -69,23 +74,9 @@ function runTurn(cellIndex) {
   console.log("2", player2Values);
 }
 
-pickWhoPlayFirstTurn();
 setInputListener(cells, runTurn);
 
 console.log(JSON.stringify(gameState, null, 2));
-
-function pickWhoPlayFirstTurn() {
-  if (gameState.gamesPlayed === 0) {
-    gameState.whoPlaysFirst = Math.floor(Math.random() * 2);
-    gameState.currentPlayerTurn = gameState.whoPlaysFirst;
-    gameState.winner = gameState.players[gameState.currentPlayerTurn].name;
-    messageEl.innerText = `${gameState.players[gameState.currentPlayerTurn].name} turn`;
-    return;
-  }
-
-  gameState.whoPlaysFirst = gameState.whoPlaysFirst === 1 ? 0 : 1;
-  gameState.currentPlayerTurn = gameState.whoPlaysFirst;
-}
 
 function killOldCell() {
   for (let i = 0; i < 9; i++) {
@@ -109,7 +100,7 @@ function killOldCell() {
   }
 }
 
-function evaluateWhoWins() {
+async function evaluateWhoWins() {
   const playerValues = gameState.currentPlayerTurn === 0 ? player1Values : player2Values;
   const sceneriosLength = winScenarios.length;
 
@@ -128,6 +119,40 @@ function evaluateWhoWins() {
           cells[value].classList.add("bg-rose-300/70");
         }
       });
+
+      for (let i = 0; i < 9; i++) {
+        cells[i].style.pointerEvents = "none";
+      }
+
+      if (gameState.currentPlayerTurn === 0) {
+        gameState.player1Score++;
+        score1.innerText = gameState.player1Score;
+      } else {
+        gameState.player2Score++;
+        score2.innerText = gameState.player2Score;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      gameState.turn = 0;
+      gameState.winner = null;
+      gameState.playing = true;
+
+      for (let i = 0; i < 9; i++) {
+        cellsState[i].value = null;
+        cellsState[i].state = STATES.empty;
+        cells[i].classList.remove("bg-rose-300/70", "bg-sky-300/70");
+        cells[i].classList.add("bg-neutral-300/75");
+        cells[i].style.pointerEvents = "auto";
+        if (cells[i].children[0]) {
+          cells[i].children[0].remove();
+        }
+      }
+
+      player1Values.length = 0;
+      player2Values.length = 0;
+
+      break;
     }
   }
 }

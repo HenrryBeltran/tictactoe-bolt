@@ -8,8 +8,17 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: Tanker;
+  src: url("../fonts/Tanker-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 @theme {
   --font-roboto-mono: RobotoMonoVariable, monospace;
+  --font-tanker: Tanker, sans-serif;
 }
 
 :root {
