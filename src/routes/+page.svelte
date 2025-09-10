@@ -1,5 +1,5 @@
 <script>
-  import Container from "../components/ui/Container.svelte";
+  import { Container } from "$lib/components/ui";
 </script>
 
 <main class="relative flex min-h-lvh items-center justify-center">

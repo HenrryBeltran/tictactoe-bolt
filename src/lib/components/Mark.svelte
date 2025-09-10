@@ -1,7 +1,7 @@
 <script lang="ts">
   interface Props {
     state: "empty" | "mark" | "dead";
-    player: "player1" | "player2" | null;
+    player: "player1" | "player2" | "computer" | null;
   }
   let { state, player }: Props = $props();
 </script>
