@@ -1,4 +1,5 @@
 import { page } from "$app/state";
+import { runComputer } from "./computer.svelte";
 
 export type BoardState = {
   cell: "empty" | "mark" | "dead";
@@ -7,10 +8,10 @@ export type BoardState = {
 }[];
 export type BoardIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
-const MARK_LIFE = 2;
-const NRO_CELLS = 9;
-const TIMER_AFTER_WIN = 3_500;
-const WINNING_COMBINATIONS = [
+export const MARK_LIFE = 2;
+export const NRO_CELLS = 9;
+export const TIMER_AFTER_WIN = 3_500;
+export const WINNING_COMBINATIONS = [
   // Rows
   [0, 1, 2],
   [3, 4, 5],
@@ -29,6 +30,7 @@ let currentTurn = $state(0);
 let whoStartedFirst = $state<"player1" | "player2" | "computer">("player1");
 let player1Stats = $state({ name: "Player 1", score: 0 });
 let player2Stats = $state({ name: "Player 2", score: 0 });
+let computerStats = $state({ name: "Computer", score: 0 });
 let boardState = $state<BoardState>([
   { cell: "empty", player: null, life: MARK_LIFE },
   { cell: "empty", player: null, life: MARK_LIFE },
@@ -83,6 +85,7 @@ export function getCanClickBoard() {
 export function playerAction(index: BoardIndex = 0) {
   return {
     placeMark: () => {
+      console.log("executing", index);
       if (gameState === "restarting") {
         return;
       }
@@ -128,6 +131,9 @@ export function playerAction(index: BoardIndex = 0) {
       const foundWinner = lookForAWinner();
       if (!foundWinner) {
         nextTurn();
+        if (page.url.pathname === "/pvc" && getCurrentPlayerTurn() === "computer") {
+          setTimeout(() => runComputer(), 200);
+        }
         return;
       }
 
@@ -149,6 +155,7 @@ export function playerAction(index: BoardIndex = 0) {
           );
           break;
         case "computer":
+          computerStats.score += 1;
           console.log("Computer scores");
           break;
       }

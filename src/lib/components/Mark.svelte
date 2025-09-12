@@ -17,7 +17,7 @@
       d="M23.5,0C10.52,0,0,10.52,0,23.5s10.52,23.5,23.5,23.5,23.5-10.52,23.5-23.5S36.48,0,23.5,0ZM23.5,39c-8.56,0-15.5-6.94-15.5-15.5s6.94-15.5,15.5-15.5,15.5,6.94,15.5,15.5-6.94,15.5-15.5,15.5Z"
     />
   </svg>
-{:else if state !== "empty" && player === "player2"}
+{:else if state !== "empty" && (player === "player2" || player === "computer")}
   <svg
     data-dead={state === "dead"}
     class="h-full w-full fill-rose-500 p-px data-[dead=true]:opacity-40"

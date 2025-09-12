@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Board } from "$lib/components";
-  import { Container, Modal } from "$lib/components/ui";
+  import { Container, Header, Modal } from "$lib/components/ui";
   import {
     getCurrentPlayerName,
     getScores,
@@ -39,40 +39,42 @@
   }
 </script>
 
-<main class="relative">
-  <h1>Player 1 vs Player 2</h1>
-  <Container>
-    <h2
-      data-player={getCurrentPlayerTurn()}
-      class="mb-4 text-center text-2xl font-bold data-[player=player1]:text-sky-400 data-[player=player2]:text-rose-500"
-    >
-      Turn of {getCurrentPlayerName()}
-    </h2>
-    <Board />
-    <div class="flex justify-between">
-      <div class="flex flex-col">
-        <span>Score {getScores().player1()}</span>
-        <span>{getPlayersName().player1()}</span>
-        <button
-          onclick={() => {
-            showEditPlayerModal = true;
-            isPlayer1OrPlayer2 = "player1";
-          }}>Edit name</button
-        >
-      </div>
-      <div class="flex flex-col">
-        <span>Score {getScores().player2()}</span>
-        <span>{getPlayersName().player2()}</span>
-        <button
-          onclick={() => {
-            showEditPlayerModal = true;
-            isPlayer1OrPlayer2 = "player2";
-          }}>Edit name</button
-        >
-      </div>
+<Header>
+  {#snippet title()}
+    <h1>Player 1 vs Player 2</h1>
+  {/snippet}
+</Header>
+<Container>
+  <h2
+    data-player={getCurrentPlayerTurn()}
+    class="mb-4 text-center text-2xl font-bold data-[player=player1]:text-sky-400 data-[player=player2]:text-rose-500"
+  >
+    Turn of {getCurrentPlayerName()}
+  </h2>
+  <Board />
+  <div class="flex justify-between">
+    <div class="flex flex-col">
+      <span>Score {getScores().player1()}</span>
+      <span>{getPlayersName().player1()}</span>
+      <button
+        onclick={() => {
+          showEditPlayerModal = true;
+          isPlayer1OrPlayer2 = "player1";
+        }}>Edit name</button
+      >
     </div>
-  </Container>
-</main>
+    <div class="flex flex-col">
+      <span>Score {getScores().player2()}</span>
+      <span>{getPlayersName().player2()}</span>
+      <button
+        onclick={() => {
+          showEditPlayerModal = true;
+          isPlayer1OrPlayer2 = "player2";
+        }}>Edit name</button
+      >
+    </div>
+  </div>
+</Container>
 
 <Modal bind:showModal={showEditPlayerModal}>
   {#snippet header()}
