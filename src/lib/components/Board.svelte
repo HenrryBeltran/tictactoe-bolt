@@ -1,11 +1,7 @@
 <script lang="ts">
   import { Mark } from "$lib/components";
-  import {
-    type BoardIndex,
-    getBoardState,
-    getCanClickBoard,
-    playerAction,
-  } from "$lib/store.svelte";
+  import { onTurnPVC } from "$lib/computer.svelte";
+  import { type BoardIndex, getBoardState, getGameState, playerAction } from "$lib/store.svelte";
 
   let board = $state<HTMLDivElement>();
 
@@ -15,11 +11,16 @@
 
   $effect(() => {
     if (board === undefined) return;
-    if (getCanClickBoard().value) {
+
+    if (getGameState() === "restarting") {
       board.addEventListener("click", boardAction);
     } else {
       board.removeEventListener("click", boardAction);
     }
+  });
+
+  $effect(() => {
+    onTurnPVC();
   });
 </script>
 
@@ -30,7 +31,12 @@
   {#each getBoardState() as cell, i}
     <button
       onclick={playerAction(i as BoardIndex).placeMark}
+      disabled={getGameState() === "restarting" || getGameState() === "cpu_thinking"}
+      aria-disabled={getGameState() === "restarting" || getGameState() === "cpu_thinking"
+        ? true
+        : null}
       class="cell flex items-center justify-center rounded-2xl bg-neutral-300/75 p-4"
+      style={`pointer-events: ${getGameState() === "restarting" || getGameState() === "cpu_thinking" ? "none" : "auto"}`}
     >
       <Mark state={cell.cell} player={cell.player} />
     </button>

@@ -7,6 +7,8 @@
     getPlayersName,
     getCurrentPlayerTurn,
     playerAction,
+    getWinner,
+    getGameState,
   } from "$lib/store.svelte";
 
   let showEditPlayerModal = $state(false);
@@ -47,9 +49,15 @@
 <Container>
   <h2
     data-player={getCurrentPlayerTurn()}
-    class="mb-4 text-center text-2xl font-bold data-[player=player1]:text-sky-400 data-[player=player2]:text-rose-500"
+    class="mb-4 text-center text-2xl font-bold data-[player=computer]:text-rose-500 data-[player=player1]:text-sky-400"
   >
-    Turn of {getCurrentPlayerName()}
+    {#if getWinner() !== null}
+      {getPlayersName().byAlias(getWinner()!)} wins!
+    {:else if getGameState() === "cpu_thinking"}
+      Turn of Computer 🧠
+    {:else}
+      Turn of {getCurrentPlayerName()}
+    {/if}
   </h2>
   <Board />
   <div class="flex justify-between">
@@ -64,8 +72,8 @@
       >
     </div>
     <div class="flex flex-col">
-      <span>Score {getScores().player2()}</span>
-      <span>{getPlayersName().player2()}</span>
+      <span>Score {getScores().computer()}</span>
+      <span>{getPlayersName().computer()}</span>
     </div>
   </div>
 </Container>

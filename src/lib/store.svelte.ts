@@ -1,5 +1,4 @@
 import { page } from "$app/state";
-import { runComputer } from "./computer.svelte";
 
 export type BoardState = {
   cell: "empty" | "mark" | "dead";
@@ -7,6 +6,7 @@ export type BoardState = {
   life: number;
 }[];
 export type BoardIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+export type ComputerDifficulty = "easy" | "medium" | "hard";
 
 export const MARK_LIFE = 2;
 export const NRO_CELLS = 9;
@@ -31,6 +31,7 @@ let whoStartedFirst = $state<"player1" | "player2" | "computer">("player1");
 let player1Stats = $state({ name: "Player 1", score: 0 });
 let player2Stats = $state({ name: "Player 2", score: 0 });
 let computerStats = $state({ name: "Computer", score: 0 });
+let computersLevel = $state<ComputerDifficulty>("medium");
 let boardState = $state<BoardState>([
   { cell: "empty", player: null, life: MARK_LIFE },
   { cell: "empty", player: null, life: MARK_LIFE },
@@ -42,10 +43,18 @@ let boardState = $state<BoardState>([
   { cell: "empty", player: null, life: MARK_LIFE },
   { cell: "empty", player: null, life: MARK_LIFE },
 ]);
-let canClickBoard = $state(false);
+let winner = $state<"player1" | "player2" | "computer" | null>(null);
 
 export function getBoardState() {
   return boardState;
+}
+
+export function getGameState() {
+  return gameState;
+}
+
+export function getWinner() {
+  return winner;
 }
 
 export function getCurrentPlayerTurn() {
@@ -67,6 +76,16 @@ export function getPlayersName() {
     player1: () => player1Stats.name,
     player2: () => player2Stats.name,
     computer: () => "Computer",
+    byAlias: (alias: "player1" | "player2" | "computer") => {
+      switch (alias) {
+        case "player1":
+          return player1Stats.name;
+        case "player2":
+          return player2Stats.name;
+        case "computer":
+          return "Computer";
+      }
+    },
   };
 }
 
@@ -74,12 +93,12 @@ export function getScores() {
   return {
     player1: () => player1Stats.score,
     player2: () => player2Stats.score,
-    computer: () => 0,
+    computer: () => computerStats.score,
   };
 }
 
-export function getCanClickBoard() {
-  return { value: canClickBoard };
+export function getComputersLevel() {
+  return computersLevel;
 }
 
 export function playerAction(index: BoardIndex = 0) {
@@ -131,15 +150,13 @@ export function playerAction(index: BoardIndex = 0) {
       const foundWinner = lookForAWinner();
       if (!foundWinner) {
         nextTurn();
-        if (page.url.pathname === "/pvc" && getCurrentPlayerTurn() === "computer") {
-          setTimeout(() => runComputer(), 200);
-        }
         return;
       }
 
       switch (currentPlayerTurn) {
         case "player1":
           player1Stats.score += 1;
+          winner = "player1";
           console.log(
             "%cPLAYER 1",
             "padding: 0.1rem 0.5rem; border-radius: 0.5rem; background: oklch(68.5% 0.169 237.323); color: #fff;",
@@ -148,6 +165,7 @@ export function playerAction(index: BoardIndex = 0) {
           break;
         case "player2":
           player2Stats.score += 1;
+          winner = "player2";
           console.log(
             "%cPLAYER 2",
             "padding: 0.1rem 0.5rem; border-radius: 0.5rem; background: oklch(64.5% 0.246 16.439); color: #fff;",
@@ -156,7 +174,12 @@ export function playerAction(index: BoardIndex = 0) {
           break;
         case "computer":
           computerStats.score += 1;
-          console.log("Computer scores");
+          winner = "computer";
+          console.log(
+            "%cCOMPUTER",
+            "padding: 0.1rem 0.5rem; border-radius: 0.5rem; background: oklch(64.5% 0.246 16.439); color: #fff;",
+            player2Stats.score,
+          );
           break;
       }
 
@@ -172,6 +195,26 @@ export function playerAction(index: BoardIndex = 0) {
         player1Stats.name = newName;
       } else if (player === "player2") {
         player2Stats.name = newName;
+      }
+    },
+    changeComputerDifficulty: (difficulty: ComputerDifficulty) => {
+      if (difficulty !== "easy" && difficulty !== "medium" && difficulty !== "hard") {
+        computersLevel = "medium";
+      } else {
+        computersLevel = difficulty;
+      }
+    },
+  };
+}
+
+export function updateGameStateOnComputerTurn() {
+  return {
+    computerStartTurn: () => (gameState = "cpu_thinking"),
+    computerEndTurn: () => {
+      if (lookForAWinner()) {
+        gameState = "restarting";
+      } else {
+        gameState = "playing";
       }
     },
   };
@@ -205,7 +248,6 @@ let timeoutId: number;
 
 function restartingGameAfterTheWinner() {
   gameState = "restarting";
-  canClickBoard = true;
   timeoutId = setTimeout(() => {
     clearBoard();
   }, TIMER_AFTER_WIN);
@@ -230,11 +272,12 @@ function clearBoard() {
   ];
   if (whoStartedFirst === "player1") {
     currentTurn = 1;
-    whoStartedFirst = "player2";
+
+    whoStartedFirst = page.url.pathname === "/pvc" ? "computer" : "player2";
   } else {
     currentTurn = 0;
     whoStartedFirst = "player1";
   }
+  winner = null;
   gameState = "idle";
-  canClickBoard = false;
 }
