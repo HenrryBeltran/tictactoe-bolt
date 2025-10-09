@@ -1,10 +1,17 @@
 <script>
   import { Container, Header } from "$lib/components/ui";
+  import { playerAction } from "$lib/store.svelte";
+
+  console.log("I'm in home");
+  playerAction().resetScores("pvp");
+  playerAction().resetScores("pvc");
+  playerAction().resetTurn();
+  playerAction().quickRestart();
 </script>
 
 <Header />
 <Container>
-  <header class="border border-red-400">
+  <header class="border-red-400">
     <h1 class="text-2xl font-bold text-neutral-900">Tic Tac Toe</h1>
     <h2 class="font-bold text-neutral-700">Bolt Edition</h2>
   </header>

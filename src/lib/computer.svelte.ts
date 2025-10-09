@@ -37,9 +37,9 @@ export function runComputer() {
 
   let tolerance = 0;
   if (getComputersLevel() === "easy") {
-    tolerance = 66;
+    tolerance = 55;
   } else if (getComputersLevel() === "medium") {
-    tolerance = 33;
+    tolerance = 30;
   } else {
     tolerance = 6;
   }

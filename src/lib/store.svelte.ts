@@ -190,6 +190,18 @@ export function playerAction(index: BoardIndex = 0) {
         cancelRestartingTimeout();
       }
     },
+    resetTurn: () => {
+      currentTurn = 0;
+    },
+    resetScores: (route: "pvp" | "pvc") => {
+      if (route === "pvp") {
+        player1Stats.score = 0;
+        player2Stats.score = 0;
+      } else {
+        player1Stats.score = 0;
+        computerStats.score = 0;
+      }
+    },
     editName: (newName: string, player: "player1" | "player2") => {
       if (player === "player1") {
         player1Stats.name = newName;

@@ -10,37 +10,33 @@
   <svg
     data-dead={state === "dead"}
     class="h-full w-full fill-sky-500 p-px data-[dead=true]:opacity-40"
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 47 47"
+    viewBox="0 0 64 64"
   >
     <path
-      d="M23.5,0C10.52,0,0,10.52,0,23.5s10.52,23.5,23.5,23.5,23.5-10.52,23.5-23.5S36.48,0,23.5,0ZM23.5,39c-8.56,0-15.5-6.94-15.5-15.5s6.94-15.5,15.5-15.5,15.5,6.94,15.5,15.5-6.94,15.5-15.5,15.5Z"
+      d="M32,16c8.82,0,16,7.18,16,16s-7.18,16-16,16-16-7.18-16-16,7.18-16,16-16M32,0C14.33,0,0,14.33,0,32s14.33,32,32,32,32-14.33,32-32S49.67,0,32,0h0Z"
     />
   </svg>
 {:else if state !== "empty" && (player === "player2" || player === "computer")}
   <svg
     data-dead={state === "dead"}
-    class="h-full w-full fill-rose-500 p-px data-[dead=true]:opacity-40"
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 38.41 38.41"
+    class="h-full w-full p-px data-[dead=true]:opacity-40"
+    viewBox="0 0 64 64"
   >
-    <rect
-      x="15.74"
-      y="-6.52"
-      width="6.92"
-      height="51.45"
-      rx="3.46"
-      ry="3.46"
-      transform="translate(19.2 -7.95) rotate(45)"
+    <line
+      x1="8"
+      y1="8"
+      x2="56"
+      y2="56"
+      class="stroke-rose-500"
+      style="fill: none; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 16px;"
     />
-    <rect
-      x="15.74"
-      y="-6.52"
-      width="6.92"
-      height="51.45"
-      rx="3.46"
-      ry="3.46"
-      transform="translate(46.36 19.2) rotate(135)"
+    <line
+      x1="56"
+      y1="8"
+      x2="8"
+      y2="56"
+      class="stroke-rose-500"
+      style="fill: none; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 16px;"
     />
   </svg>
 {:else}

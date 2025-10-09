@@ -26,7 +26,7 @@
 
 <div
   bind:this={board}
-  class="mx-auto grid aspect-square h-full w-full grid-cols-3 grid-rows-3 gap-[3.92%]"
+  class="mx-auto mt-20 grid aspect-square h-full w-full grid-cols-3 grid-rows-3 gap-[2.61%] rounded-[13%] bg-neutral-100 p-[7.83%] shadow-xl shadow-neutral-600/5"
 >
   {#each getBoardState() as cell, i}
     <button
@@ -35,7 +35,7 @@
       aria-disabled={getGameState() === "restarting" || getGameState() === "cpu_thinking"
         ? true
         : null}
-      class="cell flex items-center justify-center rounded-2xl bg-neutral-300/75 p-4"
+      class="cell flex items-center justify-center rounded-[20%] bg-neutral-300/75 p-[10%]"
       style={`pointer-events: ${getGameState() === "restarting" || getGameState() === "cpu_thinking" ? "none" : "auto"}`}
     >
       <Mark state={cell.cell} player={cell.player} />
