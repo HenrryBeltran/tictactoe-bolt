@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Board, Score } from "$lib/components";
-  import { Container, Header } from "$lib/components/ui";
+  import { Container, Navbar } from "$lib/components/ui";
   import {
     getCurrentPlayerName,
     getPlayersName,
@@ -11,7 +11,7 @@
   } from "$lib/store.svelte";
 </script>
 
-<Header>
+<Navbar>
   {#snippet title()}
     <h1
       data-player={getCurrentPlayerTurn()}
@@ -26,10 +26,10 @@
       {/if}
     </h1>
   {/snippet}
-</Header>
+</Navbar>
 <Container>
   <Board />
-  <div class="mt-6 grid grid-cols-2 gap-6">
+  <div class="mt-6 grid grid-cols-2 gap-4">
     <Score scoreOf="player1" />
     <Score scoreOf="computer" />
   </div>

@@ -1,5 +1,5 @@
 import Container from "./Container.svelte";
-import Header from "./Header.svelte";
 import Modal from "./Modal.svelte";
+import Navbar from "./Navbar.svelte";
 
-export { Container, Header, Modal };
+export { Container, Modal, Navbar };

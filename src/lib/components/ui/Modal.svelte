@@ -1,19 +1,25 @@
 <script lang="ts">
   import { type Snippet } from "svelte";
+  import type { ClassValue } from "svelte/elements";
 
   type Props = {
     showModal?: boolean;
     header?: Snippet;
     children?: Snippet;
+    className?: ClassValue;
   };
 
-  let { showModal = $bindable(), header, children }: Props = $props();
+  let { showModal = $bindable(), header, children, className }: Props = $props();
   let dialog = $state<HTMLDialogElement>();
 
   $effect(() => {
     if (showModal && dialog) dialog.showModal();
     else if (!showModal && dialog) dialog.close();
   });
+
+  export function closeModal() {
+    if (dialog !== undefined) dialog.close();
+  }
 </script>
 
 <dialog
@@ -22,19 +28,11 @@
   onclick={(e) => {
     if (e.target === dialog) dialog.close();
   }}
-  class="rounded-sm border border-purple-400"
+  class={className}
+  tabindex="-1"
 >
   <div>
     {@render header?.()}
-    <hr />
     {@render children?.()}
-    <hr />
-    <!-- svelte-ignore a11y_autofocus -->
-    <button
-      autofocus
-      onclick={() => {
-        if (dialog !== undefined) dialog.close();
-      }}>close modal</button
-    >
   </div>
 </dialog>

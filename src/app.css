@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
 @theme {
   --font-comfortaa: "Comfortaa", sans-serif;
 }

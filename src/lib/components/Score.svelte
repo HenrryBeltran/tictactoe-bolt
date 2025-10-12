@@ -1,6 +1,9 @@
 <script lang="ts">
   import { getPlayersName, getScores, playerAction } from "$lib/store.svelte";
   import { Modal } from "$lib/components/ui";
+  import type { Snippet, SvelteComponent } from "svelte";
+  import type { ClassValue } from "svelte/elements";
+  import { getColors } from "$lib/theme.svelte";
 
   type Props = {
     scoreOf: "player1" | "player2" | "computer";
@@ -8,10 +11,18 @@
 
   let { scoreOf }: Props = $props();
 
+  let modal: SvelteComponent<{
+    showModal?: boolean;
+    header?: Snippet;
+    children?: Snippet;
+    class?: ClassValue;
+  }> & { closeModal: () => void } & { $$bindings: "showModal" };
   let showEditPlayerModal = $state(false);
   let isPlayer1OrPlayer2 = $state<"player1" | "player2">("player1");
   let newName = $state("");
   let inputEl = $state<HTMLInputElement>();
+  let nameContainer = $state<HTMLDivElement>();
+  let nameEl = $state<HTMLSpanElement>();
 
   $effect(() => {
     if (inputEl === undefined) return;
@@ -51,8 +62,11 @@
 
 <div class="relative flex h-12 w-full flex-col">
   <div class="flex h-full items-center rounded-full bg-neutral-100 shadow-xl shadow-neutral-600/5">
-    <div class="@container flex-1 pr-2 pl-4">
-      <span class="text-[min(1rem,13.5cqi)] leading-none font-semibold">
+    <div bind:this={nameContainer} class="flex-1 overflow-hidden pl-4 leading-none">
+      <span
+        bind:this={nameEl}
+        class="text-[0.8125rem] leading-none font-semibold tracking-tight wrap-break-word sm:text-base"
+      >
         {#if scoreOf === "player1"}
           {getPlayersName().player1()}
         {:else if scoreOf === "player2"}
@@ -68,6 +82,7 @@
     >
       <span
         data-player={scoreOf}
+        data-color={getColors().one}
         class="leading-none font-bold text-rose-800 data-[player=player1]:text-sky-800"
       >
         {#if scoreOf === "player1"}
@@ -121,23 +136,51 @@
   {/if}
 </div>
 
-<Modal bind:showModal={showEditPlayerModal}>
-  {#snippet header()}
-    <h3>Edit name</h3>
-  {/snippet}
-  <form>
-    <!-- svelte-ignore a11y_autofocus -->
-    <input
-      bind:this={inputEl}
-      autofocus
-      type="text"
-      minlength={1}
-      maxlength={12}
-      oninput={handleInput}
-      value={isPlayer1OrPlayer2 === "player1"
-        ? getPlayersName().player1()
-        : getPlayersName().player2()}
-    />
-    <button onclick={() => updatePlayerName(isPlayer1OrPlayer2)}>Save</button>
-  </form>
+<Modal
+  bind:this={modal}
+  bind:showModal={showEditPlayerModal}
+  className="fixed top-1/3 left-1/2 max-w-md -translate-1/2 rounded-4xl shadow-2xl backdrop:bg-neutral-600/30 backdrop:backdrop-blur-lg"
+>
+  <div class="w-full p-4">
+    <h3 class="text-center text-lg leading-none font-bold tracking-tight">Edit Name</h3>
+    <h3 class="text-center text-lg leading-none font-bold tracking-tight">
+      {getColors().background}
+    </h3>
+    <form method="dialog" class="mt-4">
+      <!-- svelte-ignore a11y_autofocus -->
+      <input
+        bind:this={inputEl}
+        autofocus
+        type="text"
+        minlength={1}
+        maxlength={12}
+        oninput={handleInput}
+        value={isPlayer1OrPlayer2 === "player1"
+          ? getPlayersName().player1()
+          : getPlayersName().player2()}
+        class="rounded-full bg-neutral-300/70 px-3 py-1.5 font-semibold outline-offset-2 focus-visible:outline-2"
+        class:outline-sky-500={isPlayer1OrPlayer2 === "player1"}
+        class:outline-rose-500={isPlayer1OrPlayer2 === "player2"}
+      />
+      <div class="mt-4 grid grid-cols-2 gap-4">
+        <button
+          type="button"
+          onclick={() => modal.closeModal()}
+          class="rounded-full bg-neutral-700 py-1.5 font-bold tracking-tight text-white outline-offset-2 hover:bg-neutral-600 focus-visible:outline-2"
+          class:outline-sky-500={isPlayer1OrPlayer2 === "player1"}
+          class:outline-rose-500={isPlayer1OrPlayer2 === "player2"}>Close</button
+        >
+        <button
+          onclick={() => updatePlayerName(isPlayer1OrPlayer2)}
+          class="rounded-full py-1.5 font-bold tracking-tight text-white outline-offset-2 focus-visible:outline-2"
+          class:bg-sky-500={isPlayer1OrPlayer2 === "player1"}
+          class:hover:bg-sky-400={isPlayer1OrPlayer2 === "player1"}
+          class:outline-sky-500={isPlayer1OrPlayer2 === "player1"}
+          class:bg-rose-500={isPlayer1OrPlayer2 === "player2"}
+          class:hover:bg-rose-400={isPlayer1OrPlayer2 === "player2"}
+          class:outline-rose-400={isPlayer1OrPlayer2 === "player2"}>Save</button
+        >
+      </div>
+    </form>
+  </div>
 </Modal>

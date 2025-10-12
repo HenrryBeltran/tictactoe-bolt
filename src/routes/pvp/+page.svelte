@@ -1,15 +1,15 @@
 <script lang="ts">
   import { getWinner, getPlayersName, getGameState, playerAction } from "$lib/store.svelte";
   import { Board, Score } from "$lib/components";
-  import { Container, Header } from "$lib/components/ui";
+  import { Container, Navbar } from "$lib/components/ui";
   import { getCurrentPlayerName, getCurrentPlayerTurn } from "$lib/store.svelte";
 </script>
 
-<Header>
+<Navbar>
   {#snippet title()}
     <h1
       data-player={getCurrentPlayerTurn()}
-      class="text-center text-[min(1.5rem,8cqi)] leading-none font-bold data-[player=player1]:text-sky-400 data-[player=player2]:text-rose-500"
+      class="text-center text-[min(1.5rem,8cqi)] leading-none font-bold tracking-tighter data-[player=player1]:text-sky-400 data-[player=player2]:text-rose-500"
     >
       {#if getWinner() !== null}
         {getPlayersName().byAlias(getWinner()!)} wins!
@@ -20,14 +20,14 @@
       {/if}
     </h1>
   {/snippet}
-</Header>
+</Navbar>
 <Container>
   <Board />
-  <div class="mt-6 grid grid-cols-2 gap-6">
+  <div class="mt-6 grid grid-cols-2 gap-4">
     <Score scoreOf="player1" />
     <Score scoreOf="player2" />
   </div>
-  <div class="mt-12 flex w-full items-center justify-center">
+  <div class="mt-12 mb-8 flex w-full items-center justify-center sm:mb-0">
     <button
       onclick={() => playerAction().resetScores("pvp")}
       aria-label="reset-scores"
