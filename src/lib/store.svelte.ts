@@ -44,6 +44,7 @@ let boardState = $state<BoardState>([
   { cell: "empty", player: null, life: MARK_LIFE },
 ]);
 let winner = $state<"player1" | "player2" | "computer" | null>(null);
+let sound = $state(true);
 
 export function getBoardState() {
   return boardState;
@@ -51,6 +52,10 @@ export function getBoardState() {
 
 export function getGameState() {
   return gameState;
+}
+
+export function getThereIsSound() {
+  return sound;
 }
 
 export function getWinner() {
@@ -215,6 +220,9 @@ export function playerAction(index: BoardIndex = 0) {
       } else {
         computersLevel = difficulty;
       }
+    },
+    toggleSound: () => {
+      sound = !sound;
     },
   };
 }

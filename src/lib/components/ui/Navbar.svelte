@@ -5,6 +5,12 @@
   import { changeColorTheme, getCurrenetColorTheme, type ColorThemes } from "$lib/theme.svelte";
   import InputRadioColorTheme from "./InputRadioColorTheme.svelte";
   import type { ClassValue } from "svelte/elements";
+  import {
+    getComputersLevel,
+    getThereIsSound,
+    playerAction,
+    type ComputerDifficulty,
+  } from "$lib/store.svelte";
 
   type Props = {
     title?: Snippet;
@@ -19,11 +25,13 @@
     class?: ClassValue;
   }> & { closeModal: () => void } & { $$bindings: "showModal" };
   let showOptionsModal = $state(false);
-  let themeRadio = $state(getCurrenetColorTheme());
+
+  function onChangeCPUDifficulty(e: Event & { currentTarget: EventTarget & HTMLInputElement }) {
+    playerAction().changeComputerDifficulty(e.currentTarget.value as ComputerDifficulty);
+  }
 
   function onChangeTheme(e: Event & { currentTarget: EventTarget & HTMLInputElement }) {
-    themeRadio = e.currentTarget.value as ColorThemes;
-    changeColorTheme(themeRadio);
+    changeColorTheme(e.currentTarget.value as ColorThemes);
   }
 </script>
 
@@ -108,9 +116,9 @@
   bind:showModal={showOptionsModal}
   className="fixed top-0 left-full min-h-dvh w-[50vw] min-w-xs -translate-x-full bg-neutral-500 shadow-2xl backdrop:bg-neutral-800/30 backdrop:backdrop-blur-lg"
 >
-  <div class="relative space-y-4 p-6 text-white">
+  <div class="relative w-full space-y-4 p-6 text-white">
     <button
-      class="absolute top-0 right-0 mt-7.75 mr-[calc(var(--spacing)*11.75)] border"
+      class="absolute top-0 right-0 mt-7.75 mr-[calc(var(--spacing)*11.75)]"
       onclick={() => modal.closeModal()}
       aria-label="close-options-modal"
     >
@@ -133,48 +141,110 @@
         ></path>
       </svg>
     </button>
-    <div>
+    <div class="space-y-1.5">
       <h3>SOUND</h3>
       <div>
-        <input id="sound-input" type="checkbox" checked={true} />
-        <label for="sound-input">ON</label>
+        <input
+          id="sound-input"
+          type="checkbox"
+          checked={getThereIsSound()}
+          onchange={() => {
+            playerAction().toggleSound();
+          }}
+          hidden
+          class="peer hidden"
+        />
+        <label
+          for="sound-input"
+          class="inline-block w-18 rounded-full bg-neutral-600 px-3 py-1.5 text-center peer-checked:bg-sky-500"
+          >{getThereIsSound() ? "ON" : "OFF"}</label
+        >
       </div>
     </div>
-    <div>
+    <div class="max-w-md space-y-1.5">
       <h3>COMPUTER DIFFICULTY</h3>
-      <div>
-        <input id="easy" type="radio" name="cpu-difficulty" value="easy" />
-        <label for="easy">Easy</label>
-      </div>
-      <div>
-        <input id="medium" type="radio" name="cpu-difficulty" value="medium" checked={true} />
-        <label for="medium">Medium</label>
-      </div>
-      <div>
-        <input id="hard" type="radio" name="cpu-difficulty" value="hard" />
-        <label for="hard">Hard</label>
+      <div class="grid grid-cols-3 gap-1.5">
+        <div>
+          <input
+            id="easy"
+            type="radio"
+            name="cpu-difficulty"
+            value="easy"
+            checked={getComputersLevel() === "easy"}
+            onchange={onChangeCPUDifficulty}
+            hidden
+            class="peer hidden"
+          />
+          <label
+            for="easy"
+            class="flex items-center justify-center rounded-full bg-neutral-600 py-1.5 tracking-tight peer-checked:bg-sky-500"
+            >Easy</label
+          >
+        </div>
+        <div>
+          <input
+            id="medium"
+            type="radio"
+            name="cpu-difficulty"
+            value="medium"
+            checked={getComputersLevel() === "medium"}
+            onchange={onChangeCPUDifficulty}
+            hidden
+            class="peer hidden"
+          />
+          <label
+            for="medium"
+            class="flex items-center justify-center rounded-full bg-neutral-600 py-1.5 tracking-tight peer-checked:bg-sky-500"
+            >Medium</label
+          >
+        </div>
+        <div>
+          <input
+            id="hard"
+            type="radio"
+            name="cpu-difficulty"
+            value="hard"
+            checked={getComputersLevel() === "hard"}
+            onchange={onChangeCPUDifficulty}
+            hidden
+            class="peer hidden"
+          />
+          <label
+            for="hard"
+            class="flex items-center justify-center rounded-full bg-neutral-600 py-1.5 tracking-tight peer-checked:bg-sky-500"
+            >Hard</label
+          >
+        </div>
       </div>
     </div>
-    <div>
+    <div class="max-w-md space-y-1.5">
       <h3>COLOR THEME</h3>
-      <div>
-        <InputRadioColorTheme value="default-light" {themeRadio} {onChangeTheme}
-          >Default Light</InputRadioColorTheme
+      <div class="space-y-1.5">
+        <InputRadioColorTheme
+          value="default-light"
+          themeRadio={getCurrenetColorTheme()}
+          {onChangeTheme}>Default Light</InputRadioColorTheme
         >
-        <InputRadioColorTheme value="default-dark" {themeRadio} {onChangeTheme}
-          >Default Dark</InputRadioColorTheme
+        <InputRadioColorTheme
+          value="default-dark"
+          themeRadio={getCurrenetColorTheme()}
+          {onChangeTheme}>Default Dark</InputRadioColorTheme
         >
-        <InputRadioColorTheme value="catppuccin-frappe" {themeRadio} {onChangeTheme}
-          >Catppuccin Frappe</InputRadioColorTheme
+        <InputRadioColorTheme
+          value="catppuccin-frappe"
+          themeRadio={getCurrenetColorTheme()}
+          {onChangeTheme}>Catppuccin Frappe</InputRadioColorTheme
         >
-        <InputRadioColorTheme value="dracula" {themeRadio} {onChangeTheme}
+        <InputRadioColorTheme value="dracula" themeRadio={getCurrenetColorTheme()} {onChangeTheme}
           >Dracula</InputRadioColorTheme
         >
-        <InputRadioColorTheme value="dark-mono" {themeRadio} {onChangeTheme}
+        <InputRadioColorTheme value="dark-mono" themeRadio={getCurrenetColorTheme()} {onChangeTheme}
           >Dark Mono</InputRadioColorTheme
         >
-        <InputRadioColorTheme value="everforest" {themeRadio} {onChangeTheme}
-          >Everforest</InputRadioColorTheme
+        <InputRadioColorTheme
+          value="everforest"
+          themeRadio={getCurrenetColorTheme()}
+          {onChangeTheme}>Everforest</InputRadioColorTheme
         >
       </div>
     </div>
