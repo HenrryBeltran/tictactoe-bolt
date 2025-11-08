@@ -1,16 +1,16 @@
 <script lang="ts">
   import type { Snippet, SvelteComponent } from "svelte";
-  import { Modal } from "$lib/components/ui";
+  import { InputRadioColorTheme, Modal } from "$lib/components/ui";
   import { page } from "$app/state";
-  import { changeColorTheme, getCurrenetColorTheme, type ColorThemes } from "$lib/theme.svelte";
-  import InputRadioColorTheme from "./InputRadioColorTheme.svelte";
-  import type { ClassValue } from "svelte/elements";
   import {
-    getComputersLevel,
-    getThereIsSound,
-    playerAction,
-    type ComputerDifficulty,
-  } from "$lib/store.svelte";
+    changeColorTheme,
+    getColors,
+    getCurrenetColorTheme,
+    type ColorThemes,
+  } from "$lib/theme.svelte";
+  import type { ClassValue } from "svelte/elements";
+  import { getComputersLevel, playerAction, type ComputerDifficulty } from "$lib/store.svelte";
+  import { isSoundOn, playSoundFX, toggleSoundFX } from "$lib/sound.svelte";
 
   type Props = {
     title?: Snippet;
@@ -36,7 +36,8 @@
 </script>
 
 <nav
-  class="absolute top-6 left-1/2 h-12 w-[calc(100%-48px)] -translate-x-1/2 rounded-full bg-neutral-100 shadow-xl shadow-neutral-600/5"
+  class="absolute top-6 left-1/2 h-12 w-[calc(100%-48px)] -translate-x-1/2 rounded-full shadow-xl shadow-neutral-600/5"
+  style={`background-color: ${getColors().mantle}`}
 >
   <div class="flex h-full items-center justify-between px-5">
     {#if page.url.pathname !== "/"}
@@ -44,6 +45,10 @@
         href="/"
         class="flex w-10 items-center justify-center self-stretch"
         aria-label="go-back-link"
+        onclick={() => {
+          playSoundFX().button();
+          setTimeout(() => playSoundFX().swipeUI(), 60);
+        }}
       >
         <svg
           viewBox="0 0 24 24"
@@ -77,7 +82,11 @@
       {@render title?.()}
     </div>
     <button
-      onclick={() => (showOptionsModal = !showOptionsModal)}
+      onclick={() => {
+        showOptionsModal = !showOptionsModal;
+        playSoundFX().button();
+        setTimeout(() => playSoundFX().swipeUI(), 60);
+      }}
       aria-label="hamburger-menu"
       class="self-stretch px-2"
     >
@@ -87,24 +96,33 @@
           y1="2"
           x2="22"
           y2="2"
-          class="stroke-neutral-800"
-          style="fill: none; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 4px;"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-miterlimit="10"
+          stroke-width="4px"
+          fill="none"
         />
         <line
           x1="2"
           y1="10"
           x2="22"
           y2="10"
-          class="stroke-neutral-800"
-          style="fill: none; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 4px;"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-miterlimit="10"
+          stroke-width="4px"
+          fill="none"
         />
         <line
           x1="2"
           y1="18"
           x2="22"
           y2="18"
-          class="stroke-neutral-800"
-          style="fill: none; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 4px;"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-miterlimit="10"
+          stroke-width="4px"
+          fill="none"
         />
       </svg>
     </button>
@@ -114,12 +132,17 @@
 <Modal
   bind:this={modal}
   bind:showModal={showOptionsModal}
-  className="fixed top-0 left-full min-h-dvh w-[50vw] min-w-xs -translate-x-full bg-neutral-500 shadow-2xl backdrop:bg-neutral-800/30 backdrop:backdrop-blur-lg"
+  className="fixed top-0 left-full min-h-dvh w-[50vw] min-w-xs -translate-x-full rounded-l-3xl shadow-2xl backdrop:bg-neutral-600/30 backdrop:backdrop-blur-lg"
+  style={`background-color: ${getColors().mantle}`}
 >
-  <div class="relative w-full space-y-4 p-6 text-white">
+  <div class="relative w-full space-y-4 p-6" style={`color: ${getColors().text}`}>
     <button
-      class="absolute top-0 right-0 mt-7.75 mr-[calc(var(--spacing)*11.75)]"
-      onclick={() => modal.closeModal()}
+      class="absolute top-0 right-0 mt-7.75 mr-[calc(var(--spacing)*11.75)] outline-none"
+      onclick={() => {
+        playSoundFX().button();
+        setTimeout(() => playSoundFX().swipeUI(), 60);
+        modal.closeModal();
+      }}
       aria-label="close-options-modal"
     >
       <svg
@@ -147,17 +170,19 @@
         <input
           id="sound-input"
           type="checkbox"
-          checked={getThereIsSound()}
+          checked={isSoundOn()}
           onchange={() => {
-            playerAction().toggleSound();
+            toggleSoundFX();
+            playSoundFX().positiveAction();
           }}
           hidden
           class="peer hidden"
         />
         <label
           for="sound-input"
-          class="inline-block w-18 rounded-full bg-neutral-600 px-3 py-1.5 text-center peer-checked:bg-sky-500"
-          >{getThereIsSound() ? "ON" : "OFF"}</label
+          style={`color: ${isSoundOn() ? getColors().crust : getColors().text}; background-color: ${isSoundOn() ? getColors().primary : getColors().base};`}
+          class="inline-block w-18 rounded-full px-3 py-1.5 text-center"
+          >{isSoundOn() ? "ON" : "OFF"}</label
         >
       </div>
     </div>
@@ -172,13 +197,14 @@
             value="easy"
             checked={getComputersLevel() === "easy"}
             onchange={onChangeCPUDifficulty}
+            onclick={() => playSoundFX().positiveAction()}
             hidden
             class="peer hidden"
           />
           <label
             for="easy"
-            class="flex items-center justify-center rounded-full bg-neutral-600 py-1.5 tracking-tight peer-checked:bg-sky-500"
-            >Easy</label
+            style={`color: ${getComputersLevel() === "easy" ? getColors().crust : getColors().text}; background-color: ${getComputersLevel() === "easy" ? getColors().primary : getColors().base};`}
+            class="flex items-center justify-center rounded-full py-1.5 tracking-tight">Easy</label
           >
         </div>
         <div>
@@ -189,12 +215,14 @@
             value="medium"
             checked={getComputersLevel() === "medium"}
             onchange={onChangeCPUDifficulty}
+            onclick={() => playSoundFX().positiveAction()}
             hidden
             class="peer hidden"
           />
           <label
             for="medium"
-            class="flex items-center justify-center rounded-full bg-neutral-600 py-1.5 tracking-tight peer-checked:bg-sky-500"
+            style={`color: ${getComputersLevel() === "medium" ? getColors().crust : getColors().text}; background-color: ${getComputersLevel() === "medium" ? getColors().primary : getColors().base};`}
+            class="flex items-center justify-center rounded-full py-1.5 tracking-tight"
             >Medium</label
           >
         </div>
@@ -206,13 +234,14 @@
             value="hard"
             checked={getComputersLevel() === "hard"}
             onchange={onChangeCPUDifficulty}
+            onclick={() => playSoundFX().positiveAction()}
             hidden
             class="peer hidden"
           />
           <label
             for="hard"
-            class="flex items-center justify-center rounded-full bg-neutral-600 py-1.5 tracking-tight peer-checked:bg-sky-500"
-            >Hard</label
+            style={`color: ${getComputersLevel() === "hard" ? getColors().crust : getColors().text}; background-color: ${getComputersLevel() === "hard" ? getColors().primary : getColors().base};`}
+            class="flex items-center justify-center rounded-full py-1.5 tracking-tight">Hard</label
           >
         </div>
       </div>

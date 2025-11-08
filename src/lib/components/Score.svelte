@@ -4,6 +4,7 @@
   import type { Snippet, SvelteComponent } from "svelte";
   import type { ClassValue } from "svelte/elements";
   import { getColors } from "$lib/theme.svelte";
+  import { playSoundFX } from "$lib/sound.svelte";
 
   type Props = {
     scoreOf: "player1" | "player2" | "computer";
@@ -21,8 +22,6 @@
   let isPlayer1OrPlayer2 = $state<"player1" | "player2">("player1");
   let newName = $state("");
   let inputEl = $state<HTMLInputElement>();
-  let nameContainer = $state<HTMLDivElement>();
-  let nameEl = $state<HTMLSpanElement>();
 
   $effect(() => {
     if (inputEl === undefined) return;
@@ -61,10 +60,12 @@
 </script>
 
 <div class="relative flex h-12 w-full flex-col">
-  <div class="flex h-full items-center rounded-full bg-neutral-100 shadow-xl shadow-neutral-600/5">
-    <div bind:this={nameContainer} class="flex-1 overflow-hidden pl-4 leading-none">
+  <div
+    class="flex h-full items-center rounded-full shadow-xl shadow-neutral-600/5"
+    style={`background-color: ${getColors().mantle}`}
+  >
+    <div class="flex-1 overflow-hidden pl-4 leading-none">
       <span
-        bind:this={nameEl}
         class="text-[0.8125rem] leading-none font-semibold tracking-tight wrap-break-word sm:text-base"
       >
         {#if scoreOf === "player1"}
@@ -77,13 +78,12 @@
       </span>
     </div>
     <div
-      data-player={scoreOf}
-      class="m-2 flex h-8 min-h-8 w-12 min-w-12 items-center justify-center rounded-full bg-rose-300/75 data-[player=player1]:bg-sky-300/75"
+      class="m-2 flex h-8 min-h-8 w-12 min-w-12 items-center justify-center rounded-full"
+      style={`background-color: ${scoreOf === "player1" ? getColors().primaryLight : getColors().secondaryLight}`}
     >
       <span
-        data-player={scoreOf}
-        data-color={getColors().one}
-        class="leading-none font-bold text-rose-800 data-[player=player1]:text-sky-800"
+        class="leading-none font-bold"
+        style={`color: ${scoreOf === "player1" ? getColors().primaryDark : getColors().secondaryDark}`}
       >
         {#if scoreOf === "player1"}
           {Math.min(getScores().player1(), 999)}
@@ -100,13 +100,14 @@
       onclick={() => {
         showEditPlayerModal = true;
         isPlayer1OrPlayer2 = scoreOf;
+        playSoundFX().button();
       }}
       aria-label="edit-name"
       class="absolute -bottom-8 -left-4 flex h-12 w-12 items-center justify-center rounded-full"
     >
       <div
-        data-player={scoreOf}
-        class="flex h-8 w-8 items-center justify-center rounded-full bg-rose-500 shadow-xl shadow-neutral-600/10 data-[player=player1]:bg-sky-500"
+        class="flex h-8 w-8 items-center justify-center rounded-full shadow-xl shadow-neutral-600/10"
+        style={`background-color: ${scoreOf === "player1" ? getColors().primary : getColors().secondary}`}
       >
         <svg
           viewBox="0 0 24 24"
@@ -143,9 +144,6 @@
 >
   <div class="w-full p-4">
     <h3 class="text-center text-lg leading-none font-bold tracking-tight">Edit Name</h3>
-    <h3 class="text-center text-lg leading-none font-bold tracking-tight">
-      {getColors().background}
-    </h3>
     <form method="dialog" class="mt-4">
       <!-- svelte-ignore a11y_autofocus -->
       <input
@@ -158,27 +156,44 @@
         value={isPlayer1OrPlayer2 === "player1"
           ? getPlayersName().player1()
           : getPlayersName().player2()}
-        class="rounded-full bg-neutral-300/70 px-3 py-1.5 font-semibold outline-offset-2 focus-visible:outline-2"
-        class:outline-sky-500={isPlayer1OrPlayer2 === "player1"}
-        class:outline-rose-500={isPlayer1OrPlayer2 === "player2"}
+        class="rounded-full px-3 py-1.5 font-semibold outline-offset-2 focus-visible:outline-2"
+        style={`background-color: ${getColors().base}; outline-color: ${isPlayer1OrPlayer2 === "player1" ? getColors().primary : getColors().secondary}`}
       />
       <div class="mt-4 grid grid-cols-2 gap-4">
         <button
           type="button"
-          onclick={() => modal.closeModal()}
-          class="rounded-full bg-neutral-700 py-1.5 font-bold tracking-tight text-white outline-offset-2 hover:bg-neutral-600 focus-visible:outline-2"
-          class:outline-sky-500={isPlayer1OrPlayer2 === "player1"}
-          class:outline-rose-500={isPlayer1OrPlayer2 === "player2"}>Close</button
+          onclick={() => {
+            playSoundFX().button();
+            modal.closeModal();
+          }}
+          class="rounded-full py-1.5 font-bold tracking-tight text-white outline-offset-2 focus-visible:outline-2"
+          style={`background-color: ${getColors().negativeBtn}; outline-color: ${isPlayer1OrPlayer2 === "player1" ? getColors().primary : getColors().secondary}`}
+          onpointerover={(e) => {
+            e.currentTarget.style.backgroundColor = getColors().negativeBtnHover;
+          }}
+          onpointerleave={(e) => {
+            e.currentTarget.style.backgroundColor = getColors().negativeBtn;
+          }}>Close</button
         >
         <button
-          onclick={() => updatePlayerName(isPlayer1OrPlayer2)}
+          onclick={() => {
+            playSoundFX().positiveAction();
+            updatePlayerName(isPlayer1OrPlayer2);
+          }}
           class="rounded-full py-1.5 font-bold tracking-tight text-white outline-offset-2 focus-visible:outline-2"
-          class:bg-sky-500={isPlayer1OrPlayer2 === "player1"}
-          class:hover:bg-sky-400={isPlayer1OrPlayer2 === "player1"}
-          class:outline-sky-500={isPlayer1OrPlayer2 === "player1"}
-          class:bg-rose-500={isPlayer1OrPlayer2 === "player2"}
-          class:hover:bg-rose-400={isPlayer1OrPlayer2 === "player2"}
-          class:outline-rose-400={isPlayer1OrPlayer2 === "player2"}>Save</button
+          style={`background-color: ${isPlayer1OrPlayer2 === "player1" ? getColors().positive0Btn : getColors().positive1Btn}; outline-color: ${isPlayer1OrPlayer2 === "player1" ? getColors().primary : getColors().secondary}`}
+          onpointerover={(e) => {
+            e.currentTarget.style.backgroundColor =
+              isPlayer1OrPlayer2 === "player1"
+                ? getColors().positive0BtnHover
+                : getColors().positive1BtnHover;
+          }}
+          onpointerleave={(e) => {
+            e.currentTarget.style.backgroundColor =
+              isPlayer1OrPlayer2 === "player1"
+                ? getColors().positive0Btn
+                : getColors().positive1Btn;
+          }}>Save</button
         >
       </div>
     </form>

@@ -1,4 +1,5 @@
 import { page } from "$app/state";
+import { playSoundFX } from "./sound.svelte";
 import {
   getBoardState,
   getComputersLevel,
@@ -48,6 +49,7 @@ export function runComputer() {
     const randomMove = lookForARandomEmptyCell(boardState);
     console.log("Random move ->", randomMove, tolerance, randomNumber);
     playerAction(randomMove as BoardIndex).placeMark();
+    playSoundFX().pop();
     console.log("reading one node", count);
     count = 0;
     return;
@@ -56,6 +58,7 @@ export function runComputer() {
   const bestMove = findBestMove(boardState);
   console.log("Best move ->", bestMove, tolerance, randomNumber);
   playerAction(bestMove as BoardIndex).placeMark();
+  playSoundFX().pop();
   console.log("reading one node", count);
   count = 0;
 }

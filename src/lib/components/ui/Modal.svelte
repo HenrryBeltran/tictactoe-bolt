@@ -7,9 +7,10 @@
     header?: Snippet;
     children?: Snippet;
     className?: ClassValue;
+    style?: string;
   };
 
-  let { showModal = $bindable(), header, children, className }: Props = $props();
+  let { showModal = $bindable(), header, children, className, style }: Props = $props();
   let dialog = $state<HTMLDialogElement>();
 
   $effect(() => {
@@ -29,6 +30,7 @@
     if (e.target === dialog) dialog.close();
   }}
   class={className}
+  {style}
   tabindex="-1"
 >
   <div>

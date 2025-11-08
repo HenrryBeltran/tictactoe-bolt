@@ -44,7 +44,6 @@ let boardState = $state<BoardState>([
   { cell: "empty", player: null, life: MARK_LIFE },
 ]);
 let winner = $state<"player1" | "player2" | "computer" | null>(null);
-let sound = $state(true);
 
 export function getBoardState() {
   return boardState;
@@ -52,10 +51,6 @@ export function getBoardState() {
 
 export function getGameState() {
   return gameState;
-}
-
-export function getThereIsSound() {
-  return sound;
 }
 
 export function getWinner() {
@@ -111,13 +106,13 @@ export function playerAction(index: BoardIndex = 0) {
     placeMark: () => {
       console.log("executing", index);
       if (gameState === "restarting") {
-        return;
+        return { blocked: true };
       }
 
       const currentPlayerTurn = getCurrentPlayerTurn();
 
       if (boardState[index].cell !== "empty") {
-        return;
+        return { blocked: true };
       }
 
       if (gameState === "idle") {
@@ -155,7 +150,7 @@ export function playerAction(index: BoardIndex = 0) {
       const foundWinner = lookForAWinner();
       if (!foundWinner) {
         nextTurn();
-        return;
+        return { blocked: false };
       }
 
       switch (currentPlayerTurn) {
@@ -189,22 +184,11 @@ export function playerAction(index: BoardIndex = 0) {
       }
 
       restartingGameAfterTheWinner();
+      return { blocked: false };
     },
     quickRestart: () => {
       if (gameState === "restarting") {
         cancelRestartingTimeout();
-      }
-    },
-    resetTurn: () => {
-      currentTurn = 0;
-    },
-    resetScores: (route: "pvp" | "pvc") => {
-      if (route === "pvp") {
-        player1Stats.score = 0;
-        player2Stats.score = 0;
-      } else {
-        player1Stats.score = 0;
-        computerStats.score = 0;
       }
     },
     editName: (newName: string, player: "player1" | "player2") => {
@@ -221,8 +205,12 @@ export function playerAction(index: BoardIndex = 0) {
         computersLevel = difficulty;
       }
     },
-    toggleSound: () => {
-      sound = !sound;
+    clearGame: () => {
+      clearBoard();
+      player1Stats.score = 0;
+      player2Stats.score = 0;
+      computerStats.score = 0;
+      currentTurn = 0;
     },
   };
 }
@@ -263,7 +251,6 @@ function lookForAWinner() {
   return false;
 }
 
-/// TODO: Cancel the wating if you touch the board
 let timeoutId: number;
 
 function restartingGameAfterTheWinner() {

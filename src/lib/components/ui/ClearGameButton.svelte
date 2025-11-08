@@ -1,0 +1,42 @@
+<script>
+  import { playSoundFX } from "$lib/sound.svelte";
+  import { playerAction } from "$lib/store.svelte";
+  import { getColors } from "$lib/theme.svelte";
+</script>
+
+<button
+  onclick={() => {
+    playerAction().clearGame();
+    playSoundFX().positiveAction();
+  }}
+  aria-label="reset-scores"
+  class="flex h-12 w-12 items-center justify-center rounded-[1.25rem]"
+  style={`color: ${getColors().subtext0}`}
+  onpointerover={(e) => {
+    e.currentTarget.style.color = getColors().subtext1;
+    e.currentTarget.style.backgroundColor = getColors().surface0;
+  }}
+  onpointerleave={(e) => {
+    e.currentTarget.style.color = getColors().subtext0;
+    e.currentTarget.style.backgroundColor = "transparent";
+  }}
+>
+  <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" class="h-6 w-6">
+    <path
+      d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C15.0413 2 17.7655 3.35767 19.5996 5.5"
+      stroke="currentColor"
+      stroke-width={4}
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      style="vector-effect: non-scaling-stroke;"
+    />
+    <path
+      d="M20 2.5V6H16.5"
+      stroke="currentColor"
+      stroke-width={4}
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      style="vector-effect: non-scaling-stroke;"
+    />
+  </svg>
+</button>

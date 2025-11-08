@@ -27,5 +27,8 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check ."
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"motion": "^12.23.24"
+	}
 }
