@@ -26,7 +26,7 @@ export function playSoundFX() {
 
 function pop() {
   if (sound === false) return;
-  const sfx = new Audio("/sound/pop_fix.mp3");
+  const sfx = new Audio("/sound/pop.mp3");
   sfx.play();
 }
 
