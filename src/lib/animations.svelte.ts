@@ -1,11 +1,33 @@
-import { animate, stagger } from "motion";
+import { animate, stagger, type AnimationPlaybackControlsWithThen } from "motion";
 import { playSoundFX } from "./sound.svelte";
+import { getWinner } from "./store.svelte";
+import { getColors } from "./theme.svelte";
 
-export function winnigAnimation(
-  marks: NodeListOf<SVGElement>,
-  winner: "player1" | "player2" | "computer",
-) {
-  animate([
+let wJumping: AnimationPlaybackControlsWithThen;
+let wBlending: AnimationPlaybackControlsWithThen;
+
+export function cancelWinningAnimation() {
+  wJumping?.cancel();
+  wBlending?.cancel();
+}
+
+export function winnigAnimation() {
+  const winner = getWinner();
+  if (winner === null) return;
+
+  const marks = document.querySelectorAll(
+    `[data-player=${winner}][data-type="mark"]`,
+  ) as NodeListOf<SVGElement>;
+
+  const num1 = marks[0].getAttribute("data-nro");
+  const num2 = marks[1].getAttribute("data-nro");
+  const num3 = marks[2].getAttribute("data-nro");
+
+  const cell1 = document.querySelector(`.cell[data-nro="${num1}"]`);
+  const cell2 = document.querySelector(`.cell[data-nro="${num2}"]`);
+  const cell3 = document.querySelector(`.cell[data-nro="${num3}"]`);
+
+  wJumping = animate([
     [
       marks,
       { scale: [1, 1.3, 1], y: [0, "-10%", 0] },
@@ -22,6 +44,17 @@ export function winnigAnimation(
     ],
   ]);
 
+  wBlending = animate(
+    [cell1, cell2, cell3],
+    {
+      backgroundColor: [
+        getColors().base,
+        winner === "player1" ? getColors().primaryLight : getColors().secondaryLight,
+      ],
+    },
+    { ease: "easeOut", duration: 0.6, delay: stagger(0.05, { startDelay: 0.62 }) },
+  );
+
   // Play Sound Effect
   setTimeout(() => playSoundFX().winningNote1(), 100);
   setTimeout(() => playSoundFX().winningNote2(), 300);
@@ -34,14 +67,10 @@ export function winnigAnimation(
 }
 
 export function deniedPlayingShakeAnimation(node: HTMLElement) {
-  // animate(node, {}, { type: "spring", stiffness: 1000, damping: 30, mass: 1 });
   animate(
     node,
     { x: [0, -5, 5, -5, 5, 3, -3, 0], y: [0, 2, -2, -3, 3, -1, 1, 0] },
-    {
-      duration: 0.4, // Total duration in seconds (keep it short for a quick shake)
-      ease: "easeInOut", // Smooth easing
-    },
+    { duration: 0.38, ease: "easeInOut" },
   );
 }
 

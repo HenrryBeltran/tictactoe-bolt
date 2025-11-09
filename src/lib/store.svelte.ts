@@ -1,4 +1,5 @@
 import { page } from "$app/state";
+import { cancelWinningAnimation } from "./animations.svelte";
 
 export type BoardState = {
   cell: "empty" | "mark" | "dead";
@@ -189,6 +190,7 @@ export function playerAction(index: BoardIndex = 0) {
     quickRestart: () => {
       if (gameState === "restarting") {
         cancelRestartingTimeout();
+        cancelWinningAnimation();
       }
     },
     editName: (newName: string, player: "player1" | "player2") => {
@@ -210,7 +212,7 @@ export function playerAction(index: BoardIndex = 0) {
       player1Stats.score = 0;
       player2Stats.score = 0;
       computerStats.score = 0;
-      currentTurn = 0;
+      restartTurn();
     },
   };
 }
@@ -277,6 +279,12 @@ function clearBoard() {
     { cell: "empty", player: null, life: MARK_LIFE },
     { cell: "empty", player: null, life: MARK_LIFE },
   ];
+  restartTurn();
+  winner = null;
+  gameState = "idle";
+}
+
+function restartTurn() {
   if (whoStartedFirst === "player1") {
     currentTurn = 1;
 
@@ -285,6 +293,4 @@ function clearBoard() {
     currentTurn = 0;
     whoStartedFirst = "player1";
   }
-  winner = null;
-  gameState = "idle";
 }

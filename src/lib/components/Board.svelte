@@ -61,11 +61,7 @@
   $effect(() => {
     const winner = getWinner();
     if (winner !== null) {
-      const marks = document.querySelectorAll(
-        `[data-player=${winner}][data-type="mark"]`,
-      ) as NodeListOf<SVGElement>;
-      console.log(marks);
-      winnigAnimation(marks, winner);
+      winnigAnimation();
     }
   });
 </script>
@@ -86,9 +82,7 @@
       class="cell flex items-center justify-center rounded-[20%] p-[10%]"
       style={`pointer-events: ${getGameState() === "restarting" || getGameState() === "cpu_thinking" ? "none" : "auto"}; background-color: ${getColors().base}`}
     >
-      <!-- <div bind:this={marks[i]}> -->
       <Mark markState={cell.cell} player={cell.player} nro={i as BoardIndex} />
-      <!-- </div> -->
     </button>
   {/each}
 </div>
