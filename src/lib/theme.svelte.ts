@@ -1,18 +1,20 @@
+import { LocalStorage } from "./localState.svelte";
+
 export type ColorThemes =
   | "default-light"
   | "default-dark"
-  | "catppuccin-frappe"
+  | "catppuccin-macchiato"
   | "dracula"
   | "dark-mono"
   | "everforest";
 
 export type Palette = {
   primary: string;
-  primaryLight: string;
-  primaryDark: string;
+  primaryBack: string;
+  primaryFront: string;
   secondary: string;
-  secondaryLight: string;
-  secondaryDark: string;
+  secondaryBack: string;
+  secondaryFront: string;
   positive0Btn: string;
   positive0BtnHover: string;
   positive1Btn: string;
@@ -24,87 +26,213 @@ export type Palette = {
   subtext0: string;
   surface0: string;
   base: string;
-  baseHover: string;
   mantle: string;
   crust: string;
+  contrast: "low" | "normal";
 };
 
-const colorThemes = new Map<ColorThemes, Palette>();
+export type Themes = {
+  "default-light": Palette;
+  "default-dark": Palette;
+  "catppuccin-macchiato": Palette;
+  dracula: Palette;
+  "dark-mono": Palette;
+  everforest: Palette;
+};
 
-colorThemes.set("default-light", {
-  primary: "oklch(68.5% 0.169 237.323)", // sky 500
-  primaryLight: "oklch(82.8% 0.111 230.318)", // sky 300
-  primaryDark: "oklch(44.3% 0.11 240.79)", // sky 800
+const colorThemes: Themes = {
+  "default-light": {
+    primary: "oklch(68.5% 0.169 237.323)", // sky 500
+    primaryBack: "oklch(82.8% 0.111 230.318)", // sky 300
+    primaryFront: "oklch(44.3% 0.11 240.79)", // sky 800
 
-  secondary: "oklch(64.5% 0.246 16.439)", // rose 500
-  secondaryLight: "oklch(81% 0.117 11.638)", // rose 300
-  secondaryDark: "oklch(45.5% 0.188 13.697)", // rose 800
+    secondary: "oklch(64.5% 0.246 16.439)", // rose 500
+    secondaryBack: "oklch(81% 0.117 11.638)", // rose 300
+    secondaryFront: "oklch(45.5% 0.188 13.697)", // rose 800
 
-  positive0Btn: "oklch(68.5% 0.169 237.323)", // sky 500
-  positive0BtnHover: "oklch(74.6% 0.16 232.661)", // sky 400
-  positive1Btn: "oklch(64.5% 0.246 16.439)", // rose 500
-  positive1BtnHover: "oklch(71.2% 0.194 13.428)", // rose 400
-  negativeBtn: "oklch(26.9% 0 0)", // neutral 700
-  negativeBtnHover: "oklch(43.9% 0 0)", // neutral 600
+    positive0Btn: "oklch(68.5% 0.169 237.323)", // sky 500
+    positive0BtnHover: "oklch(74.6% 0.16 232.661)", // sky 400
+    positive1Btn: "oklch(64.5% 0.246 16.439)", // rose 500
+    positive1BtnHover: "oklch(71.2% 0.194 13.428)", // rose 400
+    negativeBtn: "oklch(26.9% 0 0)", // neutral 700
+    negativeBtnHover: "oklch(43.9% 0 0)", // neutral 600
 
-  text: "oklch(26.9% 0 0)", // neutral 800
-  subtext1: "oklch(55.6% 0 0)", // neutral 500
-  subtext0: "oklch(70.8% 0 0)", // neutral 400
+    text: "oklch(26.9% 0 0)", // neutral 800
+    subtext1: "oklch(55.6% 0 0)", // neutral 500
+    subtext0: "oklch(70.8% 0 0)", // neutral 400
 
-  surface0: "color-mix(in oklab, oklch(70.8% 0 0) 40%, transparent)", // neutral 400 40%
+    surface0: "color-mix(in oklab, oklch(70.8% 0 0) 40%, transparent)", // neutral 400 40%
 
-  base: "color-mix(in oklab, oklch(87% 0 0) 80%, transparent)", // neutral 300 80%
-  baseHover: "color-mix(in oklab, oklch(87% 0 0) 100%, transparent)", // neutral 300 100%
+    base: "color-mix(in oklab, oklch(87% 0 0) 80%, transparent)", // neutral 300 80%
 
-  mantle: "oklch(97% 0 0)", // neutral 100
+    mantle: "oklch(97% 0 0)", // neutral 100
 
-  crust: "#ffffff", // white
-});
+    crust: "#ffffff", // white
 
-colorThemes.set("default-dark", {
-  primary: "oklch(68.5% 0.169 237.323)", // sky 500
-  primaryLight: "color-mix(in oklab, oklch(82.8% 0.111 230.318) 75%, transparent)", // sky 300 75%
-  primaryDark: "oklch(44.3% 0.11 240.79)", // sky 800
+    contrast: "normal",
+  },
+  "default-dark": {
+    primary: "oklch(68.5% 0.169 237.323)", // sky 500
+    primaryBack: "color-mix(in oklab, oklch(39.1% 0.09 240.876) 90%, transparent)", // sky 900 90%
+    primaryFront: "oklch(90.1% 0.058 230.902)", // sky 200
 
-  secondary: "oklch(64.5% 0.246 16.439)", // rose 500
-  secondaryLight: "color-mix(in oklab, oklch(81% 0.117 11.638) 75%, transparent)", // rose 300 75%
-  secondaryDark: "oklch(45.5% 0.188 13.697)", // rose 800
+    secondary: "oklch(64.5% 0.246 16.439)", // rose 500
+    secondaryBack: "color-mix(in oklab, oklch(41% 0.159 10.272) 80%, transparent)", // rose 900 70%
+    secondaryFront: "oklch(89.2% 0.058 10.001)", // rose 200
 
-  positive0Btn: "oklch(68.5% 0.169 237.323)", // sky 500
-  positive0BtnHover: "oklch(74.6% 0.16 232.661)", // sky 400
-  positive1Btn: "oklch(64.5% 0.246 16.439)", // rose 500
-  positive1BtnHover: "oklch(71.2% 0.194 13.428)", // rose 400
-  negativeBtn: "oklch(26.9% 0 0)", // neutral 700
-  negativeBtnHover: "oklch(43.9% 0 0)", // neutral 600
+    positive0Btn: "oklch(68.5% 0.169 237.323)", // sky 500
+    positive0BtnHover: "oklch(74.6% 0.16 232.661)", // sky 400
+    positive1Btn: "oklch(64.5% 0.246 16.439)", // rose 500
+    positive1BtnHover: "oklch(71.2% 0.194 13.428)", // rose 400
+    negativeBtn: "oklch(43.9% 0 0)", // neutral 600
+    negativeBtnHover: "oklch(55.6% 0 0)", // neutral 500
 
-  text: "oklch(97% 0 0)", // neutral 100
-  subtext1: "oklch(87% 0 0)", // neutral 300
-  subtext0: "oklch(92.2% 0 0)", // neutral 200
+    text: "oklch(97% 0 0)", // neutral 100
+    subtext1: "oklch(87% 0 0)", // neutral 300
+    subtext0: "oklch(92.2% 0 0)", // neutral 200
 
-  surface0: "color-mix(in oklab, oklch(43.9% 0 0) 40%, transparent)", // neutral 600 40%
+    surface0: "color-mix(in oklab, oklch(43.9% 0 0) 60%, transparent)", // neutral 600 60%
 
-  base: "color-mix(in oklab, oklch(37.1% 0 0) 80%, transparent)", // neutral 700 80%
-  baseHover: "color-mix(in oklab, oklch(37.1% 0 0) 100%, transparent)", // neutral 700 100%
+    base: "oklch(26.9% 0 0)", // neutral 800
 
-  mantle: "oklch(20.5% 0 0)", // neutral 900
+    mantle: "oklch(20.5% 0 0)", // neutral 900
 
-  crust: "#000000", // black
-});
+    crust: "#000000", // black
 
-colorThemes.set("catppuccin-frappe", {} as Palette);
+    contrast: "normal",
+  },
+  "catppuccin-macchiato": {
+    primary: "rgb(198, 160, 246)", // mauve
+    primaryBack: "hsl(262deg, 44%, 42%, 90%)", // mauve dark 90%
+    primaryFront: "hsl(272deg, 88%, 89%)", // mauve light
 
-let currentColorTheme = $state<ColorThemes>("default-light");
-let colors = $state<Palette>(colorThemes.get(currentColorTheme)!);
+    secondary: "rgb(245, 169, 127)", // peach
+    secondaryBack: "hsl(18deg, 52%, 48%, 86%)", // peach dark 90%
+    secondaryFront: "hsl(25deg, 89%, 92%)", // peach light
+
+    positive0Btn: "hsl(265deg, 80%, 70%)", // mauve darker
+    positive0BtnHover: "rgb(198, 160, 246)", // mauve
+    positive1Btn: "hsl(19deg, 81%, 64%)", // peach darker
+    positive1BtnHover: "rgb(245, 169, 127)", // peach
+    negativeBtn: "hsl(231deg, 16%, 34%)", // surface1
+    negativeBtnHover: "hsl(230deg, 14%, 41%)", // surface2
+
+    text: "rgb(202, 211, 245)", // text
+    subtext1: "rgb(184, 192, 224)", // subtext1
+    subtext0: "rgb(165, 173, 203)", // surface0
+
+    surface0: "hsl(230deg, 19%, 26%)", // surface0
+
+    base: "hsl(232deg, 22%, 20%)", // base (modify)
+
+    mantle: "hsl(233deg, 23%, 15%)", // mantle
+
+    crust: "hsl(236deg, 23%, 12%)", // crust
+
+    contrast: "low",
+  },
+  "dark-mono": {
+    primary: "oklch(70.8% 0 0)", // neutral 400
+    primaryBack: "oklch(37.1% 0 0)", // neutral 700
+    primaryFront: "oklch(87% 0 0)", // neutral 300
+
+    secondary: "oklch(70.8% 0 0)", // neutral 400
+    secondaryBack: "oklch(37.1% 0 0)", // neutral 700
+    secondaryFront: "oklch(87% 0 0)", // neutral 300
+
+    positive0Btn: "oklch(55.6% 0 0)", // neutral 500
+    positive0BtnHover: "oklch(70.8% 0 0)", // neutral 400
+    positive1Btn: "oklch(55.6% 0 0)", // neutral 500
+    positive1BtnHover: "oklch(70.8% 0 0)", // neutral 400
+    negativeBtn: "color-mix(in oklab, oklch(37.1% 0 0) 75%, transparent)", // neutral 700 75%
+    negativeBtnHover: "color-mix(in oklab, oklch(43.9% 0 0) 90%, transparent)", // neutral 600 90%
+
+    text: "oklch(97% 0 0)", // neutral 100
+    subtext1: "oklch(87% 0 0)", // neutral 300
+    subtext0: "oklch(92.2% 0 0)", // neutral 200
+
+    surface0: "color-mix(in oklab, oklch(43.9% 0 0) 60%, transparent)", // neutral 600 60%
+
+    base: "oklch(26.9% 0 0)", // neutral 800
+
+    mantle: "oklch(20.5% 0 0)", // neutral 900
+
+    crust: "#000000", // black
+
+    contrast: "low",
+  },
+  dracula: {
+    primary: "hsl(326deg, 100%, 74%)", // pink
+    primaryBack: "color-mix(in oklab, oklch(82.8% 0.111 230.318) 75%, transparent)", // sky 300 75%
+    primaryFront: "oklch(44.3% 0.11 240.79)", // sky 800
+
+    secondary: "hsl(135deg, 94%, 65%)", // green
+    secondaryBack: "color-mix(in oklab, oklch(81% 0.117 11.638) 75%, transparent)", // rose 300 75%
+    secondaryFront: "oklch(45.5% 0.188 13.697)", // rose 800
+
+    positive0Btn: "oklch(68.5% 0.169 237.323)", // sky 500
+    positive0BtnHover: "oklch(74.6% 0.16 232.661)", // sky 400
+    positive1Btn: "oklch(64.5% 0.246 16.439)", // rose 500
+    positive1BtnHover: "oklch(71.2% 0.194 13.428)", // rose 400
+    negativeBtn: "hsl(225deg, 27%, 51%, 0%)", // neutral 700
+    negativeBtnHover: "hsl(225deg, 27%, 51%, 0%)", // neutral 600
+
+    text: "hsl(60deg, 30%, 96%)", // foreground
+    subtext1: "hsl(225deg, 29%, 62%)", // comment (modify - lighter)
+    subtext0: "hsl(225deg, 27%, 51%)", // comment (modify - light)
+
+    surface0: "hsl(232deg, 18%, 29%)", // selection (modify)
+
+    base: "hsl(231deg, 15%, 18%)", // background
+
+    mantle: "hsl(230deg, 16%, 12%)", // neutral 900
+
+    crust: "hsl(232deg, 14%, 31%)", // selection
+
+    contrast: "low",
+  },
+  everforest: {
+    primary: "oklch(68.5% 0.169 237.323)", // sky 500
+    primaryBack: "color-mix(in oklab, oklch(82.8% 0.111 230.318) 75%, transparent)", // sky 300 75%
+    primaryFront: "oklch(44.3% 0.11 240.79)", // sky 800
+
+    secondary: "oklch(64.5% 0.246 16.439)", // rose 500
+    secondaryBack: "color-mix(in oklab, oklch(81% 0.117 11.638) 75%, transparent)", // rose 300 75%
+    secondaryFront: "oklch(45.5% 0.188 13.697)", // rose 800
+
+    positive0Btn: "oklch(68.5% 0.169 237.323)", // sky 500
+    positive0BtnHover: "oklch(74.6% 0.16 232.661)", // sky 400
+    positive1Btn: "oklch(64.5% 0.246 16.439)", // rose 500
+    positive1BtnHover: "oklch(71.2% 0.194 13.428)", // rose 400
+    negativeBtn: "oklch(26.9% 0 0)", // neutral 700
+    negativeBtnHover: "oklch(43.9% 0 0)", // neutral 600
+
+    text: "oklch(97% 0 0)", // neutral 100
+    subtext1: "oklch(87% 0 0)", // neutral 300
+    subtext0: "oklch(92.2% 0 0)", // neutral 200
+
+    surface0: "color-mix(in oklab, oklch(43.9% 0 0) 40%, transparent)", // neutral 600 40%
+
+    base: "oklch(26.9% 0 0)", // neutral 800
+
+    mantle: "oklch(20.5% 0 0)", // neutral 900
+
+    crust: "#000000", // black
+
+    contrast: "normal",
+  },
+};
+
+let currentColorTheme = new LocalStorage<ColorThemes>("theme", "default-light");
 
 export function getCurrenetColorTheme() {
-  return currentColorTheme;
+  return currentColorTheme.current ?? "default-light";
 }
 
-export function getColors() {
-  return colors;
+export function getColors(): Palette {
+  return colorThemes[currentColorTheme.current as ColorThemes] ?? colorThemes["default-light"];
 }
 
 export function changeColorTheme(theme: ColorThemes) {
-  currentColorTheme = theme;
-  colors = colorThemes.get(theme) ?? colors;
+  currentColorTheme.current = theme;
 }

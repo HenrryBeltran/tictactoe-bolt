@@ -181,7 +181,7 @@
         <label
           for="sound-input"
           style={`color: ${isSoundOn() ? getColors().crust : getColors().text}; background-color: ${isSoundOn() ? getColors().primary : getColors().base};`}
-          class="inline-block w-18 rounded-full px-3 py-1.5 text-center"
+          class="inline-block w-18 rounded-full px-3 py-1.5 text-center font-semibold"
           >{isSoundOn() ? "ON" : "OFF"}</label
         >
       </div>
@@ -204,7 +204,8 @@
           <label
             for="easy"
             style={`color: ${getComputersLevel() === "easy" ? getColors().crust : getColors().text}; background-color: ${getComputersLevel() === "easy" ? getColors().primary : getColors().base};`}
-            class="flex items-center justify-center rounded-full py-1.5 tracking-tight">Easy</label
+            class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
+            >Easy</label
           >
         </div>
         <div>
@@ -222,7 +223,7 @@
           <label
             for="medium"
             style={`color: ${getComputersLevel() === "medium" ? getColors().crust : getColors().text}; background-color: ${getComputersLevel() === "medium" ? getColors().primary : getColors().base};`}
-            class="flex items-center justify-center rounded-full py-1.5 tracking-tight"
+            class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
             >Medium</label
           >
         </div>
@@ -241,7 +242,8 @@
           <label
             for="hard"
             style={`color: ${getComputersLevel() === "hard" ? getColors().crust : getColors().text}; background-color: ${getComputersLevel() === "hard" ? getColors().primary : getColors().base};`}
-            class="flex items-center justify-center rounded-full py-1.5 tracking-tight">Hard</label
+            class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
+            >Hard</label
           >
         </div>
       </div>
@@ -260,9 +262,9 @@
           {onChangeTheme}>Default Dark</InputRadioColorTheme
         >
         <InputRadioColorTheme
-          value="catppuccin-frappe"
+          value="catppuccin-macchiato"
           themeRadio={getCurrenetColorTheme()}
-          {onChangeTheme}>Catppuccin Frappe</InputRadioColorTheme
+          {onChangeTheme}>Catppuccin Macchiato</InputRadioColorTheme
         >
         <InputRadioColorTheme value="dracula" themeRadio={getCurrenetColorTheme()} {onChangeTheme}
           >Dracula</InputRadioColorTheme

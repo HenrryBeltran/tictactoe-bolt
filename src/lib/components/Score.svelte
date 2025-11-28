@@ -79,11 +79,11 @@
     </div>
     <div
       class="m-2 flex h-8 min-h-8 w-12 min-w-12 items-center justify-center rounded-full"
-      style={`background-color: ${scoreOf === "player1" ? getColors().primaryLight : getColors().secondaryLight}`}
+      style={`background-color: ${scoreOf === "player1" ? getColors().primaryBack : getColors().secondaryBack}`}
     >
       <span
         class="leading-none font-bold"
-        style={`color: ${scoreOf === "player1" ? getColors().primaryDark : getColors().secondaryDark}`}
+        style={`color: ${scoreOf === "player1" ? getColors().primaryFront : getColors().secondaryFront}`}
       >
         {#if scoreOf === "player1"}
           {Math.min(getScores().player1(), 999)}
@@ -115,6 +115,7 @@
           height="100%"
           class="mb-px h-5 w-5 text-white"
           fill="none"
+          style={`color: ${getColors().contrast === "low" ? getColors().mantle : getColors().text}`}
         >
           <path
             d="M16.4249 4.60509L17.4149 3.6151C18.2351 2.79497 19.5648 2.79497 20.3849 3.6151C21.205 4.43524 21.205 5.76493 20.3849 6.58507L19.3949 7.57506M16.4249 4.60509L9.76558 11.2644C9.25807 11.772 8.89804 12.4078 8.72397 13.1041L8 16L10.8959 15.276C11.5922 15.102 12.228 14.7419 12.7356 14.2344L19.3949 7.57506M16.4249 4.60509L19.3949 7.57506"
@@ -141,9 +142,15 @@
   bind:this={modal}
   bind:showModal={showEditPlayerModal}
   className="fixed top-1/3 left-1/2 max-w-md -translate-1/2 rounded-4xl shadow-2xl backdrop:bg-neutral-600/30 backdrop:backdrop-blur-lg"
+  style={`background-color: ${getColors().mantle}`}
 >
   <div class="w-full p-4">
-    <h3 class="text-center text-lg leading-none font-bold tracking-tight">Edit Name</h3>
+    <h3
+      class="text-center text-lg leading-none font-bold tracking-tight"
+      style={`color: ${getColors().text}`}
+    >
+      Edit Name
+    </h3>
     <form method="dialog" class="mt-4">
       <!-- svelte-ignore a11y_autofocus -->
       <input
@@ -157,7 +164,7 @@
           ? getPlayersName().player1()
           : getPlayersName().player2()}
         class="rounded-full px-3 py-1.5 font-semibold outline-offset-2 focus-visible:outline-2"
-        style={`background-color: ${getColors().base}; outline-color: ${isPlayer1OrPlayer2 === "player1" ? getColors().primary : getColors().secondary}`}
+        style={`background-color: ${getColors().base}; color: ${getColors().text}; outline-color: ${isPlayer1OrPlayer2 === "player1" ? getColors().primary : getColors().secondary}`}
       />
       <div class="mt-4 grid grid-cols-2 gap-4">
         <button
@@ -166,8 +173,8 @@
             playSoundFX().button();
             modal.closeModal();
           }}
-          class="rounded-full py-1.5 font-bold tracking-tight text-white outline-offset-2 focus-visible:outline-2"
-          style={`background-color: ${getColors().negativeBtn}; outline-color: ${isPlayer1OrPlayer2 === "player1" ? getColors().primary : getColors().secondary}`}
+          class="rounded-full py-1.5 font-bold tracking-tight outline-offset-2 focus-visible:outline-2"
+          style={`background-color: ${getColors().negativeBtn}; color: ${getColors().text}; outline-color: ${isPlayer1OrPlayer2 === "player1" ? getColors().primary : getColors().secondary}`}
           onpointerover={(e) => {
             e.currentTarget.style.backgroundColor = getColors().negativeBtnHover;
           }}
