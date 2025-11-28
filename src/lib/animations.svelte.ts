@@ -53,7 +53,7 @@ export function winnigAnimation() {
           winner === "player1" ? getColors().primaryBack : getColors().secondaryBack,
         ],
       },
-      { ease: "easeOut", duration: 2.6, delay: stagger(0.05, { startDelay: 0.62 }) },
+      { ease: "easeOut", duration: 0.6, delay: stagger(0.05, { startDelay: 0.62 }) },
     );
   });
 
