@@ -1,61 +1,60 @@
 import { animate, stagger, type AnimationPlaybackControlsWithThen } from "motion";
 import { playSoundFX } from "./sound.svelte";
-import { getWinner } from "./store.svelte";
+import { getGameState, getWinner } from "./store.svelte";
 import { getColors } from "./theme.svelte";
 
 let wJumping: AnimationPlaybackControlsWithThen;
 let wBlending: AnimationPlaybackControlsWithThen;
 
 export function cancelWinningAnimation() {
-  wJumping?.cancel();
-  wBlending?.cancel();
+  if (wJumping) wJumping.cancel();
+  if (wBlending) wBlending.cancel();
 }
 
-export function winnigAnimation() {
+export function winningAnimation() {
   const winner = getWinner();
   if (winner === null) return;
+  if (getGameState() !== "restarting") return;
 
-  $effect(() => {
-    const marks = document.querySelectorAll(
-      `[data-player=${winner}][data-type="mark"]`,
-    ) as NodeListOf<SVGElement>;
+  const marks = document.querySelectorAll(
+    `[data-player=${winner}][data-type="mark"]`,
+  ) as NodeListOf<SVGElement>;
 
-    const num1 = marks[0].getAttribute("data-nro");
-    const num2 = marks[1].getAttribute("data-nro");
-    const num3 = marks[2].getAttribute("data-nro");
+  const num1 = marks[0].getAttribute("data-nro");
+  const num2 = marks[1].getAttribute("data-nro");
+  const num3 = marks[2].getAttribute("data-nro");
 
-    const cell1 = document.querySelector(`.cell[data-nro="${num1}"]`);
-    const cell2 = document.querySelector(`.cell[data-nro="${num2}"]`);
-    const cell3 = document.querySelector(`.cell[data-nro="${num3}"]`);
+  const cell1 = document.querySelector(`.cell[data-nro="${num1}"]`);
+  const cell2 = document.querySelector(`.cell[data-nro="${num2}"]`);
+  const cell3 = document.querySelector(`.cell[data-nro="${num3}"]`);
 
-    wJumping = animate([
-      [
-        marks,
-        { scale: [1, 1.3, 1], y: [0, "-10%", 0] },
-        {
-          ease: "circIn",
-          duration: 0.6,
-          delay: stagger(0.2),
-        },
-      ],
-      [
-        marks,
-        { scale: [1, 0.75, 1] },
-        { ease: "circOut", duration: 0.22, delay: stagger(0.2), at: "-0.4" },
-      ],
-    ]);
-
-    wBlending = animate(
-      [cell1, cell2, cell3],
+  wJumping = animate([
+    [
+      marks,
+      { scale: [1, 1.3, 1], y: [0, "-10%", 0] },
       {
-        backgroundColor: [
-          getColors().base,
-          winner === "player1" ? getColors().primaryBack : getColors().secondaryBack,
-        ],
+        ease: "circIn",
+        duration: 0.6,
+        delay: stagger(0.2),
       },
-      { ease: "easeOut", duration: 0.6, delay: stagger(0.05, { startDelay: 0.62 }) },
-    );
-  });
+    ],
+    [
+      marks,
+      { scale: [1, 0.75, 1] },
+      { ease: "circOut", duration: 0.22, delay: stagger(0.2), at: "-0.4" },
+    ],
+  ]);
+
+  wBlending = animate(
+    [cell1, cell2, cell3],
+    {
+      backgroundColor: [
+        getColors().base,
+        winner === "player1" ? getColors().primaryBack : getColors().secondaryBack,
+      ],
+    },
+    { ease: "easeOut", duration: 0.6, delay: stagger(0.05, { startDelay: 0.62 }) },
+  );
 
   // Play Sound Effect
   setTimeout(() => playSoundFX().winningNote1(), 100);
@@ -74,7 +73,6 @@ export function deniedPlayingShakeAnimation(node: HTMLElement) {
     {
       x: [0, -5, 5, -5, 5, 3, -3, 0],
       y: [0, 2, -2, -3, 3, -1, 1, 0],
-      backgroundColor: getColors().base,
     },
     { duration: 0.38, ease: "easeInOut" },
   );

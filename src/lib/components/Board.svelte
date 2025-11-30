@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { deniedPlayingShakeAnimation, winnigAnimation } from "$lib/animations.svelte";
+  import { deniedPlayingShakeAnimation, winningAnimation } from "$lib/animations.svelte";
   import { Mark } from "$lib/components";
   import { onTurnPVC } from "$lib/computer.svelte";
   import { playSoundFX } from "$lib/sound.svelte";
@@ -11,7 +11,6 @@
     NRO_CELLS,
     playerAction,
   } from "$lib/store.svelte";
-  import { getColors } from "$lib/theme.svelte";
   import { onMount } from "svelte";
 
   let board = $state<HTMLDivElement>();
@@ -61,15 +60,14 @@
   $effect(() => {
     const winner = getWinner();
     if (winner !== null) {
-      winnigAnimation();
+      winningAnimation();
     }
   });
 </script>
 
 <div
   bind:this={board}
-  class="mx-auto mt-20 grid aspect-square h-full w-full grid-cols-3 grid-rows-3 gap-[2.61%] rounded-[13%] p-[7.83%] shadow-xl shadow-neutral-600/5"
-  style={`background-color: ${getColors().mantle}`}
+  class="mx-auto mt-20 grid aspect-square h-full w-full grid-cols-3 grid-rows-3 gap-[2.61%] rounded-[13%] bg-mantle p-[7.83%] shadow-xl shadow-neutral-600/5"
 >
   {#each getBoardState() as cell, i}
     <button
@@ -79,8 +77,11 @@
       aria-disabled={getGameState() === "restarting" || getGameState() === "cpu_thinking"
         ? true
         : null}
-      class="cell flex items-center justify-center rounded-[20%] p-[10%]"
-      style={`pointer-events: ${getGameState() === "restarting" || getGameState() === "cpu_thinking" ? "none" : "auto"}; background-color: ${getColors().base}`}
+      class="cell flex items-center justify-center rounded-[20%] bg-base-color p-[10%]"
+      class:pointer-events-none={getGameState() === "restarting" ||
+        getGameState() === "cpu_thinking"}
+      class:pointer-events-auto={getGameState() !== "restarting" &&
+        getGameState() !== "cpu_thinking"}
     >
       <Mark markState={cell.cell} player={cell.player} nro={i as BoardIndex} />
     </button>

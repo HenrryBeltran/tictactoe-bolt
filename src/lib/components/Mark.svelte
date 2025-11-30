@@ -1,7 +1,6 @@
 <script lang="ts">
   import { markAnimation } from "$lib/animations.svelte";
   import type { BoardIndex } from "$lib/store.svelte";
-  import { getColors } from "$lib/theme.svelte";
 
   interface Props {
     markState: "empty" | "mark" | "dead";
@@ -25,8 +24,7 @@
     data-nro={nro}
     data-player={player}
     data-type={markState}
-    class="h-full w-full p-px"
-    fill={getColors().primary}
+    class="h-full w-full fill-primary p-px"
     viewBox="0 0 64 64"
   >
     <path
@@ -39,7 +37,7 @@
     data-nro={nro}
     data-player={player}
     data-type={markState}
-    class="h-full w-full p-px"
+    class="h-full w-full p-px text-secondary"
     viewBox="0 0 64 64"
   >
     <line
@@ -47,7 +45,7 @@
       y1="8"
       x2="56"
       y2="56"
-      stroke={getColors().secondary}
+      stroke="currentColor"
       stroke-width="16px"
       stroke-miterlimit="10"
       stroke-linecap="round"
@@ -58,7 +56,7 @@
       y1="8"
       x2="8"
       y2="56"
-      stroke={getColors().secondary}
+      stroke="currentColor"
       stroke-width="16px"
       stroke-miterlimit="10"
       stroke-linecap="round"

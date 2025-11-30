@@ -1,7 +1,6 @@
 <script>
   import { playSoundFX } from "$lib/sound.svelte";
   import { playerAction } from "$lib/store.svelte";
-  import { getColors } from "$lib/theme.svelte";
 </script>
 
 <button
@@ -10,16 +9,7 @@
     playSoundFX().positiveAction();
   }}
   aria-label="reset-scores"
-  class="flex h-12 w-12 items-center justify-center rounded-[1.25rem]"
-  style={`color: ${getColors().subtext0}`}
-  onpointerover={(e) => {
-    e.currentTarget.style.color = getColors().subtext1;
-    e.currentTarget.style.backgroundColor = getColors().surface0;
-  }}
-  onpointerleave={(e) => {
-    e.currentTarget.style.color = getColors().subtext0;
-    e.currentTarget.style.backgroundColor = "transparent";
-  }}
+  class="flex h-12 w-12 items-center justify-center rounded-[1.25rem] text-subtext0 transition-colors duration-180 hover:bg-surface0 hover:text-subtext1"
 >
   <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" class="h-6 w-6">
     <path

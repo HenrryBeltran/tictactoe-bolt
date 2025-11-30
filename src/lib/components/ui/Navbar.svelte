@@ -2,12 +2,7 @@
   import type { Snippet, SvelteComponent } from "svelte";
   import { InputRadioColorTheme, Modal } from "$lib/components/ui";
   import { page } from "$app/state";
-  import {
-    changeColorTheme,
-    getColors,
-    getCurrenetColorTheme,
-    type ColorThemes,
-  } from "$lib/theme.svelte";
+  import { changeColorTheme, getCurrenetColorTheme, type ColorThemes } from "$lib/theme.svelte";
   import type { ClassValue } from "svelte/elements";
   import { getComputersLevel, playerAction, type ComputerDifficulty } from "$lib/store.svelte";
   import { isSoundOn, playSoundFX, toggleSoundFX } from "$lib/sound.svelte";
@@ -36,8 +31,7 @@
 </script>
 
 <nav
-  class="absolute top-6 left-1/2 h-12 w-[calc(100%-48px)] -translate-x-1/2 rounded-full shadow-xl shadow-neutral-600/5"
-  style={`background-color: ${getColors().mantle}`}
+  class="absolute top-6 left-1/2 h-12 w-[calc(100%-48px)] -translate-x-1/2 rounded-full bg-mantle shadow-xl shadow-neutral-600/5"
 >
   <div class="flex h-full items-center justify-between px-5">
     {#if page.url.pathname !== "/"}
@@ -132,10 +126,9 @@
 <Modal
   bind:this={modal}
   bind:showModal={showOptionsModal}
-  className="fixed top-0 left-full min-h-dvh w-[50vw] min-w-xs -translate-x-full rounded-l-3xl shadow-2xl backdrop:bg-neutral-600/30 backdrop:backdrop-blur-lg"
-  style={`background-color: ${getColors().mantle}`}
+  className="fixed top-0 left-full min-h-dvh w-[50vw] min-w-xs -translate-x-full rounded-l-3xl bg-mantle shadow-2xl backdrop:bg-neutral-600/30 backdrop:backdrop-blur-lg"
 >
-  <div class="relative w-full space-y-4 p-6" style={`color: ${getColors().text}`}>
+  <div class="relative w-full space-y-4 p-6 text-text-color">
     <button
       class="absolute top-0 right-0 mt-7.75 mr-[calc(var(--spacing)*11.75)] outline-none"
       onclick={() => {
@@ -180,9 +173,11 @@
         />
         <label
           for="sound-input"
-          style={`color: ${isSoundOn() ? getColors().crust : getColors().text}; background-color: ${isSoundOn() ? getColors().primary : getColors().base};`}
           class="inline-block w-18 rounded-full px-3 py-1.5 text-center font-semibold"
-          >{isSoundOn() ? "ON" : "OFF"}</label
+          class:text-crust={isSoundOn()}
+          class:text-text-color={!isSoundOn()}
+          class:bg-primary={isSoundOn()}
+          class:bg-base-color={!isSoundOn()}>{isSoundOn() ? "ON" : "OFF"}</label
         >
       </div>
     </div>
@@ -203,9 +198,11 @@
           />
           <label
             for="easy"
-            style={`color: ${getComputersLevel() === "easy" ? getColors().crust : getColors().text}; background-color: ${getComputersLevel() === "easy" ? getColors().primary : getColors().base};`}
             class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
-            >Easy</label
+            class:text-crust={getComputersLevel() === "easy"}
+            class:text-text-color={getComputersLevel() !== "easy"}
+            class:bg-primary={getComputersLevel() === "easy"}
+            class:bg-base-color={getComputersLevel() !== "easy"}>Easy</label
           >
         </div>
         <div>
@@ -222,9 +219,11 @@
           />
           <label
             for="medium"
-            style={`color: ${getComputersLevel() === "medium" ? getColors().crust : getColors().text}; background-color: ${getComputersLevel() === "medium" ? getColors().primary : getColors().base};`}
             class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
-            >Medium</label
+            class:text-crust={getComputersLevel() === "medium"}
+            class:text-text-color={getComputersLevel() !== "medium"}
+            class:bg-primary={getComputersLevel() === "medium"}
+            class:bg-base-color={getComputersLevel() !== "medium"}>Medium</label
           >
         </div>
         <div>
@@ -241,9 +240,11 @@
           />
           <label
             for="hard"
-            style={`color: ${getComputersLevel() === "hard" ? getColors().crust : getColors().text}; background-color: ${getComputersLevel() === "hard" ? getColors().primary : getColors().base};`}
             class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
-            >Hard</label
+            class:text-crust={getComputersLevel() === "hard"}
+            class:text-text-color={getComputersLevel() !== "hard"}
+            class:bg-primary={getComputersLevel() === "hard"}
+            class:bg-base-color={getComputersLevel() !== "hard"}>Hard</label
           >
         </div>
       </div>

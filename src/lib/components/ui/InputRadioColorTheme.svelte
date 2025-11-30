@@ -1,6 +1,6 @@
 <script lang="ts">
   import { playSoundFX } from "$lib/sound.svelte";
-  import { getColors, type ColorThemes } from "$lib/theme.svelte";
+  import { type ColorThemes } from "$lib/theme.svelte";
   import type { Snippet } from "svelte";
 
   type Props = {
@@ -27,8 +27,10 @@
   />
   <label
     for={value}
-    style={`color: ${themeRadio === value ? getColors().crust : getColors().text}; background-color: ${themeRadio === value ? getColors().primary : getColors().base};`}
     class="inline-block w-full rounded-full px-6 py-1.5 font-semibold tracking-tight"
-    >{@render children?.()}</label
+    class:text-crust={themeRadio === value}
+    class:text-text-color={themeRadio !== value}
+    class:bg-primary={themeRadio === value}
+    class:bg-base-color={themeRadio !== value}>{@render children?.()}</label
   >
 </div>

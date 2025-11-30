@@ -22,13 +22,13 @@ export type Palette = {
   negativeBtn: string;
   negativeBtnHover: string;
   text: string;
+  textAlt: string;
   subtext1: string;
   subtext0: string;
   surface0: string;
   base: string;
   mantle: string;
   crust: string;
-  contrast: "low" | "normal";
 };
 
 export type Themes = {
@@ -58,6 +58,7 @@ const colorThemes: Themes = {
     negativeBtnHover: "oklch(43.9% 0 0)", // neutral 600
 
     text: "oklch(26.9% 0 0)", // neutral 800
+    textAlt: "oklch(97% 0 0)", // neutral 800
     subtext1: "oklch(55.6% 0 0)", // neutral 500
     subtext0: "oklch(70.8% 0 0)", // neutral 400
 
@@ -68,8 +69,6 @@ const colorThemes: Themes = {
     mantle: "oklch(97% 0 0)", // neutral 100
 
     crust: "#ffffff", // white
-
-    contrast: "normal",
   },
   "default-dark": {
     primary: "oklch(68.5% 0.169 237.323)", // sky 500
@@ -88,6 +87,7 @@ const colorThemes: Themes = {
     negativeBtnHover: "oklch(55.6% 0 0)", // neutral 500
 
     text: "oklch(97% 0 0)", // neutral 100
+    textAlt: "oklch(97% 0 0)", // neutral 100
     subtext1: "oklch(87% 0 0)", // neutral 300
     subtext0: "oklch(92.2% 0 0)", // neutral 200
 
@@ -98,8 +98,6 @@ const colorThemes: Themes = {
     mantle: "oklch(20.5% 0 0)", // neutral 900
 
     crust: "#000000", // black
-
-    contrast: "normal",
   },
   "catppuccin-macchiato": {
     primary: "rgb(198, 160, 246)", // mauve
@@ -118,6 +116,7 @@ const colorThemes: Themes = {
     negativeBtnHover: "hsl(230deg, 14%, 41%)", // surface2
 
     text: "rgb(202, 211, 245)", // text
+    textAlt: "hsl(230deg, 19%, 26%)", // surface0
     subtext1: "rgb(184, 192, 224)", // subtext1
     subtext0: "rgb(165, 173, 203)", // surface0
 
@@ -128,38 +127,6 @@ const colorThemes: Themes = {
     mantle: "hsl(233deg, 23%, 15%)", // mantle
 
     crust: "hsl(236deg, 23%, 12%)", // crust
-
-    contrast: "low",
-  },
-  "dark-mono": {
-    primary: "oklch(70.8% 0 0)", // neutral 400
-    primaryBack: "oklch(37.1% 0 0)", // neutral 700
-    primaryFront: "oklch(87% 0 0)", // neutral 300
-
-    secondary: "oklch(70.8% 0 0)", // neutral 400
-    secondaryBack: "oklch(37.1% 0 0)", // neutral 700
-    secondaryFront: "oklch(87% 0 0)", // neutral 300
-
-    positive0Btn: "oklch(55.6% 0 0)", // neutral 500
-    positive0BtnHover: "oklch(70.8% 0 0)", // neutral 400
-    positive1Btn: "oklch(55.6% 0 0)", // neutral 500
-    positive1BtnHover: "oklch(70.8% 0 0)", // neutral 400
-    negativeBtn: "color-mix(in oklab, oklch(37.1% 0 0) 75%, transparent)", // neutral 700 75%
-    negativeBtnHover: "color-mix(in oklab, oklch(43.9% 0 0) 90%, transparent)", // neutral 600 90%
-
-    text: "oklch(97% 0 0)", // neutral 100
-    subtext1: "oklch(87% 0 0)", // neutral 300
-    subtext0: "oklch(92.2% 0 0)", // neutral 200
-
-    surface0: "color-mix(in oklab, oklch(43.9% 0 0) 60%, transparent)", // neutral 600 60%
-
-    base: "oklch(26.9% 0 0)", // neutral 800
-
-    mantle: "oklch(20.5% 0 0)", // neutral 900
-
-    crust: "#000000", // black
-
-    contrast: "low",
   },
   dracula: {
     primary: "hsl(326deg, 100%, 74%)", // pink
@@ -178,6 +145,7 @@ const colorThemes: Themes = {
     negativeBtnHover: "hsl(225deg, 27%, 51%, 0%)", // neutral 600
 
     text: "hsl(60deg, 30%, 96%)", // foreground
+    textAlt: "hsl(231deg, 15%, 18%)", // base
     subtext1: "hsl(225deg, 29%, 62%)", // comment (modify - lighter)
     subtext0: "hsl(225deg, 27%, 51%)", // comment (modify - light)
 
@@ -188,38 +156,64 @@ const colorThemes: Themes = {
     mantle: "hsl(230deg, 16%, 12%)", // neutral 900
 
     crust: "hsl(232deg, 14%, 31%)", // selection
-
-    contrast: "low",
   },
-  everforest: {
-    primary: "oklch(68.5% 0.169 237.323)", // sky 500
-    primaryBack: "color-mix(in oklab, oklch(82.8% 0.111 230.318) 75%, transparent)", // sky 300 75%
-    primaryFront: "oklch(44.3% 0.11 240.79)", // sky 800
+  "dark-mono": {
+    primary: "oklch(70.8% 0 0)", // neutral 400
+    primaryBack: "oklch(37.1% 0 0)", // neutral 700
+    primaryFront: "oklch(87% 0 0)", // neutral 300
 
-    secondary: "oklch(64.5% 0.246 16.439)", // rose 500
-    secondaryBack: "color-mix(in oklab, oklch(81% 0.117 11.638) 75%, transparent)", // rose 300 75%
-    secondaryFront: "oklch(45.5% 0.188 13.697)", // rose 800
+    secondary: "oklch(70.8% 0 0)", // neutral 400
+    secondaryBack: "oklch(37.1% 0 0)", // neutral 700
+    secondaryFront: "oklch(87% 0 0)", // neutral 300
 
-    positive0Btn: "oklch(68.5% 0.169 237.323)", // sky 500
-    positive0BtnHover: "oklch(74.6% 0.16 232.661)", // sky 400
-    positive1Btn: "oklch(64.5% 0.246 16.439)", // rose 500
-    positive1BtnHover: "oklch(71.2% 0.194 13.428)", // rose 400
-    negativeBtn: "oklch(26.9% 0 0)", // neutral 700
-    negativeBtnHover: "oklch(43.9% 0 0)", // neutral 600
+    positive0Btn: "oklch(55.6% 0 0)", // neutral 500
+    positive0BtnHover: "oklch(70.8% 0 0)", // neutral 400
+    positive1Btn: "oklch(55.6% 0 0)", // neutral 500
+    positive1BtnHover: "oklch(70.8% 0 0)", // neutral 400
+    negativeBtn: "color-mix(in oklab, oklch(37.1% 0 0) 75%, transparent)", // neutral 700 75%
+    negativeBtnHover: "color-mix(in oklab, oklch(43.9% 0 0) 90%, transparent)", // neutral 600 90%
 
     text: "oklch(97% 0 0)", // neutral 100
+    textAlt: "oklch(26.9% 0 0)", // neutral 800
     subtext1: "oklch(87% 0 0)", // neutral 300
     subtext0: "oklch(92.2% 0 0)", // neutral 200
 
-    surface0: "color-mix(in oklab, oklch(43.9% 0 0) 40%, transparent)", // neutral 600 40%
+    surface0: "color-mix(in oklab, oklch(43.9% 0 0) 60%, transparent)", // neutral 600 60%
 
     base: "oklch(26.9% 0 0)", // neutral 800
 
     mantle: "oklch(20.5% 0 0)", // neutral 900
 
     crust: "#000000", // black
+  },
+  everforest: {
+    primary: "#7FBBB3", // blue
+    primaryBack: "#3B6862", // blue (modify)
+    primaryFront: "#ECF5ED", // background blue light
 
-    contrast: "normal",
+    secondary: "#E67E80", // red
+    secondaryBack: "#824041", // red (modify)
+    secondaryFront: "#FFE7DE", // background red light
+
+    positive0Btn: "#3A94C5", // blue light
+    positive0BtnHover: "#7FBBB3", // blue
+    positive1Btn: "#F85552", // red light
+    positive1BtnHover: "#E67E80", // red
+    negativeBtn: "#4F5B58", // background5
+    negativeBtnHover: "#7A8478", // gray0
+
+    text: "#D3C6AA", // foreground
+    textAlt: "#272E33", // background0 light
+    subtext1: "#859289", // gray1
+    subtext0: "#7A8478", // gray0
+
+    surface0: "#414B50", // background3
+
+    base: "#2E383C", // background1
+
+    mantle: "#374145", // background2
+
+    crust: "#272E33", // background0
   },
 };
 
@@ -235,4 +229,45 @@ export function getColors(): Palette {
 
 export function changeColorTheme(theme: ColorThemes) {
   currentColorTheme.current = theme;
+  setCSSColorVariables();
+}
+
+export function setCSSColorVariables() {
+  document.documentElement.style.setProperty("--primary-color", getColors().primary);
+  document.documentElement.style.setProperty("--primary-back-color", getColors().primaryBack);
+  document.documentElement.style.setProperty("--primary-front-color", getColors().primaryFront);
+
+  document.documentElement.style.setProperty("--secondary-color", getColors().secondary);
+  document.documentElement.style.setProperty("--secondary-back-color", getColors().secondaryBack);
+  document.documentElement.style.setProperty("--secondary-front-color", getColors().secondaryFront);
+
+  document.documentElement.style.setProperty("--positive0-btn-color", getColors().positive0Btn);
+  document.documentElement.style.setProperty(
+    "--positive0-btn-hover-color",
+    getColors().positive0BtnHover,
+  );
+
+  document.documentElement.style.setProperty("--positive1-btn-color", getColors().positive1Btn);
+  document.documentElement.style.setProperty(
+    "--positive1-btn-hover-color",
+    getColors().positive1BtnHover,
+  );
+
+  document.documentElement.style.setProperty("--negative-btn-color", getColors().negativeBtn);
+  document.documentElement.style.setProperty(
+    "--negative-btn-hover-color",
+    getColors().negativeBtnHover,
+  );
+
+  document.documentElement.style.setProperty("--text-color", getColors().text);
+  document.documentElement.style.setProperty("--text-alt-color", getColors().textAlt);
+
+  document.documentElement.style.setProperty("--subtext1-color", getColors().subtext1);
+  document.documentElement.style.setProperty("--subtext0-color", getColors().subtext0);
+
+  document.documentElement.style.setProperty("--surface0-color", getColors().surface0);
+  document.documentElement.style.setProperty("--base-color", getColors().base);
+
+  document.documentElement.style.setProperty("--mantle-color", getColors().mantle);
+  document.documentElement.style.setProperty("--crust-color", getColors().crust);
 }

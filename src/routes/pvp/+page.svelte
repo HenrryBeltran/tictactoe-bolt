@@ -3,14 +3,14 @@
   import { Board, Score } from "$lib/components";
   import { ClearGameButton, Container, Navbar } from "$lib/components/ui";
   import { getCurrentPlayerName, getCurrentPlayerTurn } from "$lib/store.svelte";
-  import { getColors } from "$lib/theme.svelte";
 </script>
 
 <Navbar>
   {#snippet title()}
     <h1
       class="text-center text-[min(1.5rem,8cqi)] leading-none font-bold tracking-tighter"
-      style={`color: ${getCurrentPlayerTurn() === "player1" ? getColors().primary : getColors().secondary}`}
+      class:text-primary={getCurrentPlayerTurn() === "player1"}
+      class:text-secondary={getCurrentPlayerTurn() !== "player1"}
     >
       {#if getWinner() !== null}
         {getPlayersName().byAlias(getWinner()!)} wins!

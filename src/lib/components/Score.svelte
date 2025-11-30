@@ -3,7 +3,6 @@
   import { Modal } from "$lib/components/ui";
   import type { Snippet, SvelteComponent } from "svelte";
   import type { ClassValue } from "svelte/elements";
-  import { getColors } from "$lib/theme.svelte";
   import { playSoundFX } from "$lib/sound.svelte";
 
   type Props = {
@@ -30,6 +29,10 @@
       const len = inputEl.value.length;
       newName = inputEl.value;
       inputEl.setSelectionRange(len, len);
+    } else {
+      newName =
+        isPlayer1OrPlayer2 === "player1" ? getPlayersName().player1() : getPlayersName().player2();
+      inputEl.value = newName;
     }
   });
 
@@ -40,11 +43,13 @@
   function updatePlayerName(player: "player1" | "player2") {
     if (newName.length < 1) {
       inputEl?.focus();
+      /// TODO: display the input error message
       console.log("Name has to be at least 1 character long");
       return;
     }
     if (newName.length > 12) {
       inputEl?.focus();
+      /// TODO: display the input error message
       console.log("Name cannot contain more than 12 character long");
       return;
     }
@@ -60,10 +65,7 @@
 </script>
 
 <div class="relative flex h-12 w-full flex-col">
-  <div
-    class="flex h-full items-center rounded-full shadow-xl shadow-neutral-600/5"
-    style={`background-color: ${getColors().mantle}`}
-  >
+  <div class="flex h-full items-center rounded-full bg-mantle shadow-xl shadow-neutral-600/5">
     <div class="flex-1 overflow-hidden pl-4 leading-none">
       <span
         class="text-[0.8125rem] leading-none font-semibold tracking-tight wrap-break-word sm:text-base"
@@ -79,11 +81,13 @@
     </div>
     <div
       class="m-2 flex h-8 min-h-8 w-12 min-w-12 items-center justify-center rounded-full"
-      style={`background-color: ${scoreOf === "player1" ? getColors().primaryBack : getColors().secondaryBack}`}
+      class:bg-primary-back={scoreOf === "player1"}
+      class:bg-secondary-back={scoreOf !== "player1"}
     >
       <span
         class="leading-none font-bold"
-        style={`color: ${scoreOf === "player1" ? getColors().primaryFront : getColors().secondaryFront}`}
+        class:text-primary-front={scoreOf === "player1"}
+        class:text-secondary-front={scoreOf !== "player1"}
       >
         {#if scoreOf === "player1"}
           {Math.min(getScores().player1(), 999)}
@@ -107,15 +111,15 @@
     >
       <div
         class="flex h-8 w-8 items-center justify-center rounded-full shadow-xl shadow-neutral-600/10"
-        style={`background-color: ${scoreOf === "player1" ? getColors().primary : getColors().secondary}`}
+        class:bg-primary={scoreOf === "player1"}
+        class:bg-secondary={scoreOf !== "player1"}
       >
         <svg
           viewBox="0 0 24 24"
           width="100%"
           height="100%"
-          class="mb-px h-5 w-5 text-white"
+          class="mb-px h-5 w-5 text-text-alt-color"
           fill="none"
-          style={`color: ${getColors().contrast === "low" ? getColors().mantle : getColors().text}`}
         >
           <path
             d="M16.4249 4.60509L17.4149 3.6151C18.2351 2.79497 19.5648 2.79497 20.3849 3.6151C21.205 4.43524 21.205 5.76493 20.3849 6.58507L19.3949 7.57506M16.4249 4.60509L9.76558 11.2644C9.25807 11.772 8.89804 12.4078 8.72397 13.1041L8 16L10.8959 15.276C11.5922 15.102 12.228 14.7419 12.7356 14.2344L19.3949 7.57506M16.4249 4.60509L19.3949 7.57506"
@@ -141,14 +145,10 @@
 <Modal
   bind:this={modal}
   bind:showModal={showEditPlayerModal}
-  className="fixed top-1/3 left-1/2 max-w-md -translate-1/2 rounded-4xl shadow-2xl backdrop:bg-neutral-600/30 backdrop:backdrop-blur-lg"
-  style={`background-color: ${getColors().mantle}`}
+  className="fixed top-1/3 left-1/2 max-w-md -translate-1/2 rounded-4xl bg-mantle shadow-2xl backdrop:bg-neutral-600/30 backdrop:backdrop-blur-lg"
 >
   <div class="w-full p-4">
-    <h3
-      class="text-center text-lg leading-none font-bold tracking-tight"
-      style={`color: ${getColors().text}`}
-    >
+    <h3 class="text-center text-lg leading-none font-bold tracking-tight text-text-color">
       Edit Name
     </h3>
     <form method="dialog" class="mt-4">
@@ -163,8 +163,9 @@
         value={isPlayer1OrPlayer2 === "player1"
           ? getPlayersName().player1()
           : getPlayersName().player2()}
-        class="rounded-full px-3 py-1.5 font-semibold outline-offset-2 focus-visible:outline-2"
-        style={`background-color: ${getColors().base}; color: ${getColors().text}; outline-color: ${isPlayer1OrPlayer2 === "player1" ? getColors().primary : getColors().secondary}`}
+        class="rounded-full bg-base-color px-3 py-1.5 font-semibold text-text-color outline-offset-2 focus-visible:outline-2"
+        class:outline-primary={isPlayer1OrPlayer2 === "player1"}
+        class:outline-secondary={isPlayer1OrPlayer2 !== "player1"}
       />
       <div class="mt-4 grid grid-cols-2 gap-4">
         <button
@@ -173,14 +174,9 @@
             playSoundFX().button();
             modal.closeModal();
           }}
-          class="rounded-full py-1.5 font-bold tracking-tight outline-offset-2 focus-visible:outline-2"
-          style={`background-color: ${getColors().negativeBtn}; color: ${getColors().text}; outline-color: ${isPlayer1OrPlayer2 === "player1" ? getColors().primary : getColors().secondary}`}
-          onpointerover={(e) => {
-            e.currentTarget.style.backgroundColor = getColors().negativeBtnHover;
-          }}
-          onpointerleave={(e) => {
-            e.currentTarget.style.backgroundColor = getColors().negativeBtn;
-          }}>Close</button
+          class="rounded-full bg-negative-btn py-1.5 font-bold tracking-tight text-white outline-offset-2 hover:bg-negative-btn-hover focus-visible:outline-2"
+          class:outline-primary={isPlayer1OrPlayer2 === "player1"}
+          class:outline-secondary={isPlayer1OrPlayer2 !== "player1"}>Close</button
         >
         <button
           onclick={() => {
@@ -188,19 +184,12 @@
             updatePlayerName(isPlayer1OrPlayer2);
           }}
           class="rounded-full py-1.5 font-bold tracking-tight text-white outline-offset-2 focus-visible:outline-2"
-          style={`background-color: ${isPlayer1OrPlayer2 === "player1" ? getColors().positive0Btn : getColors().positive1Btn}; outline-color: ${isPlayer1OrPlayer2 === "player1" ? getColors().primary : getColors().secondary}`}
-          onpointerover={(e) => {
-            e.currentTarget.style.backgroundColor =
-              isPlayer1OrPlayer2 === "player1"
-                ? getColors().positive0BtnHover
-                : getColors().positive1BtnHover;
-          }}
-          onpointerleave={(e) => {
-            e.currentTarget.style.backgroundColor =
-              isPlayer1OrPlayer2 === "player1"
-                ? getColors().positive0Btn
-                : getColors().positive1Btn;
-          }}>Save</button
+          class:bg-positive0-btn={isPlayer1OrPlayer2 === "player1"}
+          class:bg-positive1-btn={isPlayer1OrPlayer2 !== "player1"}
+          class:hover:bg-positive0-btn-hover={isPlayer1OrPlayer2 === "player1"}
+          class:hover:bg-positive1-btn-hover={isPlayer1OrPlayer2 !== "player1"}
+          class:outline-primary={isPlayer1OrPlayer2 === "player1"}
+          class:outline-secondary={isPlayer1OrPlayer2 !== "player1"}>Save</button
         >
       </div>
     </form>
