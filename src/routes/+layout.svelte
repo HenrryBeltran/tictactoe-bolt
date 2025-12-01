@@ -14,6 +14,6 @@
   <link rel="icon" href={favicon} />
 </svelte:head>
 
-<main class="relative flex min-h-lvh flex-col bg-base-color text-text-color">
+<main class="relative flex min-h-lvh flex-col text-text-color">
   {@render children?.()}
 </main>

@@ -29,6 +29,7 @@ export type Palette = {
   base: string;
   mantle: string;
   crust: string;
+  type: "light" | "dark";
 };
 
 export type Themes = {
@@ -62,21 +63,23 @@ const colorThemes: Themes = {
     subtext1: "oklch(55.6% 0 0)", // neutral 500
     subtext0: "oklch(70.8% 0 0)", // neutral 400
 
-    surface0: "color-mix(in oklab, oklch(70.8% 0 0) 40%, transparent)", // neutral 400 40%
+    surface0: "oklch(70.8% 0 0 / 40%)", // neutral 400 40%
 
-    base: "color-mix(in oklab, oklch(87% 0 0) 80%, transparent)", // neutral 300 80%
+    base: "oklch(87% 0 0 / 80%)", // neutral 300 80%
 
     mantle: "oklch(97% 0 0)", // neutral 100
 
     crust: "#ffffff", // white
+
+    type: "light",
   },
   "default-dark": {
     primary: "oklch(68.5% 0.169 237.323)", // sky 500
-    primaryBack: "color-mix(in oklab, oklch(39.1% 0.09 240.876) 90%, transparent)", // sky 900 90%
+    primaryBack: "oklch(37.5% 0.08 240.876)", // sky 900
     primaryFront: "oklch(90.1% 0.058 230.902)", // sky 200
 
     secondary: "oklch(64.5% 0.246 16.439)", // rose 500
-    secondaryBack: "color-mix(in oklab, oklch(41% 0.159 10.272) 80%, transparent)", // rose 900 70%
+    secondaryBack: "oklch(39% 0.136 10.272)", // rose 900
     secondaryFront: "oklch(89.2% 0.058 10.001)", // rose 200
 
     positive0Btn: "oklch(68.5% 0.169 237.323)", // sky 500
@@ -91,13 +94,15 @@ const colorThemes: Themes = {
     subtext1: "oklch(87% 0 0)", // neutral 300
     subtext0: "oklch(92.2% 0 0)", // neutral 200
 
-    surface0: "color-mix(in oklab, oklch(43.9% 0 0) 60%, transparent)", // neutral 600 60%
+    surface0: "oklch(43.9% 0 0 / 60%)", // neutral 600 60%
 
     base: "oklch(26.9% 0 0)", // neutral 800
 
     mantle: "oklch(20.5% 0 0)", // neutral 900
 
     crust: "#000000", // black
+
+    type: "dark",
   },
   "catppuccin-macchiato": {
     primary: "rgb(198, 160, 246)", // mauve
@@ -127,15 +132,17 @@ const colorThemes: Themes = {
     mantle: "hsl(233deg, 23%, 15%)", // mantle
 
     crust: "hsl(236deg, 23%, 12%)", // crust
+
+    type: "dark",
   },
   dracula: {
     primary: "hsl(326deg, 100%, 74%)", // pink
-    primaryBack: "color-mix(in oklab, oklch(82.8% 0.111 230.318) 75%, transparent)", // sky 300 75%
-    primaryFront: "oklch(44.3% 0.11 240.79)", // sky 800
+    primaryBack: "hsl(330deg, 55%, 35%)", // pink (modify darker)
+    primaryFront: "hsl(322deg, 100%, 92%)", // sky (modify lighter)
 
     secondary: "hsl(135deg, 94%, 65%)", // green
-    secondaryBack: "color-mix(in oklab, oklch(81% 0.117 11.638) 75%, transparent)", // rose 300 75%
-    secondaryFront: "oklch(45.5% 0.188 13.697)", // rose 800
+    secondaryBack: "hsl(138deg, 61%, 33%)", // green (modify darker)
+    secondaryFront: "hsl(131deg, 94%, 89%)", // green (modify lighter)
 
     positive0Btn: "oklch(68.5% 0.169 237.323)", // sky 500
     positive0BtnHover: "oklch(74.6% 0.16 232.661)", // sky 400
@@ -156,6 +163,8 @@ const colorThemes: Themes = {
     mantle: "hsl(230deg, 16%, 12%)", // neutral 900
 
     crust: "hsl(232deg, 14%, 31%)", // selection
+
+    type: "dark",
   },
   "dark-mono": {
     primary: "oklch(70.8% 0 0)", // neutral 400
@@ -170,21 +179,23 @@ const colorThemes: Themes = {
     positive0BtnHover: "oklch(70.8% 0 0)", // neutral 400
     positive1Btn: "oklch(55.6% 0 0)", // neutral 500
     positive1BtnHover: "oklch(70.8% 0 0)", // neutral 400
-    negativeBtn: "color-mix(in oklab, oklch(37.1% 0 0) 75%, transparent)", // neutral 700 75%
-    negativeBtnHover: "color-mix(in oklab, oklch(43.9% 0 0) 90%, transparent)", // neutral 600 90%
+    negativeBtn: "oklch(37.1% 0 0 / 75%)", // neutral 700 75%
+    negativeBtnHover: "oklch(43.9% 0 0 / 90%)", // neutral 600 90%
 
     text: "oklch(97% 0 0)", // neutral 100
     textAlt: "oklch(26.9% 0 0)", // neutral 800
     subtext1: "oklch(87% 0 0)", // neutral 300
     subtext0: "oklch(92.2% 0 0)", // neutral 200
 
-    surface0: "color-mix(in oklab, oklch(43.9% 0 0) 60%, transparent)", // neutral 600 60%
+    surface0: "oklch(43.9% 0 0 / 60%)", // neutral 600 60%
 
     base: "oklch(26.9% 0 0)", // neutral 800
 
     mantle: "oklch(20.5% 0 0)", // neutral 900
 
     crust: "#000000", // black
+
+    type: "dark",
   },
   everforest: {
     primary: "#7FBBB3", // blue
@@ -214,6 +225,8 @@ const colorThemes: Themes = {
     mantle: "#374145", // background2
 
     crust: "#272E33", // background0
+
+    type: "dark",
   },
 };
 
@@ -233,6 +246,9 @@ export function changeColorTheme(theme: ColorThemes) {
 }
 
 export function setCSSColorVariables() {
+  document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", getColors().type);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", getColors().base);
+
   document.documentElement.style.setProperty("--primary-color", getColors().primary);
   document.documentElement.style.setProperty("--primary-back-color", getColors().primaryBack);
   document.documentElement.style.setProperty("--primary-front-color", getColors().primaryFront);

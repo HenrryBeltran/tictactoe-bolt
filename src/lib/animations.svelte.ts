@@ -51,10 +51,18 @@ export function winningAnimation() {
       backgroundColor: [
         getColors().base,
         winner === "player1" ? getColors().primaryBack : getColors().secondaryBack,
+        winner === "player1" ? getColors().primaryBack : getColors().secondaryBack,
+        winner === "player1" ? getColors().primaryBack : getColors().secondaryBack,
+        getColors().base,
       ],
     },
-    { ease: "easeOut", duration: 0.6, delay: stagger(0.05, { startDelay: 0.62 }) },
+    { ease: "easeOut", duration: 2.2, delay: stagger(0.05, { startDelay: 0.62 }) },
   );
+
+  wBlending.finished.then(() => cell1?.removeAttribute("style"));
+  wBlending.finished.then(() => cell2?.removeAttribute("style"));
+  wBlending.finished.then(() => cell3?.removeAttribute("style"));
+  wBlending.finished.then(() => wBlending.cancel());
 
   // Play Sound Effect
   setTimeout(() => playSoundFX().winningNote1(), 100);
@@ -68,13 +76,23 @@ export function winningAnimation() {
 }
 
 export function deniedPlayingShakeAnimation(node: HTMLElement) {
-  animate(
-    node,
+  node.animate(
     {
-      x: [0, -5, 5, -5, 5, 3, -3, 0],
-      y: [0, 2, -2, -3, 3, -1, 1, 0],
+      transform: [
+        "translate(0px, 0px)",
+        "translate(-5px, 2px)",
+        "translate(5px, -2px)",
+        "translate(-5px, -3px)",
+        "translate(5px, 3px)",
+        "translate(3px, -1px)",
+        "translate(-3px, 1px)",
+        "translate(0px, 0px)",
+      ],
     },
-    { duration: 0.38, ease: "easeInOut" },
+    {
+      duration: 380,
+      easing: "ease-in-out",
+    },
   );
 }
 
