@@ -1,1 +1,72 @@
 @import "tailwindcss";
+
+:root {
+  --primary-color: oklch(68.5% 0.169 237.323);
+  --primary-back-color: oklch(82.8% 0.111 230.318);
+  --primary-front-color: oklch(44.3% 0.11 240.79);
+
+  --secondary-color: oklch(64.5% 0.246 16.439);
+  --secondary-back-color: oklch(81% 0.117 11.638);
+  --secondary-front-color: oklch(45.5% 0.188 13.697);
+
+  --positive0-btn-color: oklch(68.5% 0.169 237.323);
+  --positive0-btn-hover-color: oklch(74.6% 0.16 232.661);
+  --positive1-btn-color: oklch(64.5% 0.246 16.439);
+  --positive1-btn-hover-color: oklch(71.2% 0.194 13.428);
+  --negative-btn-color: oklch(26.9% 0 0);
+  --negative-btn-hover-color: oklch(43.9% 0 0);
+
+  --text-color: oklch(26.9% 0 0);
+  --text-alt-color: oklch(97% 0 0);
+  --subtext1-color: oklch(55.6% 0 0);
+  --subtext0-color: oklch(70.8% 0 0);
+
+  --surface0-color: color-mix(in oklab, oklch(70.8% 0 0) 40%, transparent);
+
+  --base-color: color-mix(in oklab, oklch(87% 0 0) 80%, transparent);
+
+  --mantle-color: oklch(97% 0 0);
+
+  --crust-color: #ffffff;
+}
+
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+@theme {
+  --font-comfortaa: "Comfortaa", sans-serif;
+
+  --color-primary: var(--primary-color);
+  --color-primary-back: var(--primary-back-color);
+  --color-primary-front: var(--primary-front-color);
+
+  --color-secondary: var(--secondary-color);
+  --color-secondary-back: var(--secondary-back-color);
+  --color-secondary-front: var(--secondary-front-color);
+
+  --color-positive0-btn: var(--positive0-btn-color);
+  --color-positive0-btn-hover: var(--positive0-btn-hover-color);
+  --color-positive1-btn: var(--positive1-btn-color);
+  --color-positive1-btn-hover: var(--positive1-btn-hover-color);
+  --color-negative-btn: var(--negative-btn-color);
+  --color-negative-btn-hover: var(--negative-btn-hover-color);
+
+  --color-text-color: var(--text-color);
+  --color-text-alt-color: var(--text-alt-color);
+  --color-subtext1: var(--subtext1-color);
+  --color-subtext0: var(--subtext0-color);
+
+  --color-surface0: var(--surface0-color);
+
+  --color-base-color: var(--base-color);
+
+  --color-mantle: var(--mantle-color);
+
+  --color-crust: var(--crust-color);
+}
