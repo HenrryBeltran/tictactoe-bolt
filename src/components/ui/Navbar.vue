@@ -1,31 +1,53 @@
 <script setup lang="ts">
   import { RouterLink } from "vue-router";
   import { useRoute } from "vue-router";
-  import { ref, watchEffect } from "vue";
+  import { onWatcherCleanup, ref, watch } from "vue";
+  import Modal from "./Modal.vue";
+  import InputRadioColorTheme from "./InputRadioColorTheme.vue";
 
   const route = useRoute();
 
-  const width = ref(80); // Initial width in px (matches your original w-20)
+  const width = ref(80);
+  const isModalOpen = ref(false);
+  // @ts-ignore: used in template
+  const modalRef = ref<InstanceType<typeof Modal> | null>(null);
+  const isSoundOn = ref(true);
+  const computersLevel = ref<"easy" | "medium" | "hard">("medium");
+  const theme = ref("default-light");
 
-  // Effect: Update width on route changes
-  watchEffect(() => {
-    if (route.path === "/") {
-      width.value = 80;
-    } else {
-      width.value = document.documentElement.clientWidth - 48;
-    }
-  });
+  watch(
+    () => route.path,
+    () => {
+      const handleResize = () => {
+        if (route.path !== "/") {
+          width.value = document.documentElement.clientWidth - 48;
+        }
+      };
 
-  // Effect: Handle window resizes (only when not on '/')
-  watchEffect(() => {
-    const handleResize = () => {
-      if (route.path !== "/") {
-        width.value = document.documentElement.clientWidth - 48;
+      if (route.path === "/") {
+        width.value = 80;
       }
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  });
+      handleResize();
+
+      window.addEventListener("resize", handleResize);
+
+      onWatcherCleanup(() => {
+        window.removeEventListener("resize", handleResize);
+      });
+    },
+  );
+
+  function openModal() {
+    isModalOpen.value = true;
+  }
+
+  function handleClose() {
+    isModalOpen.value = false;
+  }
+
+  function handleClickCloseButton() {
+    isModalOpen.value = false;
+  }
 </script>
 
 <template>
@@ -63,7 +85,7 @@
       <div class="@container flex h-full w-full items-center justify-center">
         <slot />
       </div>
-      <button aria-label="hamburger-menu" class="self-stretch px-2">
+      <button @click="openModal" aria-label="menu-button" class="self-stretch px-2">
         <svg class="h-5 w-6" viewBox="0 0 24 20">
           <line
             x1="2"
@@ -102,4 +124,154 @@
       </button>
     </div>
   </nav>
+
+  <Modal
+    ref="modalRef"
+    :isOpen="isModalOpen"
+    @close="handleClose"
+    class="bg-mantle fixed top-0 left-full min-h-dvh w-[50vw] min-w-xs -translate-x-full rounded-l-3xl shadow-2xl"
+  >
+    <div class="text-text-color relative w-full space-y-4 p-6">
+      <button
+        class="absolute top-0 right-0 mt-7.75 mr-11.75 outline-none"
+        @click="handleClickCloseButton"
+        aria-label="close-options-modal"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="100%"
+          height="100%"
+          color="currentColor"
+          fill="none"
+          class="h-8 w-8"
+        >
+          <path
+            d="M18 6L6.00081 17.9992M17.9992 18L6 6.00085"
+            stroke="currentColor"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="vector-effect: non-scaling-stroke"
+          ></path>
+        </svg>
+      </button>
+      <div class="space-y-1.5">
+        <h3>SOUND</h3>
+        <div>
+          <input id="sound-input" type="checkbox" v-model="isSoundOn" hidden class="peer hidden" />
+          <label
+            for="sound-input"
+            class="inline-block w-18 rounded-full px-3 py-1.5 text-center font-semibold"
+            :class="{
+              'text-crust': isSoundOn,
+              'text-text-color': !isSoundOn,
+              'bg-primary': isSoundOn,
+              'bg-base-color': !isSoundOn,
+            }"
+          >
+            {{ isSoundOn ? "ON" : "OFF" }}
+          </label>
+        </div>
+      </div>
+      <div class="max-w-md space-y-1.5">
+        <h3>COMPUTER DIFFICULTY</h3>
+        <div class="grid grid-cols-3 gap-1.5">
+          <div>
+            <input
+              id="easy"
+              type="radio"
+              name="cpu-difficulty"
+              value="easy"
+              v-model="computersLevel"
+              hidden
+              class="peer hidden"
+            />
+            <label
+              for="easy"
+              class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
+              :class="{
+                'text-crust': computersLevel === 'easy',
+                'text-text-color': computersLevel !== 'easy',
+                'bg-primary': computersLevel === 'easy',
+                'bg-base-color': computersLevel !== 'easy',
+              }"
+              >Easy</label
+            >
+          </div>
+          <div>
+            <input
+              id="medium"
+              type="radio"
+              name="cpu-difficulty"
+              value="medium"
+              v-model="computersLevel"
+              hidden
+              class="peer hidden"
+            />
+            <label
+              for="medium"
+              class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
+              :class="{
+                'text-crust': computersLevel === 'medium',
+                'text-text-color': computersLevel !== 'medium',
+                'bg-primary': computersLevel === 'medium',
+                'bg-base-color': computersLevel !== 'medium',
+              }"
+              >Medium</label
+            >
+          </div>
+          <div>
+            <input
+              id="hard"
+              type="radio"
+              name="cpu-difficulty"
+              value="hard"
+              v-model="computersLevel"
+              hidden
+              class="peer hidden"
+            />
+            <label
+              for="hard"
+              class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
+              :class="{
+                'text-crust': computersLevel === 'hard',
+                'text-text-color': computersLevel !== 'hard',
+                'bg-primary': computersLevel === 'hard',
+                'bg-base-color': computersLevel !== 'hard',
+              }"
+              >Hard</label
+            >
+          </div>
+        </div>
+      </div>
+      <div class="max-w-md space-y-1.5">
+        <h3>COLOR THEME</h3>
+        <div class="space-y-1.5">
+          <InputRadioColorTheme id="default-light" name="radio-theme" value="default-light" v-model="theme"
+            >Default Light</InputRadioColorTheme
+          >
+          <InputRadioColorTheme id="default-dark" name="radio-theme" value="default-dark" v-model="theme"
+            >Default Dark</InputRadioColorTheme
+          >
+          <InputRadioColorTheme
+            id="catppuccin-macchiato"
+            name="radio-theme"
+            value="catppuccin-macchiato"
+            v-model="theme"
+            >Catppuccin Macchiato</InputRadioColorTheme
+          >
+          <InputRadioColorTheme id="dracula" name="radio-theme" value="dracula" v-model="theme"
+            >Dracula</InputRadioColorTheme
+          >
+          <InputRadioColorTheme id="dark-mono" name="radio-theme" value="dark-mono" v-model="theme"
+            >Dark Mono</InputRadioColorTheme
+          >
+          <InputRadioColorTheme id="everforest" name="radio-theme" value="everforest" v-model="theme"
+            >Everforest</InputRadioColorTheme
+          >
+        </div>
+      </div>
+    </div>
+  </Modal>
 </template>
