@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Navbar from "@/components/ui/Navbar.vue";
+import { getCurrentPlayerName, getCurrentPlayerTurn, getGameState, getPlayersName, getWinner } from "@/lib/store";
 </script>
 
 <template>
@@ -7,18 +8,17 @@ import Navbar from "@/components/ui/Navbar.vue";
     <h1
       class="text-center text-[min(1.5rem,8cqi)] leading-none font-bold tracking-tighter"
       :class="{
-        'text-primary': 'player1' === 'player1',
-        'text-secondary': 'player1' !== 'player1',
+        'text-primary': getCurrentPlayerTurn === 'player1',
+        'text-secondary': getCurrentPlayerTurn !== 'player1',
       }"
     >
-      <!-- get winner -->
-      <template v-if="false">{{ "Player 1" }} wins!</template>
-      <!-- if the route is pvp should display player 2 turn instead of computer -->
-      <template v-else-if="false">{{ "Player 2" }} wins!</template>
-      <!-- if cpu is thinking then is computer's turn -->
-      <template v-else-if="false">Turn of Computer 🧠</template>
-      <!-- displays the players name -->
-      <template v-else>Turn of {{ "Player 1" }}</template>
+      <template v-if="getWinner.value === 'player1'">{{ getPlayersName().player1.value }} wins!</template>
+      <template v-else-if="$route.path === '/pvp' && getWinner.value === 'player2'"
+        >{{ getPlayersName().player2.value }} wins!</template
+      >
+      <template v-else-if="$route.path === '/pvc' && getWinner.value === 'computer'">Computer wins!</template>
+      <template v-else-if="$route.path === '/pvc' && getGameState === 'cpu_thinking'">Turn of Computer 🧠</template>
+      <template v-else>Turn of {{ getCurrentPlayerName }}</template>
     </h1>
   </Navbar>
   <RouterView />

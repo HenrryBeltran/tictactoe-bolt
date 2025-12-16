@@ -84,7 +84,7 @@ function handleClickCloseButton() {
       <div class="@container flex h-full w-full items-center justify-center">
         <slot />
       </div>
-      <button @click="openModal" aria-label="menu-button" class="self-stretch px-2">
+      <button @click="openModal()" aria-label="menu-button" class="self-stretch px-2">
         <svg class="h-5 w-6" viewBox="0 0 24 20">
           <line
             x1="2"
@@ -133,7 +133,7 @@ function handleClickCloseButton() {
     <div class="text-text-color relative w-full space-y-4 p-6">
       <button
         class="absolute top-0 right-0 mt-7.75 mr-11.75 outline-none"
-        @click="handleClickCloseButton"
+        @click="handleClickCloseButton()"
         aria-label="close-options-modal"
       >
         <svg
