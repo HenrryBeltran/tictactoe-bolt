@@ -1,33 +1,33 @@
 <script setup lang="ts">
-  import { useTemplateRef, watch } from "vue";
+import { useTemplateRef, watch } from "vue";
 
-  const props = defineProps<{ isOpen: boolean }>();
-  const emit = defineEmits<{ close: [] }>();
-  const dialog = useTemplateRef("dialogRef");
+const props = defineProps<{ isOpen: boolean }>();
+const emit = defineEmits<{ close: [] }>();
+const dialog = useTemplateRef("dialogRef");
 
-  watch(
-    () => props.isOpen,
-    (newVal) => {
-      if (dialog.value === null) return;
-      if (newVal) {
-        dialog.value.showModal();
-      } else {
-        dialog.value.close();
-      }
-    },
-  );
-
-  const closeModal = () => {
-    if (dialog.value !== null) {
+watch(
+  () => props.isOpen,
+  (newVal) => {
+    if (dialog.value === null) return;
+    if (newVal) {
+      dialog.value.showModal();
+    } else {
       dialog.value.close();
     }
-  };
+  },
+);
 
-  const onClose = () => {
-    emit("close");
-  };
+const closeModal = () => {
+  if (dialog.value !== null) {
+    dialog.value.close();
+  }
+};
 
-  defineExpose({ closeModal });
+const onClose = () => {
+  emit("close");
+};
+
+defineExpose({ closeModal });
 </script>
 
 <template>

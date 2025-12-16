@@ -1,11 +1,9 @@
 <script setup lang="ts">
-  import { RouterLink } from "vue-router";
-  import Navbar from "@/components/ui/Navbar.vue";
-  import Container from "@/components/ui/Container.vue";
+import { RouterLink } from "vue-router";
+import Container from "@/components/ui/Container.vue";
 </script>
 
 <template>
-  <Navbar />
   <Container>
     <div class="flex w-full flex-1 flex-col justify-center">
       <header class="@container">

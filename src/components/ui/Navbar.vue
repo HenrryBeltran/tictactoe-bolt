@@ -1,58 +1,57 @@
 <script setup lang="ts">
-  import { RouterLink } from "vue-router";
-  import { useRoute } from "vue-router";
-  import { onWatcherCleanup, ref, watch } from "vue";
-  import Modal from "./Modal.vue";
-  import InputRadioColorTheme from "./InputRadioColorTheme.vue";
+import { RouterLink } from "vue-router";
+import { useRoute } from "vue-router";
+import { onWatcherCleanup, ref, useTemplateRef, watch } from "vue";
+import Modal from "./Modal.vue";
+import InputRadioColorTheme from "./InputRadioColorTheme.vue";
 
-  const route = useRoute();
+const route = useRoute();
 
-  const width = ref(80);
-  const isModalOpen = ref(false);
-  // @ts-ignore: used in template
-  const modalRef = ref<InstanceType<typeof Modal> | null>(null);
-  const isSoundOn = ref(true);
-  const computersLevel = ref<"easy" | "medium" | "hard">("medium");
-  const theme = ref("default-light");
+const width = ref(80);
+const computersLevel = ref<"easy" | "medium" | "hard">("medium");
+const theme = ref("default-light");
+const modalRef = useTemplateRef("modalRef");
+const isModalOpen = ref(false);
+const isSoundOn = ref(true);
 
-  watch(
-    () => route.path,
-    () => {
-      const handleResize = () => {
-        if (route.path !== "/") {
-          width.value = document.documentElement.clientWidth - 48;
-        }
-      };
-
-      if (route.path === "/") {
-        width.value = 80;
+watch(
+  () => route.path,
+  () => {
+    const handleResize = () => {
+      if (route.path !== "/") {
+        width.value = document.documentElement.clientWidth - 48;
       }
-      handleResize();
+    };
 
-      window.addEventListener("resize", handleResize);
+    if (route.path === "/") {
+      width.value = 80;
+    }
+    handleResize();
 
-      onWatcherCleanup(() => {
-        window.removeEventListener("resize", handleResize);
-      });
-    },
-  );
+    window.addEventListener("resize", handleResize);
 
-  function openModal() {
-    isModalOpen.value = true;
-  }
+    onWatcherCleanup(() => {
+      window.removeEventListener("resize", handleResize);
+    });
+  },
+);
 
-  function handleClose() {
-    isModalOpen.value = false;
-  }
+function openModal() {
+  isModalOpen.value = true;
+}
 
-  function handleClickCloseButton() {
-    isModalOpen.value = false;
-  }
+function handleClose() {
+  isModalOpen.value = false;
+}
+
+function handleClickCloseButton() {
+  isModalOpen.value = false;
+}
 </script>
 
 <template>
   <nav
-    class="bg-mantle absolute top-6 left-[calc(100%-20px)] h-12 w-20 origin-right -translate-x-full rounded-full shadow-xl shadow-neutral-600/5 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+    class="bg-mantle absolute top-6 left-[calc(100%-20px)] h-12 w-20 origin-right -translate-x-full rounded-full shadow-xl shadow-neutral-600/5 transition-all duration-500 ease-in-out"
     :style="`width: ${width}px;`"
   >
     <div class="flex h-full items-center justify-between px-5">
@@ -126,7 +125,7 @@
   </nav>
 
   <Modal
-    ref="modalRef"
+    :ref="modalRef"
     :isOpen="isModalOpen"
     @close="handleClose"
     class="bg-mantle fixed top-0 left-full min-h-dvh w-[50vw] min-w-xs -translate-x-full rounded-l-3xl shadow-2xl"

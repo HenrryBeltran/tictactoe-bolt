@@ -1,16 +1,16 @@
 <script setup lang="ts">
-  type RadioValue = string | number;
+type RadioValue = string | number;
 
-  const props = defineProps<{
-    modelValue: RadioValue;
-    value: RadioValue;
-    id: string;
-    name: string;
-  }>();
+const props = defineProps<{
+  modelValue: RadioValue;
+  value: RadioValue;
+  id: string;
+  name: string;
+}>();
 
-  const emit = defineEmits<{
-    (e: "update:modelValue", value: RadioValue): void;
-  }>();
+const emit = defineEmits<{
+  (e: "update:modelValue", value: RadioValue): void;
+}>();
 </script>
 
 <template>
