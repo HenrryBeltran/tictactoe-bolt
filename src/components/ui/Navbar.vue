@@ -4,11 +4,11 @@ import { useRoute } from "vue-router";
 import { onWatcherCleanup, ref, useTemplateRef, watch } from "vue";
 import Modal from "./Modal.vue";
 import InputRadioColorTheme from "./InputRadioColorTheme.vue";
+import { getComputersLevel, playerAction, type ComputerDifficulty } from "@/lib/store";
 
 const route = useRoute();
 
 const width = ref(80);
-const computersLevel = ref<"easy" | "medium" | "hard">("medium");
 const theme = ref("default-light");
 const modalRef = useTemplateRef("modalRef");
 const isModalOpen = ref(false);
@@ -35,6 +35,10 @@ watch(
     });
   },
 );
+
+function changeComputerDifficulty(difficulty: ComputerDifficulty) {
+  playerAction().changeComputerDifficulty(difficulty);
+}
 
 function openModal() {
   isModalOpen.value = true;
@@ -182,7 +186,8 @@ function handleClickCloseButton() {
               type="radio"
               name="cpu-difficulty"
               value="easy"
-              v-model="computersLevel"
+              @click="changeComputerDifficulty('easy')"
+              :checked="getComputersLevel === 'easy'"
               hidden
               class="peer hidden"
             />
@@ -190,10 +195,10 @@ function handleClickCloseButton() {
               for="easy"
               class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
               :class="{
-                'text-crust': computersLevel === 'easy',
-                'text-text-color': computersLevel !== 'easy',
-                'bg-primary': computersLevel === 'easy',
-                'bg-base-color': computersLevel !== 'easy',
+                'text-crust': getComputersLevel === 'easy',
+                'text-text-color': getComputersLevel !== 'easy',
+                'bg-primary': getComputersLevel === 'easy',
+                'bg-base-color': getComputersLevel !== 'easy',
               }"
               >Easy</label
             >
@@ -204,7 +209,8 @@ function handleClickCloseButton() {
               type="radio"
               name="cpu-difficulty"
               value="medium"
-              v-model="computersLevel"
+              @click="changeComputerDifficulty('medium')"
+              :checked="getComputersLevel === 'medium'"
               hidden
               class="peer hidden"
             />
@@ -212,10 +218,10 @@ function handleClickCloseButton() {
               for="medium"
               class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
               :class="{
-                'text-crust': computersLevel === 'medium',
-                'text-text-color': computersLevel !== 'medium',
-                'bg-primary': computersLevel === 'medium',
-                'bg-base-color': computersLevel !== 'medium',
+                'text-crust': getComputersLevel === 'medium',
+                'text-text-color': getComputersLevel !== 'medium',
+                'bg-primary': getComputersLevel === 'medium',
+                'bg-base-color': getComputersLevel !== 'medium',
               }"
               >Medium</label
             >
@@ -226,7 +232,8 @@ function handleClickCloseButton() {
               type="radio"
               name="cpu-difficulty"
               value="hard"
-              v-model="computersLevel"
+              @click="changeComputerDifficulty('hard')"
+              :checked="getComputersLevel === 'hard'"
               hidden
               class="peer hidden"
             />
@@ -234,10 +241,10 @@ function handleClickCloseButton() {
               for="hard"
               class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
               :class="{
-                'text-crust': computersLevel === 'hard',
-                'text-text-color': computersLevel !== 'hard',
-                'bg-primary': computersLevel === 'hard',
-                'bg-base-color': computersLevel !== 'hard',
+                'text-crust': getComputersLevel === 'hard',
+                'text-text-color': getComputersLevel !== 'hard',
+                'bg-primary': getComputersLevel === 'hard',
+                'bg-base-color': getComputersLevel !== 'hard',
               }"
               >Hard</label
             >

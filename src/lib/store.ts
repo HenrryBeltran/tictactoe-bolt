@@ -31,7 +31,7 @@ let whoStartedFirst = ref<"player1" | "player2" | "computer">("player1");
 let player1Stats = ref({ name: "Player 1", score: 0 });
 let player2Stats = ref({ name: "Player 2", score: 0 });
 let computerStats = ref({ name: "Computer", score: 0 });
-let computersLevel = ref<ComputerDifficulty>("hard");
+let computersLevel = ref<ComputerDifficulty>("medium");
 let boardState = reactive<BoardState>([
   { cell: "empty", player: null, life: MARK_LIFE },
   { cell: "empty", player: null, life: MARK_LIFE },
