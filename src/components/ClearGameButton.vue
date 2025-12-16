@@ -1,6 +1,14 @@
+<script setup lang="ts">
+import { playerAction } from "@/lib/store";
+
+function resetBoard() {
+  playerAction().clearGame();
+}
+</script>
+
 <template>
   <button
-    @click="() => console.log('Reset Board')"
+    @click="resetBoard()"
     aria-label="reset-scores"
     class="text-subtext0 hover:bg-surface0 hover:text-subtext1 flex h-12 w-12 items-center justify-center rounded-[1.25rem] transition-colors duration-180"
   >

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, useTemplateRef } from "vue";
 import Modal from "./ui/Modal.vue";
+import { getScores } from "@/lib/store";
 
 type Props = {
   scoreOf: "player1" | "player2" | "computer";
@@ -8,11 +9,6 @@ type Props = {
 
 const props = defineProps<Props>();
 
-const scores = ref({
-  player1: 4,
-  player2: 5,
-  computer: 3,
-});
 const inputName = ref("");
 const modalRef = useTemplateRef("modalRef");
 const isModalOpen = ref(false);
@@ -50,9 +46,9 @@ function closeModal() {
             'text-secondary-front': scoreOf !== 'player1',
           }"
         >
-          <template v-if="scoreOf === 'player1'">{{ Math.min(scores.player1, 999) }}</template>
-          <template v-else-if="scoreOf === 'player2'">{{ Math.min(scores.player2, 999) }}</template>
-          <template v-else>{{ Math.min(scores.computer, 999) }}</template>
+          <template v-if="scoreOf === 'player1'">{{ Math.min(getScores().player1.value, 999) }}</template>
+          <template v-else-if="scoreOf === 'player2'">{{ Math.min(getScores().player2.value, 999) }}</template>
+          <template v-else>{{ Math.min(getScores().computer.value, 999) }}</template>
         </span>
       </div>
     </div>

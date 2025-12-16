@@ -18,6 +18,8 @@ import { getCurrentPlayerName, getCurrentPlayerTurn, getGameState, getPlayersNam
       >
       <template v-else-if="$route.path === '/pvc' && getWinner.value === 'computer'">Computer wins!</template>
       <template v-else-if="$route.path === '/pvc' && getGameState === 'cpu_thinking'">Turn of Computer 🧠</template>
+      <!-- TODO: Check if this extra condition is needed after implementing the computer ai -->
+      <template v-else-if="$route.path === '/pvc' && getCurrentPlayerTurn !== 'player1'">Turn of Computer 🧠</template>
       <template v-else>Turn of {{ getCurrentPlayerName }}</template>
     </h1>
   </Navbar>
