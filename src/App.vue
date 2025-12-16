@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import Navbar from "@/components/ui/Navbar.vue";
-import { getCurrentPlayerName, getCurrentPlayerTurn, getGameState, getPlayersName, getWinner } from "@/lib/store";
+import {
+  getCurrentPlayerTurnInPVC,
+  getCurrentPlayerTurnInPVP,
+  getCurrentPlayerNameInPVP,
+  getCurrentPlayerNameInPVC,
+  getPlayersName,
+  getWinner,
+} from "@/lib/store";
 </script>
 
 <template>
@@ -8,8 +15,8 @@ import { getCurrentPlayerName, getCurrentPlayerTurn, getGameState, getPlayersNam
     <h1
       class="text-center text-[min(1.5rem,8cqi)] leading-none font-bold tracking-tighter"
       :class="{
-        'text-primary': getCurrentPlayerTurn === 'player1',
-        'text-secondary': getCurrentPlayerTurn !== 'player1',
+        'text-primary': getCurrentPlayerTurnInPVP === 'player1' || getCurrentPlayerTurnInPVC === 'player1',
+        'text-secondary': getCurrentPlayerTurnInPVP !== 'player1' || getCurrentPlayerTurnInPVC !== 'player1',
       }"
     >
       <template v-if="getWinner.value === 'player1'">{{ getPlayersName().player1.value }} wins!</template>
@@ -17,10 +24,9 @@ import { getCurrentPlayerName, getCurrentPlayerTurn, getGameState, getPlayersNam
         >{{ getPlayersName().player2.value }} wins!</template
       >
       <template v-else-if="$route.path === '/pvc' && getWinner.value === 'computer'">Computer wins!</template>
-      <template v-else-if="$route.path === '/pvc' && getGameState === 'cpu_thinking'">Turn of Computer 🧠</template>
-      <!-- TODO: Check if this extra condition is needed after implementing the computer ai -->
-      <template v-else-if="$route.path === '/pvc' && getCurrentPlayerTurn !== 'player1'">Turn of Computer 🧠</template>
-      <template v-else>Turn of {{ getCurrentPlayerName }}</template>
+      <template v-else
+        >Turn of {{ $route.path === "/pvp" ? getCurrentPlayerNameInPVP : getCurrentPlayerNameInPVC }}</template
+      >
     </h1>
   </Navbar>
   <RouterView />

@@ -1,4 +1,5 @@
 import { computed, reactive, ref } from "vue";
+import { onTurnPVC } from "./computer";
 
 export type BoardState = {
   cell: "empty" | "mark" | "dead";
@@ -30,7 +31,7 @@ let whoStartedFirst = ref<"player1" | "player2" | "computer">("player1");
 let player1Stats = ref({ name: "Player 1", score: 0 });
 let player2Stats = ref({ name: "Player 2", score: 0 });
 let computerStats = ref({ name: "Computer", score: 0 });
-let computersLevel = ref<ComputerDifficulty>("medium");
+let computersLevel = ref<ComputerDifficulty>("hard");
 let boardState = reactive<BoardState>([
   { cell: "empty", player: null, life: MARK_LIFE },
   { cell: "empty", player: null, life: MARK_LIFE },
@@ -56,18 +57,20 @@ export const getWinner = computed(() => {
   return winner;
 });
 
-export const getCurrentPlayerTurn = computed(() => {
-  if (location.pathname === "/pvc") {
-    return currentTurn.value % 2 === 0 ? "player1" : "computer";
-  }
+export const getCurrentPlayerTurnInPVP = computed(() => {
   return currentTurn.value % 2 === 0 ? "player1" : "player2";
 });
 
-export const getCurrentPlayerName = computed(() => {
-  if (location.pathname === "/pvc") {
-    return currentTurn.value % 2 === 0 ? player1Stats.value.name : "Computer";
-  }
+export const getCurrentPlayerTurnInPVC = computed(() => {
+  return currentTurn.value % 2 === 0 ? "player1" : "computer";
+});
+
+export const getCurrentPlayerNameInPVP = computed(() => {
   return currentTurn.value % 2 === 0 ? player1Stats.value.name : player2Stats.value.name;
+});
+
+export const getCurrentPlayerNameInPVC = computed(() => {
+  return currentTurn.value % 2 === 0 ? player1Stats.value.name : "Computer";
 });
 
 export function getPlayersName() {
@@ -86,7 +89,7 @@ export function getScores() {
 }
 
 export const getComputersLevel = computed(() => {
-  return computersLevel;
+  return computersLevel.value;
 });
 
 export function playerAction() {
@@ -97,7 +100,8 @@ export function playerAction() {
         return { blocked: true };
       }
 
-      const currentPlayerTurn = getCurrentPlayerTurn.value;
+      const currentPlayerTurn =
+        currentTurn.value % 2 === 0 ? "player1" : location.pathname === "/pvp" ? "player2" : "computer";
 
       if (boardState[index].cell !== "empty") {
         return { blocked: true };
@@ -221,9 +225,12 @@ function nextTurn() {
 function lookForAWinner() {
   const playerBoard: number[] = [];
 
+  const currentPlayerTurn =
+    currentTurn.value % 2 === 0 ? "player1" : location.pathname === "/pvp" ? "player2" : "computer";
+
   for (let i = 0; i < NRO_CELLS; i++) {
-    const bs = boardState[i];
-    if (bs && bs.player === getCurrentPlayerTurn.value && bs.cell === "mark") {
+    const cell = boardState[i];
+    if (cell && cell.player === currentPlayerTurn && cell.cell === "mark") {
       playerBoard.push(i);
     }
   }
@@ -270,7 +277,13 @@ function restartTurn() {
   if (whoStartedFirst.value === "player1") {
     currentTurn.value = 1;
 
-    whoStartedFirst.value = location.pathname === "/pvc" ? "computer" : "player2";
+    if (location.pathname === "/pvc") {
+      whoStartedFirst.value = "computer";
+      // Run ai logic after restart
+      onTurnPVC();
+    } else {
+      whoStartedFirst.value = "player2";
+    }
   } else {
     currentTurn.value = 0;
     whoStartedFirst.value = "player1";

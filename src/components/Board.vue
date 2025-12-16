@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import { getBoardState, getGameState, NRO_CELLS, playerAction } from "@/lib/store";
 import Mark from "./Mark.vue";
-import { onUnmounted } from "vue";
+import { getBoardState, getCurrentPlayerTurnInPVC, getGameState, NRO_CELLS, playerAction } from "@/lib/store";
+import { onUnmounted, watchEffect } from "vue";
+import { onTurnPVC } from "@/lib/computer";
 
 onUnmounted(() => {
   playerAction().clearGame();
+});
+
+watchEffect(() => {
+  onTurnPVC();
 });
 
 function clickCell(index: number) {
@@ -39,12 +44,12 @@ function clickCell(index: number) {
     <button
       v-for="(cell, i) in getBoardState"
       :data-nro="i"
-      :disabled="getGameState === 'cpu_thinking'"
-      :aria-disabled="getGameState === 'cpu_thinking' ? true : undefined"
+      :disabled="getCurrentPlayerTurnInPVC === 'computer'"
+      :aria-disabled="getCurrentPlayerTurnInPVC === 'computer' ? true : false"
       class="cell bg-base-color flex items-center justify-center rounded-[20%] p-[10%]"
       :class="{
-        'pointer-events-none': getGameState === 'cpu_thinking',
-        'pointer-events-auto': getGameState !== 'cpu_thinking',
+        'pointer-events-none': getCurrentPlayerTurnInPVC === 'computer',
+        'pointer-events-auto': getCurrentPlayerTurnInPVC !== 'computer',
       }"
       @click="clickCell(i)"
     >
