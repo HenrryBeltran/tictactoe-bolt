@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, useTemplateRef } from "vue";
+import { ref, useTemplateRef, watch } from "vue";
 import Modal from "./ui/Modal.vue";
-import { getScores } from "@/lib/store";
+import { getPlayersName, getScores, playerAction } from "@/lib/store";
 
 type Props = {
   scoreOf: "player1" | "player2" | "computer";
@@ -9,9 +9,36 @@ type Props = {
 
 const props = defineProps<Props>();
 
+const inputElement = useTemplateRef<HTMLInputElement>("inputRef");
 const inputName = ref("");
-const modalRef = useTemplateRef("modalRef");
 const isModalOpen = ref(false);
+
+watch(isModalOpen, () => {
+  if (props.scoreOf === "player1") {
+    inputName.value = getPlayersName().player1.value;
+    placeInputCursorAtTheEnd(getPlayersName().player1.value);
+  } else if (props.scoreOf === "player2") {
+    inputName.value = getPlayersName().player2.value;
+    placeInputCursorAtTheEnd(getPlayersName().player2.value);
+  }
+});
+
+function placeInputCursorAtTheEnd(playerName: string) {
+  setTimeout(() => {
+    if (inputElement.value === null) return;
+
+    const len = playerName.length;
+    inputElement.value.focus();
+    inputElement.value.setSelectionRange(len, len, "forward");
+  }, 0);
+}
+
+function submitNewName() {
+  if (props.scoreOf !== "computer") {
+    playerAction().editName(inputName.value, props.scoreOf);
+  }
+  closeModal();
+}
 
 function openModal() {
   isModalOpen.value = true;
@@ -27,8 +54,8 @@ function closeModal() {
     <div class="bg-mantle flex h-full items-center rounded-full shadow-xl shadow-neutral-600/5">
       <div class="flex-1 overflow-hidden pl-4 leading-none">
         <span class="text-[0.8125rem] leading-none font-semibold tracking-tight wrap-break-word sm:text-base">
-          <template v-if="scoreOf === 'player1'">Player 1</template>
-          <template v-else-if="scoreOf === 'player2'">Player 2</template>
+          <template v-if="scoreOf === 'player1'">{{ getPlayersName().player1.value }}</template>
+          <template v-else-if="scoreOf === 'player2'">{{ getPlayersName().player2.value }}</template>
           <template v-else>Computer</template>
         </span>
       </div>
@@ -87,7 +114,6 @@ function closeModal() {
   </div>
 
   <Modal
-    :ref="modalRef"
     :isOpen="isModalOpen"
     @close="closeModal()"
     class="bg-mantle fixed top-1/3 left-1/2 max-w-md -translate-1/2 rounded-4xl shadow-2xl"
@@ -96,7 +122,7 @@ function closeModal() {
       <h3 class="text-text-color text-center text-lg leading-none font-bold tracking-tight">Edit Name</h3>
       <form method="dialog" class="mt-4">
         <input
-          autofocus
+          ref="inputRef"
           type="text"
           minlength="1"
           maxlength="12"
@@ -120,7 +146,8 @@ function closeModal() {
             Close
           </button>
           <button
-            @click="() => console.log('Save Input Name', inputName)"
+            type="submit"
+            @click.prevent="submitNewName()"
             class="rounded-full py-1.5 font-bold tracking-tight text-white outline-offset-2 focus-visible:outline-2"
             :class="{
               'bg-positive0-btn': scoreOf === 'player1',
