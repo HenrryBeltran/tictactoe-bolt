@@ -6,7 +6,10 @@ export function arrayIntersection<T>(arr1: Array<T>, arr2: Array<T>): Array<T> {
   for (let i = 0; i < arr1Len; i++) {
     for (let j = 0; j < arr2Len; j++) {
       if (arr1[i] === arr2[j]) {
-        intersected.push(arr2[j]);
+        const item = arr2[j];
+        if (item !== undefined) {
+          intersected.push(item);
+        }
       }
     }
   }
