@@ -15,6 +15,7 @@ const props = defineProps<Props>();
     :data-player="player"
     :data-type="markState"
     class="fill-primary h-full w-full p-px"
+    :class="{ 'opacity-40': markState === 'dead' }"
     viewBox="0 0 64 64"
   >
     <path
@@ -27,6 +28,7 @@ const props = defineProps<Props>();
     :data-player="player"
     :data-type="markState"
     class="text-secondary h-full w-full p-px"
+    :class="{ 'opacity-40': markState === 'dead' }"
     viewBox="0 0 64 64"
   >
     <line
