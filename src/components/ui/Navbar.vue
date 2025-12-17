@@ -5,6 +5,7 @@ import { onWatcherCleanup, ref, useTemplateRef, watch } from "vue";
 import Modal from "./Modal.vue";
 import InputRadioColorTheme from "./InputRadioColorTheme.vue";
 import { getComputersLevel, playerAction, type ComputerDifficulty } from "@/lib/store";
+import { isSoundOn, playSoundFX, toggleSoundFX } from "@/lib/sound";
 
 const route = useRoute();
 
@@ -12,7 +13,6 @@ const width = ref(80);
 const theme = ref("default-light");
 const modalRef = useTemplateRef("modalRef");
 const isModalOpen = ref(false);
-const isSoundOn = ref(true);
 
 watch(
   () => route.path,
@@ -36,20 +36,38 @@ watch(
   },
 );
 
+function switchSound() {
+  toggleSoundFX();
+  playSoundFX().positiveAction();
+}
+
 function changeComputerDifficulty(difficulty: ComputerDifficulty) {
   playerAction().changeComputerDifficulty(difficulty);
+  playSoundFX().positiveAction();
+}
+
+function changeColorTheme() {
+  playSoundFX().positiveAction();
+}
+
+function goToHome() {
+  playSoundFX().button();
 }
 
 function openModal() {
   isModalOpen.value = true;
+  playSoundFX().button();
+  playSoundFX().swipeUI();
 }
 
-function handleClose() {
+function closeModal() {
   isModalOpen.value = false;
 }
 
 function handleClickCloseButton() {
   isModalOpen.value = false;
+  playSoundFX().button();
+  playSoundFX().swipeUI();
 }
 </script>
 
@@ -61,6 +79,7 @@ function handleClickCloseButton() {
     <div class="flex h-full items-center justify-between px-5">
       <RouterLink
         v-if="route.path !== '/'"
+        @click="goToHome()"
         to="/"
         class="flex w-10 items-center justify-center self-stretch"
         aria-label="go-back-link"
@@ -131,7 +150,7 @@ function handleClickCloseButton() {
   <Modal
     :ref="modalRef"
     :isOpen="isModalOpen"
-    @close="handleClose"
+    @close="closeModal()"
     class="bg-mantle fixed top-0 left-full min-h-dvh w-[50vw] min-w-xs -translate-x-full rounded-l-3xl shadow-2xl"
   >
     <div class="text-text-color relative w-full space-y-4 p-6">
@@ -162,7 +181,14 @@ function handleClickCloseButton() {
       <div class="space-y-1.5">
         <h3>SOUND</h3>
         <div>
-          <input id="sound-input" type="checkbox" v-model="isSoundOn" hidden class="peer hidden" />
+          <input
+            id="sound-input"
+            type="checkbox"
+            @click="switchSound()"
+            :checked="isSoundOn"
+            hidden
+            class="peer hidden"
+          />
           <label
             for="sound-input"
             class="inline-block w-18 rounded-full px-3 py-1.5 text-center font-semibold"
@@ -254,10 +280,20 @@ function handleClickCloseButton() {
       <div class="max-w-md space-y-1.5">
         <h3>COLOR THEME</h3>
         <div class="space-y-1.5">
-          <InputRadioColorTheme id="default-light" name="radio-theme" value="default-light" v-model="theme"
+          <InputRadioColorTheme
+            id="default-light"
+            name="radio-theme"
+            value="default-light"
+            v-model="theme"
+            @updateTheme="changeColorTheme()"
             >Default Light</InputRadioColorTheme
           >
-          <InputRadioColorTheme id="default-dark" name="radio-theme" value="default-dark" v-model="theme"
+          <InputRadioColorTheme
+            id="default-dark"
+            name="radio-theme"
+            value="default-dark"
+            v-model="theme"
+            @updateTheme="changeColorTheme()"
             >Default Dark</InputRadioColorTheme
           >
           <InputRadioColorTheme
@@ -265,15 +301,31 @@ function handleClickCloseButton() {
             name="radio-theme"
             value="catppuccin-macchiato"
             v-model="theme"
+            @updateTheme="changeColorTheme()"
             >Catppuccin Macchiato</InputRadioColorTheme
           >
-          <InputRadioColorTheme id="dracula" name="radio-theme" value="dracula" v-model="theme"
+          <InputRadioColorTheme
+            id="dracula"
+            name="radio-theme"
+            value="dracula"
+            v-model="theme"
+            @updateTheme="changeColorTheme()"
             >Dracula</InputRadioColorTheme
           >
-          <InputRadioColorTheme id="dark-mono" name="radio-theme" value="dark-mono" v-model="theme"
+          <InputRadioColorTheme
+            id="dark-mono"
+            name="radio-theme"
+            value="dark-mono"
+            v-model="theme"
+            @updateTheme="changeColorTheme()"
             >Dark Mono</InputRadioColorTheme
           >
-          <InputRadioColorTheme id="everforest" name="radio-theme" value="everforest" v-model="theme"
+          <InputRadioColorTheme
+            id="everforest"
+            name="radio-theme"
+            value="everforest"
+            v-model="theme"
+            @updateTheme="changeColorTheme()"
             >Everforest</InputRadioColorTheme
           >
         </div>

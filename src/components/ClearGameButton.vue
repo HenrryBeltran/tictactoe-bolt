@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { playSoundFX } from "@/lib/sound";
 import { playerAction } from "@/lib/store";
 
 function resetBoard() {
   playerAction().clearGame();
+  playSoundFX().positiveAction();
 }
 </script>
 

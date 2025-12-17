@@ -3,6 +3,7 @@ import Mark from "./Mark.vue";
 import { getBoardState, getCurrentPlayerTurnInPVC, getGameState, NRO_CELLS, playerAction } from "@/lib/store";
 import { onUnmounted, watchEffect } from "vue";
 import { onTurnPVC } from "@/lib/computer";
+import { playSoundFX } from "@/lib/sound";
 
 onUnmounted(() => {
   playerAction().clearGame();
@@ -18,6 +19,7 @@ function clickCell(index: number) {
   if (blocked && getGameState.value === "restarting") {
     console.log("~ Go for quick restart");
     playerAction().quickRestart();
+    playSoundFX().denied();
     return;
   }
 
@@ -32,8 +34,11 @@ function clickCell(index: number) {
       }
     }
 
+    playSoundFX().denied();
     return;
   }
+
+  playSoundFX().pop();
 }
 </script>
 

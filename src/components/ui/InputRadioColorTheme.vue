@@ -9,8 +9,12 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "update:modelValue", value: RadioValue): void;
+  updateTheme: [];
 }>();
+
+function updateThemeValue() {
+  emit("updateTheme");
+}
 </script>
 
 <template>
@@ -21,7 +25,7 @@ const emit = defineEmits<{
       :name="props.name"
       :value="value"
       :checked="modelValue === value"
-      @change="emit('update:modelValue', value)"
+      @change="updateThemeValue()"
       hidden
       class="peer hidden"
     />

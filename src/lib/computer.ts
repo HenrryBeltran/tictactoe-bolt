@@ -1,3 +1,4 @@
+import { playSoundFX } from "./sound.ts";
 import {
   getBoardState,
   getComputersLevel,
@@ -51,6 +52,7 @@ export function runComputer() {
       `Random Tolerance Number: ${randomToleranceNumber}`,
     );
     playerAction().placeMark(randomMove);
+    playSoundFX().pop();
     console.log(`Reading one node ${count} time`);
     count = 0;
     return;
@@ -63,6 +65,7 @@ export function runComputer() {
     `Random Tolerance Number: ${randomToleranceNumber}`,
   );
   playerAction().placeMark(bestMove);
+  playSoundFX().pop();
   console.log(`Reading one node ${count} time`);
   count = 0;
 }

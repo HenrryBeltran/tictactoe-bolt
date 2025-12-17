@@ -2,6 +2,7 @@
 import { ref, useTemplateRef, watch } from "vue";
 import Modal from "./ui/Modal.vue";
 import { getPlayersName, getScores, playerAction } from "@/lib/store";
+import { playSoundFX } from "@/lib/sound";
 
 type Props = {
   scoreOf: "player1" | "player2" | "computer";
@@ -38,14 +39,21 @@ function submitNewName() {
     playerAction().editName(inputName.value, props.scoreOf);
   }
   closeModal();
+  playSoundFX().positiveAction();
 }
 
 function openModal() {
   isModalOpen.value = true;
+  playSoundFX().button();
 }
 
 function closeModal() {
   isModalOpen.value = false;
+}
+
+function closeModalClickButton() {
+  isModalOpen.value = false;
+  playSoundFX().button();
 }
 </script>
 
@@ -136,7 +144,7 @@ function closeModal() {
         <div class="mt-4 grid grid-cols-2 gap-4">
           <button
             type="button"
-            @click="closeModal()"
+            @click="closeModalClickButton()"
             class="bg-negative-btn hover:bg-negative-btn-hover rounded-full py-1.5 font-bold tracking-tight text-white outline-offset-2 focus-visible:outline-2"
             :class="{
               'outline-primary': scoreOf === 'player1',

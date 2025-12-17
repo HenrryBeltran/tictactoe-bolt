@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
 import Container from "@/components/ui/Container.vue";
+import { playSoundFX } from "@/lib/sound";
+
+function handleClick() {
+  playSoundFX().positiveAction();
+}
 </script>
 
 <template>
@@ -19,12 +24,14 @@ import Container from "@/components/ui/Container.vue";
         <div class="flex flex-col gap-4">
           <RouterLink
             to="/pvp"
+            @click="handleClick()"
             class="bg-mantle flex max-h-12 min-h-12 items-center justify-center rounded-full font-semibold tracking-tight"
           >
             Player vs Player</RouterLink
           >
           <RouterLink
             to="/pvc"
+            @click="handleClick()"
             class="bg-mantle flex max-h-12 min-h-12 items-center justify-center rounded-full font-semibold tracking-tight"
           >
             Player vs Computer</RouterLink
@@ -35,6 +42,8 @@ import Container from "@/components/ui/Container.vue";
   </Container>
   <footer class="text-subtext1 justify-self-end py-6 text-center text-sm">
     &copy; 2025 Code and design by
-    <a href="https://henrry.site" target="_blank" class="underline-offset-2 hover:underline">Henrry Beltran</a>
+    <a href="https://henrry.site" @click="handleClick()" target="_blank" class="underline-offset-2 hover:underline"
+      >Henrry Beltran</a
+    >
   </footer>
 </template>

@@ -1,5 +1,6 @@
 import { computed, reactive, ref } from "vue";
 import { onTurnPVC } from "./computer";
+import { playSoundFX } from "./sound";
 
 export type BoardState = {
   cell: "empty" | "mark" | "dead";
@@ -169,6 +170,17 @@ export function playerAction() {
             player2Stats.value.score,
           );
           break;
+      }
+
+      // Play Sound Effect
+      // TODO: move this sound code to the animation script in the future
+      setTimeout(() => playSoundFX().winningNote1(), 100);
+      setTimeout(() => playSoundFX().winningNote2(), 300);
+      setTimeout(() => playSoundFX().winningNote3(), 500);
+      if (winner.value !== "computer") {
+        setTimeout(() => playSoundFX().winning(), 850);
+      } else {
+        setTimeout(() => playSoundFX().lossing(), 850);
       }
 
       restartingGameAfterTheWinner();
