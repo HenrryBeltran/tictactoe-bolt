@@ -49,12 +49,12 @@ function clickCell(index: number) {
     <button
       v-for="(cell, i) in getBoardState"
       :data-nro="i"
-      :disabled="getCurrentPlayerTurnInPVC === 'computer'"
-      :aria-disabled="getCurrentPlayerTurnInPVC === 'computer' ? true : false"
+      :disabled="$route.path === '/pvc' && getCurrentPlayerTurnInPVC === 'computer'"
+      :aria-disabled="$route.path === '/pvc' && getCurrentPlayerTurnInPVC === 'computer' ? true : false"
       class="cell bg-base-color flex items-center justify-center rounded-[20%] p-[10%]"
       :class="{
-        'pointer-events-none': getCurrentPlayerTurnInPVC === 'computer',
-        'pointer-events-auto': getCurrentPlayerTurnInPVC !== 'computer',
+        'pointer-events-none': $route.path === '/pvc' && getCurrentPlayerTurnInPVC === 'computer',
+        'pointer-events-auto': $route.path === '/pvc' && getCurrentPlayerTurnInPVC !== 'computer',
       }"
       @click="clickCell(i)"
     >
