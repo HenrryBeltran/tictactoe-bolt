@@ -5,7 +5,7 @@ let sound = ref(true);
 export const isSoundOn = computed(() => sound.value);
 
 export function toggleSoundFX() {
-  sound.value = !sound;
+  sound.value = !sound.value;
 }
 
 export function playSoundFX() {

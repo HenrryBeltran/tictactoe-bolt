@@ -23,7 +23,7 @@ function updateThemeValue() {
       :name="props.name"
       :value="value"
       :checked="modelValue === value"
-      @change="updateThemeValue()"
+      @click="updateThemeValue()"
       hidden
       class="peer hidden"
     />

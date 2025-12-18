@@ -184,9 +184,10 @@ function handleClickCloseButton() {
         <div>
           <input
             id="sound-input"
+            name="sound-input"
             type="checkbox"
-            @click="switchSound()"
             :checked="isSoundOn"
+            @change="switchSound()"
             hidden
             class="peer hidden"
           />
@@ -213,8 +214,8 @@ function handleClickCloseButton() {
               type="radio"
               name="cpu-difficulty"
               value="easy"
-              @click="changeComputerDifficulty('easy')"
               :checked="getComputersLevel === 'easy'"
+              @click="changeComputerDifficulty('easy')"
               hidden
               class="peer hidden"
             />
@@ -236,8 +237,8 @@ function handleClickCloseButton() {
               type="radio"
               name="cpu-difficulty"
               value="medium"
-              @click="changeComputerDifficulty('medium')"
               :checked="getComputersLevel === 'medium'"
+              @click="changeComputerDifficulty('medium')"
               hidden
               class="peer hidden"
             />
@@ -259,8 +260,8 @@ function handleClickCloseButton() {
               type="radio"
               name="cpu-difficulty"
               value="hard"
-              @click="changeComputerDifficulty('hard')"
               :checked="getComputersLevel === 'hard'"
+              @click="changeComputerDifficulty('hard')"
               hidden
               class="peer hidden"
             />
