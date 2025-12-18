@@ -1,6 +1,6 @@
 import { computed, ref } from "vue";
 
-let sound = ref(true);
+const sound = ref(true);
 
 export const isSoundOn = computed(() => sound.value);
 

@@ -230,7 +230,7 @@ const colorThemes: Themes = {
   },
 };
 
-let currentColorTheme = ref<ColorThemes>("default-light");
+const currentColorTheme = ref<ColorThemes>("default-light");
 
 export const getCurrenetColorTheme = computed(() => {
   return currentColorTheme.value;

@@ -26,14 +26,14 @@ export const WINNING_COMBINATIONS = [
   [2, 4, 6],
 ];
 
-let gameState = ref<"idle" | "playing" | "cpu_thinking" | "restarting">("idle");
-let currentTurn = ref(0);
-let whoStartedFirst = ref<"player1" | "player2" | "computer">("player1");
-let player1Stats = ref({ name: "Player 1", score: 0 });
-let player2Stats = ref({ name: "Player 2", score: 0 });
-let computerStats = ref({ name: "Computer", score: 0 });
-let computersLevel = ref<ComputerDifficulty>("medium");
-let boardState = reactive<BoardState>([
+const gameState = ref<"idle" | "playing" | "cpu_thinking" | "restarting">("idle");
+const currentTurn = ref(0);
+const whoStartedFirst = ref<"player1" | "player2" | "computer">("player1");
+const player1Stats = ref({ name: "Player 1", score: 0 });
+const player2Stats = ref({ name: "Player 2", score: 0 });
+const computerStats = ref({ name: "Computer", score: 0 });
+const computersLevel = ref<ComputerDifficulty>("medium");
+const boardState = reactive<BoardState>([
   { cell: "empty", player: null, life: MARK_LIFE },
   { cell: "empty", player: null, life: MARK_LIFE },
   { cell: "empty", player: null, life: MARK_LIFE },
@@ -44,7 +44,7 @@ let boardState = reactive<BoardState>([
   { cell: "empty", player: null, life: MARK_LIFE },
   { cell: "empty", player: null, life: MARK_LIFE },
 ]);
-let winner = ref<"player1" | "player2" | "computer" | null>(null);
+const winner = ref<"player1" | "player2" | "computer" | null>(null);
 
 export const getBoardState = computed(() => {
   return boardState;
