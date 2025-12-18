@@ -8,6 +8,12 @@ import {
   getPlayersName,
   getWinner,
 } from "@/lib/store";
+import { onMounted } from "vue";
+import { setCSSColorVariables } from "@/lib/theme";
+
+onMounted(() => {
+  setCSSColorVariables();
+});
 </script>
 
 <template>

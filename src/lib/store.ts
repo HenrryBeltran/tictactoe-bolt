@@ -1,6 +1,7 @@
 import { computed, reactive, ref } from "vue";
 import { onTurnPVC } from "./computer";
 import { playSoundFX } from "./sound";
+import { localState } from "./utils";
 
 export type BoardState = {
   cell: "empty" | "mark" | "dead";
@@ -32,7 +33,7 @@ const whoStartedFirst = ref<"player1" | "player2" | "computer">("player1");
 const player1Stats = ref({ name: "Player 1", score: 0 });
 const player2Stats = ref({ name: "Player 2", score: 0 });
 const computerStats = ref({ name: "Computer", score: 0 });
-const computersLevel = ref<ComputerDifficulty>("medium");
+const computersLevel = ref<ComputerDifficulty>(localState<ComputerDifficulty>("cpu-difficulty", "medium").get());
 const boardState = reactive<BoardState>([
   { cell: "empty", player: null, life: MARK_LIFE },
   { cell: "empty", player: null, life: MARK_LIFE },
@@ -203,8 +204,10 @@ export function playerAction() {
     changeComputerDifficulty: (difficulty: ComputerDifficulty) => {
       if (difficulty !== "easy" && difficulty !== "medium" && difficulty !== "hard") {
         computersLevel.value = "medium";
+        localState<ComputerDifficulty>("cpu-difficulty", "medium").set("medium");
       } else {
         computersLevel.value = difficulty;
+        localState<ComputerDifficulty>("cpu-difficulty", "medium").set(difficulty);
       }
     },
     clearGame: () => {

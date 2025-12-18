@@ -1,4 +1,5 @@
 import { computed, ref } from "vue";
+import { localState } from "./utils";
 
 export type ColorThemes =
   | "default-light"
@@ -230,7 +231,7 @@ const colorThemes: Themes = {
   },
 };
 
-const currentColorTheme = ref<ColorThemes>("default-light");
+const currentColorTheme = ref<ColorThemes>(localState<ColorThemes>("theme", "default-light").get());
 
 export const getCurrenetColorTheme = computed(() => {
   return currentColorTheme.value;
@@ -242,6 +243,7 @@ export const getColors = computed(() => {
 
 export function changeColorTheme(theme: ColorThemes) {
   currentColorTheme.value = theme;
+  localState("theme", "default-light").set(theme);
   setCSSColorVariables();
 }
 

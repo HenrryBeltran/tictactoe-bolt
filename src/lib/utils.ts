@@ -16,3 +16,15 @@ export function arrayIntersection<T>(arr1: Array<T>, arr2: Array<T>): Array<T> {
 
   return intersected;
 }
+
+export function localState<T>(key: string, defaultValue: T) {
+  const localValue = localStorage.getItem(key);
+  if (localValue === null) {
+    localStorage.setItem(key, String(defaultValue));
+  }
+
+  return {
+    get: () => (localStorage.getItem(key) as T | null) ?? defaultValue,
+    set: (value: T) => localStorage.setItem(key, String(value)),
+  };
+}

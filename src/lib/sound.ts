@@ -1,11 +1,13 @@
 import { computed, ref } from "vue";
+import { localState } from "./utils";
 
-const sound = ref(true);
+const sound = ref(localState("sound", "true").get() === "true");
 
 export const isSoundOn = computed(() => sound.value);
 
 export function toggleSoundFX() {
   sound.value = !sound.value;
+  localState("sound", "true").set(String(sound.value));
 }
 
 export function playSoundFX() {
