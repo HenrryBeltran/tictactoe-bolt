@@ -1,9 +1,7 @@
 <script setup lang="ts">
-type RadioValue = string | number;
-
 const props = defineProps<{
-  modelValue: RadioValue;
-  value: RadioValue;
+  value: string;
+  modelValue: string;
   id: string;
   name: string;
 }>();

@@ -6,11 +6,11 @@ import Modal from "./Modal.vue";
 import InputRadioColorTheme from "./InputRadioColorTheme.vue";
 import { getComputersLevel, playerAction, type ComputerDifficulty } from "@/lib/store";
 import { isSoundOn, playSoundFX, toggleSoundFX } from "@/lib/sound";
+import { changeColorTheme, getCurrenetColorTheme, type ColorThemes } from "@/lib/theme";
 
 const route = useRoute();
 
 const width = ref(80);
-const theme = ref("default-light");
 const modalRef = useTemplateRef("modalRef");
 const isModalOpen = ref(false);
 
@@ -46,7 +46,8 @@ function changeComputerDifficulty(difficulty: ComputerDifficulty) {
   playSoundFX().positiveAction();
 }
 
-function changeColorTheme() {
+function handleChangeColorTheme(theme: ColorThemes) {
+  changeColorTheme(theme);
   playSoundFX().positiveAction();
 }
 
@@ -73,7 +74,7 @@ function handleClickCloseButton() {
 
 <template>
   <nav
-    class="bg-mantle absolute top-6 left-[calc(100%-20px)] h-12 w-20 origin-right -translate-x-full rounded-full shadow-xl shadow-neutral-600/5 transition-all duration-500 ease-in-out"
+    class="bg-mantle absolute top-6 left-[calc(100%-20px)] h-12 w-20 origin-right -translate-x-full rounded-full shadow-xl shadow-neutral-600/5 transition-[width] duration-500 ease-in-out"
     :style="`width: ${width}px;`"
   >
     <div class="flex h-full items-center justify-between px-5">
@@ -284,48 +285,48 @@ function handleClickCloseButton() {
             id="default-light"
             name="radio-theme"
             value="default-light"
-            v-model="theme"
-            @updateTheme="changeColorTheme()"
+            :modelValue="getCurrenetColorTheme"
+            @updateTheme="handleChangeColorTheme('default-light')"
             >Default Light</InputRadioColorTheme
           >
           <InputRadioColorTheme
             id="default-dark"
             name="radio-theme"
             value="default-dark"
-            v-model="theme"
-            @updateTheme="changeColorTheme()"
+            :modelValue="getCurrenetColorTheme"
+            @updateTheme="handleChangeColorTheme('default-dark')"
             >Default Dark</InputRadioColorTheme
           >
           <InputRadioColorTheme
             id="catppuccin-macchiato"
             name="radio-theme"
             value="catppuccin-macchiato"
-            v-model="theme"
-            @updateTheme="changeColorTheme()"
+            :modelValue="getCurrenetColorTheme"
+            @updateTheme="handleChangeColorTheme('catppuccin-macchiato')"
             >Catppuccin Macchiato</InputRadioColorTheme
           >
           <InputRadioColorTheme
             id="dracula"
             name="radio-theme"
             value="dracula"
-            v-model="theme"
-            @updateTheme="changeColorTheme()"
+            :modelValue="getCurrenetColorTheme"
+            @updateTheme="handleChangeColorTheme('dracula')"
             >Dracula</InputRadioColorTheme
           >
           <InputRadioColorTheme
             id="dark-mono"
             name="radio-theme"
             value="dark-mono"
-            v-model="theme"
-            @updateTheme="changeColorTheme()"
+            :modelValue="getCurrenetColorTheme"
+            @updateTheme="handleChangeColorTheme('dark-mono')"
             >Dark Mono</InputRadioColorTheme
           >
           <InputRadioColorTheme
             id="everforest"
             name="radio-theme"
             value="everforest"
-            v-model="theme"
-            @updateTheme="changeColorTheme()"
+            :modelValue="getCurrenetColorTheme"
+            @updateTheme="handleChangeColorTheme('everforest')"
             >Everforest</InputRadioColorTheme
           >
         </div>
