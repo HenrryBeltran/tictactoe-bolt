@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { playSoundFX } from "@/lib/sound";
 import { playerAction } from "@/lib/store";
+import { springLazyTransition } from "@/lib/transitions";
+import { motion } from "motion-v";
 
 function resetBoard() {
   playerAction().clearGame();
@@ -9,10 +11,13 @@ function resetBoard() {
 </script>
 
 <template>
-  <button
+  <motion.button
     @click="resetBoard()"
     aria-label="reset-scores"
     class="text-subtext0 hover:bg-surface0 hover:text-subtext1 flex h-12 w-12 items-center justify-center rounded-[1.25rem] transition-colors duration-180"
+    :initial="{ opacity: 0 }"
+    :animate="{ opacity: 1 }"
+    :transition="{ delay: 0.5, ...springLazyTransition }"
   >
     <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" class="h-6 w-6">
       <path
@@ -32,5 +37,5 @@ function resetBoard() {
         style="vector-effect: non-scaling-stroke"
       />
     </svg>
-  </button>
+  </motion.button>
 </template>

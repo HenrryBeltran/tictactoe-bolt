@@ -35,5 +35,40 @@ onMounted(() => {
       >
     </h1>
   </Navbar>
-  <RouterView />
+  <RouterView v-slot="{ Component }">
+    <Transition name="appear" mode="out-in">
+      <Component :is="Component" :key="$route.path" />
+    </Transition>
+  </RouterView>
 </template>
+
+<style scoped>
+.appear-leave-active,
+.appear-enter-active {
+  transition-property: transform, opacity;
+  transition-duration: 0.24s;
+  transition-timing-function: linear(
+    0,
+    0.012 0.9%,
+    0.05 2%,
+    0.411 9.2%,
+    0.517 11.8%,
+    0.611 14.6%,
+    0.694 17.7%,
+    0.765 21.1%,
+    0.824 24.8%,
+    0.872 28.9%,
+    0.91 33.4%,
+    0.939 38.4%,
+    0.977 50.9%,
+    0.994 68.4%,
+    1
+  );
+}
+
+.appear-enter-from,
+.appear-leave-to {
+  transform: translateY(6%);
+  opacity: 0;
+}
+</style>

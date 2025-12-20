@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
 import { useRoute } from "vue-router";
-import { onWatcherCleanup, ref, useTemplateRef, watch } from "vue";
+import { onWatcherCleanup, ref, watch } from "vue";
 import Modal from "./Modal.vue";
 import InputRadioColorTheme from "./InputRadioColorTheme.vue";
 import { getComputersLevel, playerAction, type ComputerDifficulty } from "@/lib/store";
 import { isSoundOn, playSoundFX, toggleSoundFX } from "@/lib/sound";
 import { changeColorTheme, getCurrenetColorTheme, type ColorThemes } from "@/lib/theme";
+import { motion, AnimatePresence } from "motion-v";
+import { springSwiftTransition } from "@/lib/transitions";
 
 const route = useRoute();
 
 const width = ref(80);
-const modalRef = useTemplateRef("modalRef");
 const isModalOpen = ref(false);
 
 watch(
@@ -73,9 +74,11 @@ function handleClickCloseButton() {
 </script>
 
 <template>
-  <nav
-    class="bg-mantle absolute top-6 left-[calc(100%-20px)] h-12 w-20 origin-right -translate-x-full rounded-full shadow-xl shadow-neutral-600/5 transition-[width] duration-500 ease-in-out"
-    :style="`width: ${width}px;`"
+  <motion.nav
+    class="bg-mantle absolute top-6 left-[calc(100%-20px)] h-12 w-20 origin-right -translate-x-full rounded-full shadow-xl shadow-neutral-600/5"
+    :initial="{ width }"
+    :animate="{ width }"
+    :transition="springSwiftTransition"
   >
     <div class="flex h-full items-center justify-between px-5">
       <RouterLink
@@ -146,192 +149,198 @@ function handleClickCloseButton() {
         </svg>
       </button>
     </div>
-  </nav>
+  </motion.nav>
 
-  <Modal
-    :ref="modalRef"
-    :isOpen="isModalOpen"
-    @close="closeModal()"
-    class="bg-mantle fixed top-0 left-full min-h-dvh w-[50vw] min-w-xs -translate-x-full rounded-l-3xl shadow-2xl"
-  >
-    <div class="text-text-color relative w-full space-y-4 p-6">
-      <button
-        class="absolute top-0 right-0 mt-7.75 mr-11.75 outline-none"
-        @click="handleClickCloseButton()"
-        aria-label="close-options-modal"
+  <AnimatePresence mode="wait">
+    <Modal v-if="isModalOpen" @close="closeModal()">
+      <motion.div
+        key="options-panel"
+        class="bg-mantle fixed top-0 left-full min-h-dvh w-[50vw] min-w-xs -translate-x-full rounded-l-3xl shadow-2xl"
+        :initial="{ x: '120%' }"
+        :animate="{ x: 0 }"
+        :exit="{ x: '120%' }"
+        :transition="springSwiftTransition"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          width="100%"
-          height="100%"
-          color="currentColor"
-          fill="none"
-          class="h-8 w-8"
-        >
-          <path
-            d="M18 6L6.00081 17.9992M17.9992 18L6 6.00085"
-            stroke="currentColor"
-            stroke-width="4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            style="vector-effect: non-scaling-stroke"
-          ></path>
-        </svg>
-      </button>
-      <div class="space-y-1.5">
-        <h3>SOUND</h3>
-        <div>
-          <input
-            id="sound-input"
-            name="sound-input"
-            type="checkbox"
-            :checked="isSoundOn"
-            @change="switchSound()"
-            hidden
-            class="peer hidden"
-          />
-          <label
-            for="sound-input"
-            class="inline-block w-18 rounded-full px-3 py-1.5 text-center font-semibold"
-            :class="{
-              'text-crust': isSoundOn,
-              'text-text-color': !isSoundOn,
-              'bg-primary': isSoundOn,
-              'bg-base-color': !isSoundOn,
-            }"
+        <div class="text-text-color relative w-full space-y-4 p-6">
+          <button
+            class="absolute top-0 right-0 mt-7.75 mr-11.75 outline-none"
+            @click="handleClickCloseButton()"
+            aria-label="close-options-modal"
           >
-            {{ isSoundOn ? "ON" : "OFF" }}
-          </label>
-        </div>
-      </div>
-      <div class="max-w-md space-y-1.5">
-        <h3>COMPUTER DIFFICULTY</h3>
-        <div class="grid grid-cols-3 gap-1.5">
-          <div>
-            <input
-              id="easy"
-              type="radio"
-              name="cpu-difficulty"
-              value="easy"
-              :checked="getComputersLevel === 'easy'"
-              @click="changeComputerDifficulty('easy')"
-              hidden
-              class="peer hidden"
-            />
-            <label
-              for="easy"
-              class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
-              :class="{
-                'text-crust': getComputersLevel === 'easy',
-                'text-text-color': getComputersLevel !== 'easy',
-                'bg-primary': getComputersLevel === 'easy',
-                'bg-base-color': getComputersLevel !== 'easy',
-              }"
-              >Easy</label
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="100%"
+              height="100%"
+              color="currentColor"
+              fill="none"
+              class="h-8 w-8"
             >
+              <path
+                d="M18 6L6.00081 17.9992M17.9992 18L6 6.00085"
+                stroke="currentColor"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="vector-effect: non-scaling-stroke"
+              ></path>
+            </svg>
+          </button>
+          <div class="space-y-1.5">
+            <h3>SOUND</h3>
+            <div>
+              <input
+                id="sound-input"
+                name="sound-input"
+                type="checkbox"
+                :checked="isSoundOn"
+                @change="switchSound()"
+                hidden
+                class="peer hidden"
+              />
+              <label
+                for="sound-input"
+                class="inline-block w-18 rounded-full px-3 py-1.5 text-center font-semibold"
+                :class="{
+                  'text-crust': isSoundOn,
+                  'text-text-color': !isSoundOn,
+                  'bg-primary': isSoundOn,
+                  'bg-base-color': !isSoundOn,
+                }"
+              >
+                {{ isSoundOn ? "ON" : "OFF" }}
+              </label>
+            </div>
           </div>
-          <div>
-            <input
-              id="medium"
-              type="radio"
-              name="cpu-difficulty"
-              value="medium"
-              :checked="getComputersLevel === 'medium'"
-              @click="changeComputerDifficulty('medium')"
-              hidden
-              class="peer hidden"
-            />
-            <label
-              for="medium"
-              class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
-              :class="{
-                'text-crust': getComputersLevel === 'medium',
-                'text-text-color': getComputersLevel !== 'medium',
-                'bg-primary': getComputersLevel === 'medium',
-                'bg-base-color': getComputersLevel !== 'medium',
-              }"
-              >Medium</label
-            >
+          <div class="max-w-md space-y-1.5">
+            <h3>COMPUTER DIFFICULTY</h3>
+            <div class="grid grid-cols-3 gap-1.5">
+              <div>
+                <input
+                  id="easy"
+                  type="radio"
+                  name="cpu-difficulty"
+                  value="easy"
+                  :checked="getComputersLevel === 'easy'"
+                  @click="changeComputerDifficulty('easy')"
+                  hidden
+                  class="peer hidden"
+                />
+                <label
+                  for="easy"
+                  class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
+                  :class="{
+                    'text-crust': getComputersLevel === 'easy',
+                    'text-text-color': getComputersLevel !== 'easy',
+                    'bg-primary': getComputersLevel === 'easy',
+                    'bg-base-color': getComputersLevel !== 'easy',
+                  }"
+                  >Easy</label
+                >
+              </div>
+              <div>
+                <input
+                  id="medium"
+                  type="radio"
+                  name="cpu-difficulty"
+                  value="medium"
+                  :checked="getComputersLevel === 'medium'"
+                  @click="changeComputerDifficulty('medium')"
+                  hidden
+                  class="peer hidden"
+                />
+                <label
+                  for="medium"
+                  class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
+                  :class="{
+                    'text-crust': getComputersLevel === 'medium',
+                    'text-text-color': getComputersLevel !== 'medium',
+                    'bg-primary': getComputersLevel === 'medium',
+                    'bg-base-color': getComputersLevel !== 'medium',
+                  }"
+                  >Medium</label
+                >
+              </div>
+              <div>
+                <input
+                  id="hard"
+                  type="radio"
+                  name="cpu-difficulty"
+                  value="hard"
+                  :checked="getComputersLevel === 'hard'"
+                  @click="changeComputerDifficulty('hard')"
+                  hidden
+                  class="peer hidden"
+                />
+                <label
+                  for="hard"
+                  class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
+                  :class="{
+                    'text-crust': getComputersLevel === 'hard',
+                    'text-text-color': getComputersLevel !== 'hard',
+                    'bg-primary': getComputersLevel === 'hard',
+                    'bg-base-color': getComputersLevel !== 'hard',
+                  }"
+                  >Hard</label
+                >
+              </div>
+            </div>
           </div>
-          <div>
-            <input
-              id="hard"
-              type="radio"
-              name="cpu-difficulty"
-              value="hard"
-              :checked="getComputersLevel === 'hard'"
-              @click="changeComputerDifficulty('hard')"
-              hidden
-              class="peer hidden"
-            />
-            <label
-              for="hard"
-              class="flex items-center justify-center rounded-full py-1.5 font-semibold tracking-tight"
-              :class="{
-                'text-crust': getComputersLevel === 'hard',
-                'text-text-color': getComputersLevel !== 'hard',
-                'bg-primary': getComputersLevel === 'hard',
-                'bg-base-color': getComputersLevel !== 'hard',
-              }"
-              >Hard</label
-            >
+          <div class="max-w-md space-y-1.5">
+            <h3>COLOR THEME</h3>
+            <div class="space-y-1.5">
+              <InputRadioColorTheme
+                id="default-light"
+                name="radio-theme"
+                value="default-light"
+                :modelValue="getCurrenetColorTheme"
+                @updateTheme="handleChangeColorTheme('default-light')"
+                >Default Light</InputRadioColorTheme
+              >
+              <InputRadioColorTheme
+                id="default-dark"
+                name="radio-theme"
+                value="default-dark"
+                :modelValue="getCurrenetColorTheme"
+                @updateTheme="handleChangeColorTheme('default-dark')"
+                >Default Dark</InputRadioColorTheme
+              >
+              <InputRadioColorTheme
+                id="catppuccin-macchiato"
+                name="radio-theme"
+                value="catppuccin-macchiato"
+                :modelValue="getCurrenetColorTheme"
+                @updateTheme="handleChangeColorTheme('catppuccin-macchiato')"
+                >Catppuccin Macchiato</InputRadioColorTheme
+              >
+              <InputRadioColorTheme
+                id="dracula"
+                name="radio-theme"
+                value="dracula"
+                :modelValue="getCurrenetColorTheme"
+                @updateTheme="handleChangeColorTheme('dracula')"
+                >Dracula</InputRadioColorTheme
+              >
+              <InputRadioColorTheme
+                id="dark-mono"
+                name="radio-theme"
+                value="dark-mono"
+                :modelValue="getCurrenetColorTheme"
+                @updateTheme="handleChangeColorTheme('dark-mono')"
+                >Dark Mono</InputRadioColorTheme
+              >
+              <InputRadioColorTheme
+                id="everforest"
+                name="radio-theme"
+                value="everforest"
+                :modelValue="getCurrenetColorTheme"
+                @updateTheme="handleChangeColorTheme('everforest')"
+                >Everforest</InputRadioColorTheme
+              >
+            </div>
           </div>
         </div>
-      </div>
-      <div class="max-w-md space-y-1.5">
-        <h3>COLOR THEME</h3>
-        <div class="space-y-1.5">
-          <InputRadioColorTheme
-            id="default-light"
-            name="radio-theme"
-            value="default-light"
-            :modelValue="getCurrenetColorTheme"
-            @updateTheme="handleChangeColorTheme('default-light')"
-            >Default Light</InputRadioColorTheme
-          >
-          <InputRadioColorTheme
-            id="default-dark"
-            name="radio-theme"
-            value="default-dark"
-            :modelValue="getCurrenetColorTheme"
-            @updateTheme="handleChangeColorTheme('default-dark')"
-            >Default Dark</InputRadioColorTheme
-          >
-          <InputRadioColorTheme
-            id="catppuccin-macchiato"
-            name="radio-theme"
-            value="catppuccin-macchiato"
-            :modelValue="getCurrenetColorTheme"
-            @updateTheme="handleChangeColorTheme('catppuccin-macchiato')"
-            >Catppuccin Macchiato</InputRadioColorTheme
-          >
-          <InputRadioColorTheme
-            id="dracula"
-            name="radio-theme"
-            value="dracula"
-            :modelValue="getCurrenetColorTheme"
-            @updateTheme="handleChangeColorTheme('dracula')"
-            >Dracula</InputRadioColorTheme
-          >
-          <InputRadioColorTheme
-            id="dark-mono"
-            name="radio-theme"
-            value="dark-mono"
-            :modelValue="getCurrenetColorTheme"
-            @updateTheme="handleChangeColorTheme('dark-mono')"
-            >Dark Mono</InputRadioColorTheme
-          >
-          <InputRadioColorTheme
-            id="everforest"
-            name="radio-theme"
-            value="everforest"
-            :modelValue="getCurrenetColorTheme"
-            @updateTheme="handleChangeColorTheme('everforest')"
-            >Everforest</InputRadioColorTheme
-          >
-        </div>
-      </div>
-    </div>
-  </Modal>
+      </motion.div>
+    </Modal>
+  </AnimatePresence>
 </template>

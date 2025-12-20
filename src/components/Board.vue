@@ -4,6 +4,8 @@ import { getBoardState, getCurrentPlayerTurnInPVC, getGameState, NRO_CELLS, play
 import { onUnmounted, watchEffect } from "vue";
 import { onTurnPVC } from "@/lib/computer";
 import { playSoundFX } from "@/lib/sound";
+import { motion } from "motion-v";
+import { springGlideTransition, springTransition } from "@/lib/transitions";
 
 onUnmounted(() => {
   playerAction().clearGame();
@@ -43,10 +45,14 @@ function clickCell(index: number) {
 </script>
 
 <template>
-  <div
+  <motion.div
+    id="board"
     class="bg-mantle mx-auto mt-20 grid aspect-square h-full w-full grid-cols-3 grid-rows-3 gap-[2.61%] rounded-[13%] p-[7.83%] shadow-xl shadow-neutral-600/5"
+    :initial="{ scale: 0.85 }"
+    :animate="{ scale: 1 }"
+    :transition="springGlideTransition"
   >
-    <button
+    <motion.button
       v-for="(cell, i) in getBoardState"
       :data-nro="i"
       :disabled="$route.path === '/pvc' && getCurrentPlayerTurnInPVC === 'computer'"
@@ -57,8 +63,11 @@ function clickCell(index: number) {
         'pointer-events-auto': $route.path === '/pvc' && getCurrentPlayerTurnInPVC !== 'computer',
       }"
       @click="clickCell(i)"
+      :initial="{ scale: 0 }"
+      :animate="{ scale: 1 }"
+      :transition="{ delay: 0 + 0.07 * i, ...springGlideTransition }"
     >
       <Mark :mark-state="cell.cell" :player="cell.player" :nro="i" />
-    </button>
-  </div>
+    </motion.button>
+  </motion.div>
 </template>

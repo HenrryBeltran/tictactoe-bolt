@@ -3,6 +3,8 @@ import { ref, useTemplateRef, watch } from "vue";
 import Modal from "./ui/Modal.vue";
 import { getPlayersName, getScores, playerAction } from "@/lib/store";
 import { playSoundFX } from "@/lib/sound";
+import { motion, AnimatePresence } from "motion-v";
+import { springGlideTransition, springLazyTransition } from "@/lib/transitions";
 
 type Props = {
   scoreOf: "player1" | "player2" | "computer";
@@ -58,7 +60,13 @@ function closeModalClickButton() {
 </script>
 
 <template>
-  <div class="relative flex h-12 w-full flex-col">
+  <motion.div
+    ref="scoreElementRef"
+    class="relative flex h-12 w-full flex-col"
+    :initial="{ scale: 0.85 }"
+    :animate="{ scale: 1 }"
+    :transition="springGlideTransition"
+  >
     <div class="bg-mantle flex h-full items-center rounded-full shadow-xl shadow-neutral-600/5">
       <div class="flex-1 overflow-hidden pl-4 leading-none">
         <span class="text-[0.8125rem] leading-none font-semibold tracking-tight wrap-break-word sm:text-base">
@@ -87,11 +95,14 @@ function closeModalClickButton() {
         </span>
       </div>
     </div>
-    <button
+    <motion.button
       v-if="scoreOf !== 'computer'"
       @click="openModal()"
       aria-label="edit-name"
       class="absolute -bottom-8 -left-4 flex h-12 w-12 items-center justify-center rounded-full"
+      :initial="{ scale: 0 }"
+      :animate="{ scale: 1 }"
+      :transition="{ delay: 0.3, ...springLazyTransition }"
     >
       <div
         class="flex h-8 w-8 items-center justify-center rounded-full shadow-xl shadow-neutral-600/10"
@@ -118,58 +129,65 @@ function closeModalClickButton() {
           ></path>
         </svg>
       </div>
-    </button>
-  </div>
+    </motion.button>
+  </motion.div>
 
-  <Modal
-    :isOpen="isModalOpen"
-    @close="closeModal()"
-    class="bg-mantle fixed top-1/3 left-1/2 max-w-md -translate-1/2 rounded-4xl shadow-2xl"
-  >
-    <div class="w-full p-4">
-      <h3 class="text-text-color text-center text-lg leading-none font-bold tracking-tight">Edit Name</h3>
-      <form method="dialog" class="mt-4">
-        <input
-          ref="inputRef"
-          type="text"
-          minlength="1"
-          maxlength="12"
-          v-model="inputName"
-          class="bg-base-color text-text-color rounded-full px-3 py-1.5 font-semibold outline-offset-2 focus-visible:outline-2"
-          :class="{
-            'outline-primary': scoreOf === 'player1',
-            'outline-secondary': scoreOf !== 'player1',
-          }"
-        />
-        <div class="mt-4 grid grid-cols-2 gap-4">
-          <button
-            type="button"
-            @click="closeModalClickButton()"
-            class="bg-negative-btn hover:bg-negative-btn-hover rounded-full py-1.5 font-bold tracking-tight text-white outline-offset-2 focus-visible:outline-2"
-            :class="{
-              'outline-primary': scoreOf === 'player1',
-              'outline-secondary': scoreOf !== 'player1',
-            }"
-          >
-            Close
-          </button>
-          <button
-            type="submit"
-            @click.prevent="submitNewName()"
-            class="rounded-full py-1.5 font-bold tracking-tight text-white outline-offset-2 focus-visible:outline-2"
-            :class="{
-              'bg-positive0-btn': scoreOf === 'player1',
-              'bg-positive1-btn': scoreOf !== 'player1',
-              'hover:bg-positive0-btn-hover': scoreOf === 'player1',
-              'hover:bg-positive1-btn-hover': scoreOf !== 'player1',
-              'outline-primary': scoreOf === 'player1',
-              'outline-secondary': scoreOf !== 'player1',
-            }"
-          >
-            Save
-          </button>
+  <AnimatePresence class="fixed">
+    <Modal v-if="isModalOpen" @close="closeModal()">
+      <motion.div
+        key="options-panel"
+        class="bg-mantle fixed top-1/3 left-1/2 max-w-md -translate-1/2 rounded-4xl shadow-2xl"
+        :initial="{ scale: 0.5, opacity: 0 }"
+        :animate="{ scale: 1, opacity: 1 }"
+        :exit="{ scale: 0.5, opacity: 0 }"
+        :transition="springGlideTransition"
+      >
+        <div class="w-full p-4">
+          <h3 class="text-text-color text-center text-lg leading-none font-bold tracking-tight">Edit Name</h3>
+          <form method="dialog" class="mt-4">
+            <input
+              ref="inputRef"
+              type="text"
+              minlength="1"
+              maxlength="12"
+              v-model="inputName"
+              class="bg-base-color text-text-color rounded-full px-3 py-1.5 font-semibold outline-offset-2 focus-visible:outline-2"
+              :class="{
+                'outline-primary': scoreOf === 'player1',
+                'outline-secondary': scoreOf !== 'player1',
+              }"
+            />
+            <div class="mt-4 grid grid-cols-2 gap-4">
+              <button
+                type="button"
+                @click="closeModalClickButton()"
+                class="bg-negative-btn hover:bg-negative-btn-hover rounded-full py-1.5 font-bold tracking-tight text-white outline-offset-2 focus-visible:outline-2"
+                :class="{
+                  'outline-primary': scoreOf === 'player1',
+                  'outline-secondary': scoreOf !== 'player1',
+                }"
+              >
+                Close
+              </button>
+              <button
+                type="submit"
+                @click.prevent="submitNewName()"
+                class="rounded-full py-1.5 font-bold tracking-tight text-white outline-offset-2 focus-visible:outline-2"
+                :class="{
+                  'bg-positive0-btn': scoreOf === 'player1',
+                  'bg-positive1-btn': scoreOf !== 'player1',
+                  'hover:bg-positive0-btn-hover': scoreOf === 'player1',
+                  'hover:bg-positive1-btn-hover': scoreOf !== 'player1',
+                  'outline-primary': scoreOf === 'player1',
+                  'outline-secondary': scoreOf !== 'player1',
+                }"
+              >
+                Save
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
-  </Modal>
+      </motion.div>
+    </Modal>
+  </AnimatePresence>
 </template>
