@@ -5,7 +5,7 @@ import { onUnmounted, watchEffect } from "vue";
 import { onTurnPVC } from "@/lib/computer";
 import { playSoundFX } from "@/lib/sound";
 import { motion } from "motion-v";
-import { springGlideTransition, springTransition } from "@/lib/transitions";
+import { springGlideTransition } from "@/lib/transitions";
 
 onUnmounted(() => {
   playerAction().clearGame();
