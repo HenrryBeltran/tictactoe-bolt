@@ -2,7 +2,7 @@
 import { onMounted, useTemplateRef } from "vue";
 
 const emit = defineEmits<{ close: [] }>();
-const dialog = useTemplateRef("dialogRef");
+const dialog = useTemplateRef<HTMLDialogElement>("dialogRef");
 
 onMounted(() => {
   dialog.value?.showModal();
@@ -10,18 +10,23 @@ onMounted(() => {
 
 const onCancel = (e: Event) => {
   e.preventDefault();
-  requestClose();
+  emit("close");
 };
 
-const requestClose = () => {
-  dialog.value?.close();
-  emit("close");
+const onClick = (e: MouseEvent) => {
+  if (e.target === dialog.value) {
+    emit("close");
+  }
 };
 </script>
 
 <template>
-  <!-- class="backdrop:bg-(--base-color)/45 backdrop:backdrop-blur-lg" -->
-  <dialog ref="dialogRef" @cancel="onCancel">
+  <dialog
+    ref="dialogRef"
+    @cancel="onCancel"
+    @click="onClick"
+    class="backdrop:bg-(--base-color)/45 backdrop:backdrop-blur-lg"
+  >
     <slot />
   </dialog>
 </template>

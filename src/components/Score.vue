@@ -4,7 +4,7 @@ import Modal from "./ui/Modal.vue";
 import { getPlayersName, getScores, playerAction } from "@/lib/store";
 import { playSoundFX } from "@/lib/sound";
 import { motion, AnimatePresence } from "motion-v";
-import { springGlideTransition, springLazyTransition } from "@/lib/transitions";
+import { springGlideTransition, springLazyTransition, springSwiftTransition } from "@/lib/transitions";
 
 type Props = {
   scoreOf: "player1" | "player2" | "computer";
@@ -132,7 +132,7 @@ function closeModalClickButton() {
     </motion.button>
   </motion.div>
 
-  <AnimatePresence class="fixed">
+  <AnimatePresence>
     <Modal v-if="isModalOpen" @close="closeModal()">
       <motion.div
         key="options-panel"
@@ -140,7 +140,7 @@ function closeModalClickButton() {
         :initial="{ scale: 0.5, opacity: 0 }"
         :animate="{ scale: 1, opacity: 1 }"
         :exit="{ scale: 0.5, opacity: 0 }"
-        :transition="springGlideTransition"
+        :transition="springSwiftTransition"
       >
         <div class="w-full p-4">
           <h3 class="text-text-color text-center text-lg leading-none font-bold tracking-tight">Edit Name</h3>
