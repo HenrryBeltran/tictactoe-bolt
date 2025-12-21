@@ -14,6 +14,13 @@ export const springGlideTransition: Transition = {
   mass: 1,
 };
 
+export const springQuickGlideTransition: Transition = {
+  type: "spring",
+  stiffness: 500,
+  damping: 32,
+  mass: 1.8,
+};
+
 export const springLazyTransition: Transition = {
   type: "spring",
   stiffness: 50,
@@ -26,6 +33,13 @@ export const springBouncyTransition: Transition = {
   stiffness: 200,
   damping: 15,
   mass: 2,
+};
+
+export const springHardBounceTransition: Transition = {
+  type: "spring",
+  stiffness: 500,
+  damping: 12,
+  mass: 1,
 };
 
 export const springSwiftTransition: Transition = {

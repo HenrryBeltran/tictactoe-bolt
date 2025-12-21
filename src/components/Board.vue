@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import Mark from "./Mark.vue";
-import { getBoardState, getCurrentPlayerTurnInPVC, getGameState, NRO_CELLS, playerAction } from "@/lib/store";
-import { onUnmounted, watchEffect } from "vue";
+import {
+  getBoardState,
+  getCurrentPlayerTurnInPVC,
+  getGameState,
+  getWinner,
+  NRO_CELLS,
+  playerAction,
+} from "@/lib/store";
+import { onUnmounted, watch, watchEffect } from "vue";
 import { onTurnPVC } from "@/lib/computer";
 import { playSoundFX } from "@/lib/sound";
-import { motion } from "motion-v";
+import { animate, motion } from "motion-v";
 import { springGlideTransition } from "@/lib/transitions";
+import { winningAnimation } from "@/lib/animations";
 
 onUnmounted(() => {
   playerAction().clearGame();
@@ -13,6 +21,12 @@ onUnmounted(() => {
 
 watchEffect(() => {
   onTurnPVC();
+});
+
+watch(getWinner.value, () => {
+  if (getWinner.value !== null) {
+    winningAnimation();
+  }
 });
 
 function clickCell(index: number) {
@@ -32,7 +46,17 @@ function clickCell(index: number) {
     for (let i = 0; i < NRO_CELLS; i++) {
       const cellNro = Number(btnCells[i]?.getAttribute("data-nro"));
       if (cellNro === index) {
-        console.log("Shake Effect", cellNro);
+        animate(
+          btnCells.item(i),
+          {
+            x: [0, -5, 5, -5, 5, 3, -3, 0],
+            y: [0, 2, -2, -3, 3, -1, 1, 0],
+          },
+          {
+            duration: 0.38,
+            ease: "easeInOut",
+          },
+        );
       }
     }
 

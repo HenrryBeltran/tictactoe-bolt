@@ -1,7 +1,7 @@
 import { computed, reactive, ref } from "vue";
 import { onTurnPVC } from "./computer";
-import { playSoundFX } from "./sound";
 import { localState } from "./utils";
+import { cancelWinningAnimation } from "./animations";
 
 export type BoardState = {
   cell: "empty" | "mark" | "dead";
@@ -12,7 +12,7 @@ export type ComputerDifficulty = "easy" | "medium" | "hard";
 
 export const MARK_LIFE = 2;
 export const NRO_CELLS = 9;
-export const TIMER_AFTER_WIN = 3_500;
+export const TIMER_AFTER_WIN = 2_500;
 export const WINNING_COMBINATIONS = [
   // Rows
   [0, 1, 2],
@@ -173,25 +173,13 @@ export function playerAction() {
           break;
       }
 
-      // Play Sound Effect
-      // TODO: move this sound code to the animation script in the future
-      setTimeout(() => playSoundFX().winningNote1(), 100);
-      setTimeout(() => playSoundFX().winningNote2(), 300);
-      setTimeout(() => playSoundFX().winningNote3(), 500);
-      if (winner.value !== "computer") {
-        setTimeout(() => playSoundFX().winning(), 850);
-      } else {
-        setTimeout(() => playSoundFX().lossing(), 850);
-      }
-
       restartingGameAfterTheWinner();
       return { blocked: false };
     },
     quickRestart: () => {
       if (gameState.value === "restarting") {
         cancelRestartingTimeout();
-        // TODO: Cancel a future animation
-        // cancelWinningAnimation();
+        cancelWinningAnimation();
       }
     },
     editName: (newName: string, player: "player1" | "player2") => {
