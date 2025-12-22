@@ -5,8 +5,6 @@ import { getColors } from "./theme.ts";
 import { nextTick } from "vue";
 import { springQuickGlideTransition } from "./transitions.ts";
 
-/// Board Animations
-
 let wJumping: AnimationPlaybackControlsWithThen;
 let wBlending: AnimationPlaybackControlsWithThen;
 
@@ -57,40 +55,16 @@ export function winningAnimation() {
       { ease: "circOut", duration: 3, delay: stagger(0.05, { startDelay: 0.22 }) },
     );
 
-    wBlending.finished.then(() => cell1?.removeAttribute("style"));
-    wBlending.finished.then(() => cell2?.removeAttribute("style"));
-    wBlending.finished.then(() => cell3?.removeAttribute("style"));
     wBlending.finished.then(() => wBlending.cancel());
 
     // Play Sound Effect
     setTimeout(() => playSoundFX().winningNote1(), 100);
-    setTimeout(() => playSoundFX().winningNote2(), 300);
-    setTimeout(() => playSoundFX().winningNote3(), 500);
+    setTimeout(() => playSoundFX().winningNote2(), 220);
+    setTimeout(() => playSoundFX().winningNote3(), 340);
     if (winner.value !== "computer") {
-      setTimeout(() => playSoundFX().winning(), 850);
+      setTimeout(() => playSoundFX().winning(), 450);
     } else {
-      setTimeout(() => playSoundFX().lossing(), 850);
+      setTimeout(() => playSoundFX().lossing(), 450);
     }
   });
-}
-
-export function deniedPlayingShakeAnimation(node: HTMLElement) {
-  node.animate(
-    {
-      transform: [
-        "translate(0px, 0px)",
-        "translate(-5px, 2px)",
-        "translate(5px, -2px)",
-        "translate(-5px, -3px)",
-        "translate(5px, 3px)",
-        "translate(3px, -1px)",
-        "translate(-3px, 1px)",
-        "translate(0px, 0px)",
-      ],
-    },
-    {
-      duration: 380,
-      easing: "ease-in-out",
-    },
-  );
 }
