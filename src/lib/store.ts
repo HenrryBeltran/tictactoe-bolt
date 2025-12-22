@@ -1,7 +1,7 @@
 import { computed, reactive, ref } from "vue";
 import { onTurnPVC } from "./computer";
 import { localState } from "./utils";
-import { cancelWinningAnimation } from "./animations";
+import { cancelWinningAnimation, winningAnimation } from "./animations";
 
 export type BoardState = {
   cell: "empty" | "mark" | "dead";
@@ -12,7 +12,7 @@ export type ComputerDifficulty = "easy" | "medium" | "hard";
 
 export const MARK_LIFE = 2;
 export const NRO_CELLS = 9;
-export const TIMER_AFTER_WIN = 2_500;
+export const TIMER_AFTER_WIN = 2_000;
 export const WINNING_COMBINATIONS = [
   // Rows
   [0, 1, 2],
@@ -173,6 +173,7 @@ export function playerAction() {
           break;
       }
 
+      winningAnimation();
       restartingGameAfterTheWinner();
       return { blocked: false };
     },

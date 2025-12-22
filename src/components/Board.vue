@@ -1,19 +1,11 @@
 <script setup lang="ts">
 import Mark from "./Mark.vue";
-import {
-  getBoardState,
-  getCurrentPlayerTurnInPVC,
-  getGameState,
-  getWinner,
-  NRO_CELLS,
-  playerAction,
-} from "@/lib/store";
-import { onUnmounted, watch, watchEffect } from "vue";
+import { getBoardState, getCurrentPlayerTurnInPVC, getGameState, NRO_CELLS, playerAction } from "@/lib/store";
+import { onUnmounted, watchEffect } from "vue";
 import { onTurnPVC } from "@/lib/computer";
 import { playSoundFX } from "@/lib/sound";
 import { animate, motion } from "motion-v";
 import { springGlideTransition } from "@/lib/transitions";
-import { winningAnimation } from "@/lib/animations";
 
 onUnmounted(() => {
   playerAction().clearGame();
@@ -21,12 +13,6 @@ onUnmounted(() => {
 
 watchEffect(() => {
   onTurnPVC();
-});
-
-watch(getWinner.value, () => {
-  if (getWinner.value !== null) {
-    winningAnimation();
-  }
 });
 
 function clickCell(index: number) {
