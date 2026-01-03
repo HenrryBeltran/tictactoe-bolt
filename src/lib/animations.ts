@@ -20,6 +20,7 @@ export function cancelWinningAnimation() {
 export function winningAnimation() {
   nextTick().then(() => {
     const winner = getWinner.value;
+    const colors = getColors.value;
     if (winner === null) return;
     if (getGameState.value !== "restarting") return;
 
@@ -50,22 +51,22 @@ export function winningAnimation() {
 
     cell1?.animate(
       [
-        { backgroundColor: getColors.value.base },
-        { backgroundColor: winner.value === "player1" ? getColors.value.primaryBack : getColors.value.secondaryBack },
+        { backgroundColor: colors.base },
+        { backgroundColor: winner.value === "player1" ? colors.primaryBack : colors.secondaryBack },
       ],
       { easing: "cubic-bezier(0.22, 1, 0.36, 1)", duration: 1_800 },
     );
     cell2?.animate(
       [
-        { backgroundColor: getColors.value.base },
-        { backgroundColor: winner.value === "player1" ? getColors.value.primaryBack : getColors.value.secondaryBack },
+        { backgroundColor: colors.base },
+        { backgroundColor: winner.value === "player1" ? colors.primaryBack : colors.secondaryBack },
       ],
       { easing: "cubic-bezier(0.22, 1, 0.36, 1)", duration: 1_700, delay: 100 },
     );
     cell3?.animate(
       [
-        { backgroundColor: getColors.value.base },
-        { backgroundColor: winner.value === "player1" ? getColors.value.primaryBack : getColors.value.secondaryBack },
+        { backgroundColor: colors.base },
+        { backgroundColor: winner.value === "player1" ? colors.primaryBack : colors.secondaryBack },
       ],
       { easing: "cubic-bezier(0.22, 1, 0.36, 1)", duration: 1_600, delay: 200 },
     );
