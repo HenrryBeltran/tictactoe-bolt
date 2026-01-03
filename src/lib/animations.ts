@@ -6,11 +6,9 @@ import { nextTick } from "vue";
 import { springQuickGlideTransition } from "./transitions.ts";
 
 let wJumping: AnimationPlaybackControlsWithThen;
-let wBlending: AnimationPlaybackControlsWithThen;
 
 export function cancelWinningAnimation() {
   if (wJumping) wJumping.cancel();
-  if (wBlending) wBlending.cancel();
 }
 
 export function winningAnimation() {
@@ -42,20 +40,30 @@ export function winningAnimation() {
       ],
       [marks, { scale: [1, 0.75, 1] }, { ease: "circOut", duration: 0.22, delay: stagger(0.2), at: "-0.4" }],
     ]);
+    console.log("--> Finish jumping w animation");
 
-    wBlending = animate(
-      [cell1, cell2, cell3],
-      {
-        backgroundColor: [
-          getColors.value.base,
-          winner.value === "player1" ? getColors.value.primaryBack : getColors.value.secondaryBack,
-          getColors.value.base,
-        ],
-      },
-      { ease: "circOut", duration: 3, delay: stagger(0.05, { startDelay: 0.22 }) },
+    cell1?.animate(
+      [
+        { backgroundColor: getColors.value.base },
+        { backgroundColor: winner.value === "player1" ? getColors.value.primaryBack : getColors.value.secondaryBack },
+      ],
+      { easing: "cubic-bezier(0.22, 1, 0.36, 1)", duration: 1_800 },
     );
-
-    wBlending.finished.then(() => wBlending.cancel());
+    cell2?.animate(
+      [
+        { backgroundColor: getColors.value.base },
+        { backgroundColor: winner.value === "player1" ? getColors.value.primaryBack : getColors.value.secondaryBack },
+      ],
+      { easing: "cubic-bezier(0.22, 1, 0.36, 1)", duration: 1_700, delay: 100 },
+    );
+    cell3?.animate(
+      [
+        { backgroundColor: getColors.value.base },
+        { backgroundColor: winner.value === "player1" ? getColors.value.primaryBack : getColors.value.secondaryBack },
+      ],
+      { easing: "cubic-bezier(0.22, 1, 0.36, 1)", duration: 1_600, delay: 200 },
+    );
+    console.log("--> Finish bleding w animation");
 
     // Play Sound Effect
     setTimeout(() => playSoundFX().winningNote1(), 100);
