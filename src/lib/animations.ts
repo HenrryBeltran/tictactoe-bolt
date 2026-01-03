@@ -8,7 +8,13 @@ import { springQuickGlideTransition } from "./transitions.ts";
 let wJumping: AnimationPlaybackControlsWithThen;
 
 export function cancelWinningAnimation() {
-  if (wJumping) wJumping.cancel();
+  if (wJumping) {
+    try {
+      wJumping.cancel();
+    } catch (e) {
+      console.log("CATCH: cancelWinningAnimation", e);
+    }
+  }
 }
 
 export function winningAnimation() {
