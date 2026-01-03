@@ -2,25 +2,20 @@ import { animate, stagger, type AnimationPlaybackControlsWithThen } from "motion
 import { playSoundFX } from "./sound.ts";
 import { getGameState, getWinner } from "./store.ts";
 import { getColors } from "./theme.ts";
-import { nextTick } from "vue";
 import { springQuickGlideTransition } from "./transitions.ts";
 
 let wJumping: AnimationPlaybackControlsWithThen;
 
 export function cancelWinningAnimation() {
   if (wJumping) {
-    try {
-      wJumping.cancel();
-    } catch (e) {
-      console.log("CATCH: cancelWinningAnimation", e);
-    }
+    wJumping.cancel();
   }
 }
 
 export function winningAnimation() {
-  nextTick().then(() => {
+  console.log("~ executing: winningAnimation()");
+  setTimeout(() => {
     const winner = getWinner.value;
-    const colors = getColors.value;
     if (winner === null) return;
     if (getGameState.value !== "restarting") return;
 
@@ -51,22 +46,22 @@ export function winningAnimation() {
 
     cell1?.animate(
       [
-        { backgroundColor: colors.base },
-        { backgroundColor: winner.value === "player1" ? colors.primaryBack : colors.secondaryBack },
+        { backgroundColor: getColors.value.base },
+        { backgroundColor: winner.value === "player1" ? getColors.value.primaryBack : getColors.value.secondaryBack },
       ],
       { easing: "cubic-bezier(0.22, 1, 0.36, 1)", duration: 1_800 },
     );
     cell2?.animate(
       [
-        { backgroundColor: colors.base },
-        { backgroundColor: winner.value === "player1" ? colors.primaryBack : colors.secondaryBack },
+        { backgroundColor: getColors.value.base },
+        { backgroundColor: winner.value === "player1" ? getColors.value.primaryBack : getColors.value.secondaryBack },
       ],
       { easing: "cubic-bezier(0.22, 1, 0.36, 1)", duration: 1_700, delay: 100 },
     );
     cell3?.animate(
       [
-        { backgroundColor: colors.base },
-        { backgroundColor: winner.value === "player1" ? colors.primaryBack : colors.secondaryBack },
+        { backgroundColor: getColors.value.base },
+        { backgroundColor: winner.value === "player1" ? getColors.value.primaryBack : getColors.value.secondaryBack },
       ],
       { easing: "cubic-bezier(0.22, 1, 0.36, 1)", duration: 1_600, delay: 200 },
     );
@@ -81,5 +76,5 @@ export function winningAnimation() {
     } else {
       setTimeout(() => playSoundFX().lossing(), 450);
     }
-  });
+  }, 0);
 }
