@@ -283,8 +283,6 @@ function restartTurn() {
 
     if (location.pathname === "/pvc") {
       whoStartedFirst.value = "computer";
-      // Run ai logic after restart
-      onTurnPVC();
     } else {
       whoStartedFirst.value = "player2";
     }
