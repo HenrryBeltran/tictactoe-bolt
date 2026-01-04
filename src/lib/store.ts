@@ -1,5 +1,4 @@
 import { computed, reactive, ref } from "vue";
-import { onTurnPVC } from "./computer";
 import { localState } from "./utils";
 import { cancelWinningAnimation, winningAnimation } from "./animations";
 
