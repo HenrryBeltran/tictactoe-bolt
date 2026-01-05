@@ -13,7 +13,6 @@ export function cancelWinningAnimation() {
 }
 
 export function winningAnimation() {
-  console.log("~ executing: winningAnimation()");
   setTimeout(() => {
     const winner = getWinner.value;
     if (winner === null) return;
@@ -42,7 +41,6 @@ export function winningAnimation() {
       ],
       [marks, { scale: [1, 0.75, 1] }, { ease: "circOut", duration: 0.22, delay: stagger(0.2), at: "-0.4" }],
     ]);
-    console.log("--> Finish jumping w animation");
 
     cell1?.animate(
       [
@@ -65,7 +63,6 @@ export function winningAnimation() {
       ],
       { easing: "cubic-bezier(0.22, 1, 0.36, 1)", duration: 1_600, delay: 200 },
     );
-    console.log("--> Finish bleding w animation");
 
     // Play Sound Effect
     setTimeout(() => playSoundFX().winningNote1(), 100);

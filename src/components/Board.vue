@@ -22,13 +22,6 @@ onUnmounted(() => {
 });
 
 watch(
-  () => getGameState.value,
-  () => {
-    console.log(">>>>> HEY RUNNING game state of ->", getGameState.value);
-  },
-);
-
-watch(
   () => [getGameState.value, getCurrentPlayerTurnInPVC.value],
   () => {
     if (route.path !== "/pvc") return;
@@ -41,7 +34,6 @@ watch(
     );
 
     if (getCurrentPlayerTurnInPVC.value === "computer") {
-      console.log(">>>>> from onTurnPVC Computer Turn");
       updateGameStateOnComputerTurn().computerStartTurn();
       setTimeout(() => {
         runComputer();
@@ -55,14 +47,12 @@ function clickCell(index: number) {
   const { blocked } = playerAction().placeMark(index);
 
   if (blocked && getGameState.value === "restarting") {
-    console.log("~ Go for quick restart");
     playerAction().quickRestart();
     playSoundFX().denied();
     return;
   }
 
   if (blocked) {
-    console.log("Cell block!");
     const btnCells = document.querySelectorAll(".cell") as NodeListOf<HTMLElement>;
 
     for (let i = 0; i < NRO_CELLS; i++) {

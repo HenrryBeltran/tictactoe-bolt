@@ -96,7 +96,6 @@ export const getComputersLevel = computed(() => {
 export function playerAction() {
   return {
     placeMark: (index: number) => {
-      console.log("executing", index);
       if (boardState[index] === undefined || gameState.value === "restarting") {
         return { blocked: true };
       }

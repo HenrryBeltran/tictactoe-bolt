@@ -24,7 +24,6 @@ export function onTurnPVC() {
     );
 
     if (getCurrentPlayerTurnInPVC.value === "computer") {
-      console.log(">>>>> from onTurnPVC Computer Turn");
       updateGameStateOnComputerTurn().computerStartTurn();
       setTimeout(() => runComputer(), 250);
     } else if (getCurrentPlayerTurnInPVC.value === "player1") {
@@ -48,11 +47,11 @@ export function runComputer() {
 
   if (randomToleranceNumber < tolerance) {
     const randomMove = lookForARandomEmptyCell(boardState);
-    console.log(
-      `Random move -> ${randomMove}`,
-      `Tolerance: ${tolerance}`,
-      `Random Tolerance Number: ${randomToleranceNumber}`,
-    );
+    // console.log(
+    //   `Random move -> ${randomMove}`,
+    //   `Tolerance: ${tolerance}`,
+    //   `Random Tolerance Number: ${randomToleranceNumber}`,
+    // );
     playerAction().placeMark(randomMove);
     playSoundFX().pop();
     console.log(
@@ -65,11 +64,11 @@ export function runComputer() {
   }
 
   const bestMove = findBestMove(boardState);
-  console.log(
-    `Best move -> ${bestMove}`,
-    `Tolerance: ${tolerance}`,
-    `Random Tolerance Number: ${randomToleranceNumber}`,
-  );
+  // console.log(
+  //   `Best move -> ${bestMove}`,
+  //   `Tolerance: ${tolerance}`,
+  //   `Random Tolerance Number: ${randomToleranceNumber}`,
+  // );
   playerAction().placeMark(bestMove);
   playSoundFX().pop();
   console.log(
