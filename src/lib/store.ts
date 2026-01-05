@@ -203,7 +203,6 @@ export function playerAction() {
       player1Stats.value.score = 0;
       player2Stats.value.score = 0;
       computerStats.value.score = 0;
-      restartTurn();
     },
   };
 }
@@ -271,9 +270,9 @@ function clearBoard() {
   boardState[6] = { cell: "empty", player: null, life: MARK_LIFE };
   boardState[7] = { cell: "empty", player: null, life: MARK_LIFE };
   boardState[8] = { cell: "empty", player: null, life: MARK_LIFE };
-  restartTurn();
   winner.value = null;
   gameState.value = "idle";
+  restartTurn();
 }
 
 function restartTurn() {

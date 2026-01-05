@@ -1,19 +1,55 @@
 <script setup lang="ts">
 import Mark from "./Mark.vue";
-import { getBoardState, getCurrentPlayerTurnInPVC, getGameState, NRO_CELLS, playerAction } from "@/lib/store";
-import { onUnmounted, watchEffect } from "vue";
-import { onTurnPVC } from "@/lib/computer";
+import {
+  getBoardState,
+  getCurrentPlayerTurnInPVC,
+  getGameState,
+  NRO_CELLS,
+  playerAction,
+  updateGameStateOnComputerTurn,
+} from "@/lib/store";
+import { onUnmounted, watch } from "vue";
+import { runComputer } from "@/lib/computer";
 import { playSoundFX } from "@/lib/sound";
 import { animate, motion } from "motion-v";
 import { springGlideTransition } from "@/lib/transitions";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 
 onUnmounted(() => {
   playerAction().clearGame();
 });
 
-watchEffect(() => {
-  onTurnPVC();
-});
+watch(
+  () => getGameState.value,
+  () => {
+    console.log(">>>>> HEY RUNNING game state of ->", getGameState.value);
+  },
+);
+
+watch(
+  () => [getGameState.value, getCurrentPlayerTurnInPVC.value],
+  () => {
+    if (route.path !== "/pvc") return;
+    if (getGameState.value !== "idle" && getGameState.value !== "playing") return;
+
+    console.log(
+      "%c~TURN",
+      "padding: 0.1rem 0.5rem; border-radius: 0.5rem; background: oklch(44.6% 0.043 257.281); color: #fff;",
+      getCurrentPlayerTurnInPVC.value,
+    );
+
+    if (getCurrentPlayerTurnInPVC.value === "computer") {
+      console.log(">>>>> from onTurnPVC Computer Turn");
+      updateGameStateOnComputerTurn().computerStartTurn();
+      setTimeout(() => {
+        runComputer();
+        updateGameStateOnComputerTurn().computerEndTurn();
+      }, 250);
+    }
+  },
+);
 
 function clickCell(index: number) {
   const { blocked } = playerAction().placeMark(index);

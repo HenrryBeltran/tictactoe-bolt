@@ -14,21 +14,23 @@ import { arrayIntersection } from "./utils.ts";
 let count = 0;
 
 export function onTurnPVC() {
-  if (location.pathname !== "/pvc") return;
+  setTimeout(() => {
+    if (location.pathname !== "/pvc") return;
 
-  console.log(
-    "%cTURN",
-    "padding: 0.1rem 0.5rem; border-radius: 0.5rem; background: oklch(44.6% 0.043 257.281); color: #fff;",
-    getCurrentPlayerTurnInPVC.value,
-  );
+    console.log(
+      "%cTURN",
+      "padding: 0.1rem 0.5rem; border-radius: 0.5rem; background: oklch(44.6% 0.043 257.281); color: #fff;",
+      getCurrentPlayerTurnInPVC.value,
+    );
 
-  if (getCurrentPlayerTurnInPVC.value === "computer") {
-    console.log(">>>>> from onTurnPVC Computer Turn");
-    updateGameStateOnComputerTurn().computerStartTurn();
-    setTimeout(() => runComputer(), 250);
-  } else if (getCurrentPlayerTurnInPVC.value === "player1") {
-    updateGameStateOnComputerTurn().computerEndTurn();
-  }
+    if (getCurrentPlayerTurnInPVC.value === "computer") {
+      console.log(">>>>> from onTurnPVC Computer Turn");
+      updateGameStateOnComputerTurn().computerStartTurn();
+      setTimeout(() => runComputer(), 250);
+    } else if (getCurrentPlayerTurnInPVC.value === "player1") {
+      updateGameStateOnComputerTurn().computerEndTurn();
+    }
+  }, 0);
 }
 
 export function runComputer() {
@@ -53,7 +55,11 @@ export function runComputer() {
     );
     playerAction().placeMark(randomMove);
     playSoundFX().pop();
-    console.log(`Reading one node ${count} time`);
+    console.log(
+      `%cReading one node ${count} times`,
+      "padding: 0.1rem 0.5rem; border-radius: 0.5rem; background: oklch(48.8% 0.243 264.376); color: #fff;",
+    );
+
     count = 0;
     return;
   }
@@ -66,7 +72,10 @@ export function runComputer() {
   );
   playerAction().placeMark(bestMove);
   playSoundFX().pop();
-  console.log(`Reading one node ${count} time`);
+  console.log(
+    `%cReading one node ${count} times`,
+    "padding: 0.1rem 0.5rem; border-radius: 0.5rem; background: oklch(48.8% 0.243 264.376); color: #fff;",
+  );
   count = 0;
 }
 
@@ -129,15 +138,13 @@ function isBoardFull(board: BoardState) {
   return true;
 }
 
-function minimax(board: BoardState, depth: number, isMaximizingPlayer: boolean) {
+function minimax(board: BoardState, depth: number, isMaximizingPlayer: boolean, alpha: number, beta: number) {
   let score = evaluate(board);
 
   count++;
 
   if (score === 10) return score - depth;
-
   if (score === -10) return score + depth;
-
   if (isBoardFull(board)) return 0;
 
   if (isMaximizingPlayer) {
@@ -149,10 +156,14 @@ function minimax(board: BoardState, depth: number, isMaximizingPlayer: boolean) 
         cell.cell = "mark";
         cell.player = "computer";
 
-        best = Math.max(best, minimax(board, depth + 1, !isMaximizingPlayer));
+        best = Math.max(best, minimax(board, depth + 1, !isMaximizingPlayer, alpha, beta));
 
         cell.cell = "empty";
         cell.player = null;
+
+        alpha = Math.max(alpha, best);
+
+        if (beta <= alpha) break;
       }
     }
     return best;
@@ -165,10 +176,14 @@ function minimax(board: BoardState, depth: number, isMaximizingPlayer: boolean) 
         cell.cell = "mark";
         cell.player = "player1";
 
-        best = Math.min(best, minimax(board, depth + 1, !isMaximizingPlayer));
+        best = Math.min(best, minimax(board, depth + 1, !isMaximizingPlayer, alpha, beta));
 
         cell.cell = "empty";
         cell.player = null;
+
+        beta = Math.min(beta, best);
+
+        if (beta <= alpha) break;
       }
     }
     return best;
@@ -176,18 +191,21 @@ function minimax(board: BoardState, depth: number, isMaximizingPlayer: boolean) 
 }
 
 function findBestMove(board: BoardState) {
-  let bestVal = -1000;
+  let bestVal = -1_000;
   let bestMove = -1;
 
   for (let i = 0; i < NRO_CELLS; i++) {
-    console.log("::: computer thinking");
+    console.log(
+      "%c:::: computer thinking",
+      "padding: 0.1rem 0.5rem; border-radius: 0.5rem; background: oklch(52.5% 0.223 3.958); color: #fff;",
+    );
 
     const cell = board[i];
     if (cell && cell.cell === "empty") {
       cell.cell = "mark";
       cell.player = "computer";
 
-      let moveVal = minimax(board, 0, false);
+      let moveVal = minimax(board, 0, false, -1_000, 1_000);
 
       cell.cell = "empty";
       cell.player = null;
