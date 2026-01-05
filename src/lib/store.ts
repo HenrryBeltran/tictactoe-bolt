@@ -203,6 +203,7 @@ export function playerAction() {
       player1Stats.value.score = 0;
       player2Stats.value.score = 0;
       computerStats.value.score = 0;
+      restartTurn();
     },
   };
 }
