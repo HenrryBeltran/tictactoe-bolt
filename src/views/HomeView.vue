@@ -53,7 +53,7 @@ function handleClick() {
             <RouterLink
               to="/pvp"
               @click="handleClick()"
-              class="bg-mantle flex max-h-12 min-h-12 items-center justify-center rounded-full font-semibold tracking-tight"
+              class="bg-mantle hover:outline-primary focus:outline-primary flex max-h-12 min-h-12 items-center justify-center rounded-full font-semibold tracking-tight outline-2 outline-offset-4 outline-transparent transition-[scale,outline] duration-150 hover:scale-105 focus:scale-105"
             >
               Player vs Player</RouterLink
             >
@@ -66,7 +66,7 @@ function handleClick() {
             <RouterLink
               to="/pvc"
               @click="handleClick()"
-              class="bg-mantle flex max-h-12 min-h-12 items-center justify-center rounded-full font-semibold tracking-tight"
+              class="bg-mantle hover:outline-secondary focus:outline-secondary flex max-h-12 min-h-12 items-center justify-center rounded-full font-semibold tracking-tight outline-2 outline-offset-4 outline-transparent transition-[scale,outline] duration-150 hover:scale-105 focus:scale-105"
             >
               Player vs Computer</RouterLink
             >
