@@ -1,5 +1,7 @@
-# Vue 3 + TypeScript + Vite
+# TIC-TAC-TOE Bolt
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+#### Video Demo: <https://youtube.com/to-be-prepared>
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+#### Description:
+
+The Bolt version of the Tic-Tac-Toe game eliminates the possibility of ties. In this project, I implemented a two-player mode and the option to compete against the computer. I developed an artificial intelligence using the minimax algorithm. Additionally, it allows the selection of various color palettes to customize the gaming experience according to thematic preferences.
