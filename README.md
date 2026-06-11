@@ -1,6 +1,8 @@
 # TIC-TAC-TOE Bolt
 
-### Video Demo: <https://youtu.be/g7zKknFTwa4>
+### Video Demo:
+
+<https://youtu.be/g7zKknFTwa4>
 
 ### Description:
 
