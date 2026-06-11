@@ -51,3 +51,18 @@ I created the theme palette by assigning a specific name to each color based on 
 For the animations, I used the Vue version of the motion library.
 
 I also added some settings options for the sound and game difficulty to the menu settings where you select the color palette. These settings are stored locally in the browser using the Web Storage API.
+
+
+### RUN PROJECT
+
+To run the project you need to first install all the dependencies and have bun install on your computer.
+
+Install dependencies:
+```text
+bun install
+```
+
+Run app:
+```text
+bun run dev
+```
